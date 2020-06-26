@@ -13,7 +13,9 @@
  '(blink-cursor-mode nil)
  '(custom-enabled-themes (quote (deeper-blue)))
  '(menu-bar-mode nil)
- '(package-selected-packages (quote (evil-magit magit vterm evil)))
+ '(package-selected-packages
+   (quote
+    (evil-numbers latex-preview-pane org-edit-latex evil-org evil-mu4e evil-magit magit vterm evil)))
  '(scroll-bar-mode nil)
  '(tool-bar-mode nil))
 (custom-set-faces
