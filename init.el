@@ -15,7 +15,7 @@
  '(menu-bar-mode nil)
  '(package-selected-packages
    (quote
-    (toc-org ox-clip org-cliplink org-superstar ob-async htmlize gnuplot orgit org-starter org-evil yaml-mode json-mode company-ghc ghci-completion dante lsp-treemacs company-irony-c-headers lsp-haskell flycheck-irony irony-eldoc company-irony haskell-emacs haskell-mode evil-collection evil-numbers latex-preview-pane org-edit-latex evil-org evil-mu4e evil-magit magit vterm evil)))
+    (orgit-forge ob-go org-pdftools org-re-reveal org-tree-slide org-noter-pdftools org-noter gnuplot-mode ob-rust ob-tmux toc-org ox-clip org-cliplink org-superstar ob-async htmlize gnuplot orgit org-starter org-evil yaml-mode json-mode company-ghc ghci-completion dante lsp-treemacs company-irony-c-headers lsp-haskell flycheck-irony irony-eldoc company-irony haskell-emacs haskell-mode evil-collection evil-numbers latex-preview-pane org-edit-latex evil-org evil-mu4e evil-magit magit vterm evil)))
  '(scroll-bar-mode nil)
  '(tool-bar-mode nil))
 (custom-set-faces
