@@ -15,7 +15,7 @@
  '(menu-bar-mode nil)
  '(package-selected-packages
    (quote
-    (lsp-haskell flycheck-irony irony-eldoc company-irony haskell-emacs haskell-mode evil-collection evil-numbers latex-preview-pane org-edit-latex evil-org evil-mu4e evil-magit magit vterm evil)))
+    (org-starter org-evil yaml-mode json-mode company-ghc ghci-completion dante lsp-treemacs company-irony-c-headers lsp-haskell flycheck-irony irony-eldoc company-irony haskell-emacs haskell-mode evil-collection evil-numbers latex-preview-pane org-edit-latex evil-org evil-mu4e evil-magit magit vterm evil)))
  '(scroll-bar-mode nil)
  '(tool-bar-mode nil))
 (custom-set-faces
