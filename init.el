@@ -21,7 +21,7 @@
    (quote
     (("gnu" . "https://elpa.gnu.org/packages/")
      ("melpa" . "https://melpa.org/packages/"))))
- '(package-selected-packages (quote (org magit)))
+ '(package-selected-packages (quote (docker-compose-mode dockerfile-mode org magit)))
  '(scroll-bar-mode nil)
  '(tool-bar-mode nil))
 (custom-set-faces
@@ -31,3 +31,5 @@
  ;; If there is more than one, they won't work right.
  '(default ((t (:inherit nil :stipple nil :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 98 :width normal :foundry "JB  " :family "JetBrains Mono")))))
 (setq backup-directory-alist `(("." . "~/.saves")))
+(when (version<= "26.0.50" emacs-version )
+  (global-display-line-numbers-mode))
