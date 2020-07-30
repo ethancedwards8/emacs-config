@@ -21,7 +21,9 @@
    (quote
     (("gnu" . "https://elpa.gnu.org/packages/")
      ("melpa" . "https://melpa.org/packages/"))))
- '(package-selected-packages (quote (docker-compose-mode dockerfile-mode org magit)))
+ '(package-selected-packages
+   (quote
+    (hl-todo vterm dante docker-compose-mode dockerfile-mode org magit)))
  '(scroll-bar-mode nil)
  '(tool-bar-mode nil))
 (custom-set-faces
