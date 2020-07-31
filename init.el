@@ -1,4 +1,3 @@
-
 ;; Added by Package.el.  This must come before configurations of
 ;; installed packages.  Don't delete this line.  If you don't want it,
 ;; just comment it out by adding a semicolon to the start of the line.
@@ -17,6 +16,7 @@
  '(blink-cursor-mode nil)
  '(custom-enabled-themes (quote (deeper-blue)))
  '(menu-bar-mode nil)
+ '(org-agenda-files nil)
  '(package-archives
    (quote
     (("gnu" . "https://elpa.gnu.org/packages/")
@@ -36,3 +36,12 @@
 (when (version<= "26.0.50" emacs-version )
   (global-display-line-numbers-mode))
 (powerline-default-theme)
+
+(global-set-key (kbd "C-x g") 'magit-status)
+(global-set-key (kbd "C-x v") 'vterm)
+(global-set-key (kbd "C-c l") 'org-store-link)
+(global-set-key (kbd "C-c a") 'org-agenda)
+(global-set-key (kbd "C-c c") 'org-capture)
+(setq org-log-done t)
+
+;; (setq org-agenda-files (list "~/org/*.org"))
