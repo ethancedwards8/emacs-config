@@ -23,7 +23,7 @@
      ("melpa" . "https://melpa.org/packages/"))))
  '(package-selected-packages
    (quote
-    (powerline hl-todo vterm dante docker-compose-mode dockerfile-mode org magit)))
+    (rust-mode powerline hl-todo vterm dante docker-compose-mode dockerfile-mode org magit)))
  '(scroll-bar-mode nil)
  '(tool-bar-mode nil))
 (custom-set-faces
@@ -36,6 +36,11 @@
 (when (version<= "26.0.50" emacs-version )
   (global-display-line-numbers-mode))
 (powerline-default-theme)
+
+(require 'rust-mode)
+(add-hook 'rust-mode-hook
+	  (lambda () (setq indent-tabs-mode nil)))
+(define-key rust-mode-map (kbd "C-c C-c") 'rust-run)
 
 (global-set-key (kbd "C-x g") 'magit-status)
 (global-set-key (kbd "C-x v") 'vterm)
