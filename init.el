@@ -23,7 +23,7 @@
      ("melpa" . "https://melpa.org/packages/"))))
  '(package-selected-packages
    (quote
-    (racer rust-mode powerline hl-todo vterm dante docker-compose-mode dockerfile-mode org magit)))
+    (fzf racer rust-mode powerline hl-todo vterm dante docker-compose-mode dockerfile-mode org magit)))
  '(scroll-bar-mode nil)
  '(tool-bar-mode nil))
 (custom-set-faces
