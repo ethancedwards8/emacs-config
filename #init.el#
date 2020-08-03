@@ -47,7 +47,7 @@
 (define-key rust-mode-map (kbd "TAB") #'company-indent-or-compelete-common)
 (setq company-tooltip-align-annotations t)
 
-(global-unset-key (kbd "C-z"))
+(global-unset-key (kbd "C-x"))
 (global-set-key (kbd "C-x g") 'magit-status)
 (global-set-key (kbd "C-x v") 'vterm)
 (global-set-key (kbd "C-c l") 'org-store-link)
