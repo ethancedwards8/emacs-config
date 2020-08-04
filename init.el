@@ -48,6 +48,7 @@
 (setq company-tooltip-align-annotations t)
 
 (global-unset-key (kbd "C-z"))
+(global-set-key (kbd "C-z f") 'fzf)
 (global-set-key (kbd "C-x g") 'magit-status)
 (global-set-key (kbd "C-x v") 'vterm)
 (global-set-key (kbd "C-c l") 'org-store-link)
