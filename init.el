@@ -35,6 +35,7 @@
 (setq backup-directory-alist `(("." . "~/.saves")))
 (when (version<= "26.0.50" emacs-version )
   (global-display-line-numbers-mode))
+(setq dispaly-line-numbers-mode 'relative)
 (powerline-default-theme)
 
 (require 'rust-mode)
