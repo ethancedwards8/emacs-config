@@ -23,7 +23,7 @@
      ("melpa" . "https://melpa.org/packages/"))))
  '(package-selected-packages
    (quote
-    (racer rust-mode powerline hl-todo vterm dante docker-compose-mode dockerfile-mode org magit)))
+    (fzf racer rust-mode powerline hl-todo vterm dante docker-compose-mode dockerfile-mode org magit)))
  '(scroll-bar-mode nil)
  '(tool-bar-mode nil))
 (custom-set-faces
@@ -49,6 +49,7 @@
 (setq company-tooltip-align-annotations t)
 
 (global-unset-key (kbd "C-z"))
+(global-set-key (kbd "C-z f") 'fzf)
 (global-set-key (kbd "C-x g") 'magit-status)
 (global-set-key (kbd "C-x v") 'vterm)
 (global-set-key (kbd "C-c l") 'org-store-link)
