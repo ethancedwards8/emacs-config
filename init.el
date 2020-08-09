@@ -48,6 +48,9 @@
 (define-key rust-mode-map (kbd "TAB") #'company-indent-or-compelete-common)
 (setq company-tooltip-align-annotations t)
 
+(setq user-full-name "Ethan Carter Edwards"
+      user-mail-address "ethancarteredwards@gmail.com")
+
 (global-unset-key (kbd "C-z"))
 (global-set-key (kbd "C-z f") 'fzf)
 (global-set-key (kbd "C-z l") 'ielm)
