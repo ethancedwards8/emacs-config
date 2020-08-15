@@ -48,6 +48,13 @@
 (define-key rust-mode-map (kbd "TAB") #'company-indent-or-compelete-common)
 (setq company-tooltip-align-annotations t)
 
+;; from the "better defaults" github page source: https://github.com/technomancy/better-defaults/blob/master/better-defaults.el
+(global-set-key (kbd "C-s") 'isearch-forward-regexp)
+(global-set-key (kbd "C-r") 'isearch-backward-regexp)
+(global-set-key (kbd "C-M-s") 'isearch-forward)
+(global-set-key (kbd "C-M-r") 'isearch-backward)
+
+;; various different bindings, never can remember the org ones though :/
 (global-unset-key (kbd "C-z"))
 (global-set-key (kbd "C-z f") 'fzf)
 (global-set-key (kbd "C-z l") 'ielm)
@@ -59,4 +66,5 @@
 (setq org-log-done t)
 (setq confirm-kill-emacs 'y-or-n-p)
 
-;; (setq org-agenda-files (list "~/org/*.org"))
+(setq org-agenda-files (list "~/org/*.org"
+			     "~/Nextcloud/Org"))
