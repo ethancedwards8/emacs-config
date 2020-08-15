@@ -55,6 +55,10 @@
 (global-set-key (kbd "C-M-r") 'isearch-backward)
 
 ;; various different bindings, never can remember the org ones though :/
+
+(setq user-full-name "Ethan Carter Edwards"
+      user-mail-address "ethancarteredwards@gmail.com")
+
 (global-unset-key (kbd "C-z"))
 (global-set-key (kbd "C-z f") 'fzf)
 (global-set-key (kbd "C-z l") 'ielm)
