@@ -37,6 +37,7 @@
   (global-display-line-numbers-mode))
 (setq dispaly-line-numbers-mode 'relative)
 (powerline-default-theme)
+(setq-default c-basic-offset 8)
 
 (require 'rust-mode)
 (add-hook 'rust-mode-hook
