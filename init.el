@@ -71,5 +71,10 @@
 (setq org-log-done t)
 (setq confirm-kill-emacs 'y-or-n-p)
 
+(eval-after-load "org"
+  '(require 'ox-md nil t))
+(eval-after-load "org"
+  '(require 'org-tempo))
+
 (setq org-agenda-files (list "~/org/*.org"
 			     "~/Nextcloud/Org"))
