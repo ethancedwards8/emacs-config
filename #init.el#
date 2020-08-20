@@ -14,14 +14,16 @@
  '(ansi-color-names-vector
    ["black" "#d55e00" "#009e73" "#f8ec59" "#0072b2" "#cc79a7" "#56b4e9" "white"])
  '(blink-cursor-mode nil)
- '(custom-enabled-themes '(deeper-blue))
+ '(custom-enabled-themes (quote (deeper-blue)))
  '(menu-bar-mode nil)
- '(org-agenda-files nil t)
+ '(org-agenda-files nil)
  '(package-archives
-   '(("gnu" . "https://elpa.gnu.org/packages/")
-     ("melpa" . "https://melpa.org/packages/")))
+   (quote
+    (("gnu" . "https://elpa.gnu.org/packages/")
+     ("melpa" . "https://melpa.org/packages/"))))
  '(package-selected-packages
-   '(chess fzf racer rust-mode powerline hl-todo vterm dante docker-compose-mode dockerfile-mode org magit))
+   (quote
+    (fzf racer rust-mode powerline hl-todo vterm dante docker-compose-mode dockerfile-mode org magit)))
  '(scroll-bar-mode nil)
  '(tool-bar-mode nil))
 (custom-set-faces
@@ -36,9 +38,6 @@
 (setq dispaly-line-numbers-mode 'relative)
 (powerline-default-theme)
 (setq-default c-basic-offset 8)
-(setq c-default-style '((java-mode . "java")
-			(awk-mode . "awk")
-			(other . "linux")))
 
 (require 'rust-mode)
 (add-hook 'rust-mode-hook
@@ -56,13 +55,11 @@
 (global-set-key (kbd "C-M-s") 'isearch-forward)
 (global-set-key (kbd "C-M-r") 'isearch-backward)
 
+;; various different bindings, never can remember the org ones though :/
 
-
-;; My full name and email address for whatever reason this is required
 (setq user-full-name "Ethan Carter Edwards"
       user-mail-address "ethancarteredwards@gmail.com")
 
-;; various different bindings, never can remember the org ones though :/
 (global-unset-key (kbd "C-z"))
 (global-set-key (kbd "C-z f") 'fzf)
 (global-set-key (kbd "C-z l") 'ielm)
