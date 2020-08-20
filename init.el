@@ -38,6 +38,9 @@
 (setq dispaly-line-numbers-mode 'relative)
 (powerline-default-theme)
 (setq-default c-basic-offset 8)
+(setq c-default-style '((java-mode . "java")
+			(awk-mode . "awk")
+			(other . "linux")))
 
 (require 'rust-mode)
 (add-hook 'rust-mode-hook
@@ -55,11 +58,13 @@
 (global-set-key (kbd "C-M-s") 'isearch-forward)
 (global-set-key (kbd "C-M-r") 'isearch-backward)
 
-;; various different bindings, never can remember the org ones though :/
 
+
+;; My full name and email address for whatever reason this is required
 (setq user-full-name "Ethan Carter Edwards"
       user-mail-address "ethancarteredwards@gmail.com")
 
+;; various different bindings, never can remember the org ones though :/
 (global-unset-key (kbd "C-z"))
 (global-set-key (kbd "C-z f") 'fzf)
 (global-set-key (kbd "C-z l") 'ielm)
