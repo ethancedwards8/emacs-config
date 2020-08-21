@@ -79,5 +79,7 @@
 (eval-after-load "org"
   '(require 'org-tempo))
 
-(setq org-agenda-files (list "~/org/*.org"
-			     "~/Nextcloud/Org"))
+(setq org-agenda-files (list "~/Nextcloud/Org/glusterfs.org"
+			     "~/Nextcloud/Org/School.org"
+			     "~/Nextcloud/Org/Work.org"
+			     "~/Nextcloud/Org/basics.org"))
