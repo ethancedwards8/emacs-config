@@ -21,7 +21,7 @@
    '(("gnu" . "https://elpa.gnu.org/packages/")
      ("melpa" . "https://melpa.org/packages/")))
  '(package-selected-packages
-   '(chess fzf racer rust-mode powerline hl-todo vterm dante docker-compose-mode dockerfile-mode org magit))
+   '(elcord chess fzf racer rust-mode powerline hl-todo vterm dante docker-compose-mode dockerfile-mode org magit))
  '(scroll-bar-mode nil)
  '(tool-bar-mode nil))
 (custom-set-faces
@@ -56,6 +56,8 @@
 (global-set-key (kbd "C-M-s") 'isearch-forward)
 (global-set-key (kbd "C-M-r") 'isearch-backward)
 
+(require 'elcord)
+(elcord-mode)
 
 
 ;; My full name and email address for whatever reason this is required
