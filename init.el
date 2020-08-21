@@ -57,7 +57,7 @@
 (global-set-key (kbd "C-M-r") 'isearch-backward)
 
 (require 'elcord)
-(elcord-mode)
+;; (elcord-mode)
 
 
 ;; My full name and email address for whatever reason this is required
