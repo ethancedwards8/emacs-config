@@ -34,7 +34,12 @@
 (setq backup-directory-alist `(("." . "~/.saves")))
 (when (version<= "26.0.50" emacs-version )
   (global-display-line-numbers-mode))
-(setq dispaly-line-numbers-mode 'relative)
+(setq global-display-line-numbers-mode 'relative)
+;;; My failed relative line numbers attempt
+;; (when (version<= "26.0.50" emacs-version)
+;;   (progn
+;;     (display-line-numbers-mode)
+;;     (setq display-line-numbers-mode 'relative)))
 (powerline-default-theme)
 (setq-default c-basic-offset 8)
 (setq c-default-style '((java-mode . "java")
