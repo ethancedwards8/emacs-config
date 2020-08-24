@@ -16,13 +16,13 @@
  '(blink-cursor-mode nil)
  '(custom-enabled-themes '(deeper-blue))
  '(menu-bar-mode nil)
- '(org-directory "~/Nextcloud/Org/")
  '(org-agenda-files (list org-directory))
+ '(org-directory "~/Nextcloud/Org/")
  '(package-archives
    '(("gnu" . "https://elpa.gnu.org/packages/")
      ("melpa" . "https://melpa.org/packages/")))
  '(package-selected-packages
-   '(elcord chess fzf racer rust-mode powerline hl-todo vterm dante docker-compose-mode dockerfile-mode org magit))
+   '(elcord chess fzf powerline hl-todo vterm docker-compose-mode dockerfile-mode org magit))
  '(scroll-bar-mode nil)
  '(tool-bar-mode nil))
 (custom-set-faces
