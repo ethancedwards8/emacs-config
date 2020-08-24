@@ -16,7 +16,8 @@
  '(blink-cursor-mode nil)
  '(custom-enabled-themes '(deeper-blue))
  '(menu-bar-mode nil)
- '(org-agenda-files nil t)
+ '(org-directory "~/Nextcloud/Org/")
+ '(org-agenda-files (list org-directory))
  '(package-archives
    '(("gnu" . "https://elpa.gnu.org/packages/")
      ("melpa" . "https://melpa.org/packages/")))
@@ -81,7 +82,14 @@
 (eval-after-load "org"
   '(require 'org-tempo))
 
-(setq org-agenda-files (list "~/Nextcloud/Org/glusterfs.org"
-			     "~/Nextcloud/Org/School.org"
-			     "~/Nextcloud/Org/Work.org"
-			     "~/Nextcloud/Org/basics.org"))
+(setq diary-file "~/Nextcloud/emacs-diary")
+(setq org-agenda-include-diary t)
+
+;; (custom-set-variables
+;;  '(org-directory "~/Nextcloud/Org")
+;;  '(org-agenda-files (list org-directory)))
+
+;; (setq org-agenda-files (list "~/Nextcloud/Org/glusterfs.org"
+;; 			     "~/Nextcloud/Org/School.org"
+;; 			     "~/Nextcloud/Org/Work.org"
+;; 			     "~/Nextcloud/Org/basics.org"))
