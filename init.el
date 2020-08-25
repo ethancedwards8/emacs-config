@@ -16,12 +16,13 @@
  '(blink-cursor-mode nil)
  '(custom-enabled-themes '(deeper-blue))
  '(menu-bar-mode nil)
- '(org-agenda-files nil t)
+ '(org-agenda-files (list org-directory))
+ '(org-directory "~/Nextcloud/Org/")
  '(package-archives
    '(("gnu" . "https://elpa.gnu.org/packages/")
      ("melpa" . "https://melpa.org/packages/")))
  '(package-selected-packages
-   '(elcord chess fzf racer rust-mode powerline hl-todo vterm dante docker-compose-mode dockerfile-mode org magit))
+   '(elcord chess fzf powerline hl-todo vterm docker-compose-mode dockerfile-mode org magit))
  '(scroll-bar-mode nil)
  '(tool-bar-mode nil))
 (custom-set-faces
@@ -33,22 +34,27 @@
 (setq backup-directory-alist `(("." . "~/.saves")))
 (when (version<= "26.0.50" emacs-version )
   (global-display-line-numbers-mode))
-(setq dispaly-line-numbers-mode 'relative)
+(setq global-display-line-numbers-mode 'relative)
+;;; My failed relative line numbers attempt
+;; (when (version<= "26.0.50" emacs-version)
+;;   (progn
+;;     (display-line-numbers-mode)
+;;     (setq display-line-numbers-mode 'relative)))
 (powerline-default-theme)
 (setq-default c-basic-offset 8)
 (setq c-default-style '((java-mode . "java")
 			(awk-mode . "awk")
 			(other . "linux")))
 
-(require 'rust-mode)
-(add-hook 'rust-mode-hook
-	  (lambda () (setq indent-tabs-mode nil)))
-(define-key rust-mode-map (kbd "C-c C-c") 'rust-run)
-(add-hook 'rust-mode-hook #'racer-mode)
-(add-hook 'racer-mode-hook #'eldoc-mode)
-(add-hook 'racer-mode-hook #'company-mode)
-(define-key rust-mode-map (kbd "TAB") #'company-indent-or-compelete-common)
-(setq company-tooltip-align-annotations t)
+;;(require 'rust-mode)
+;;(add-hook 'rust-mode-hook
+;;	  (lambda () (setq indent-tabs-mode nil)))
+;; (define-key rust-mode-map (kbd "C-c C-c") 'rust-run)
+;; (add-hook 'rust-mode-hook #'racer-mode)
+;; (add-hook 'racer-mode-hook #'eldoc-mode)
+;; (add-hook 'racer-mode-hook #'company-mode)
+;; (define-key rust-mode-map (kbd "TAB") #'company-indent-or-compelete-common)
+;; (setq company-tooltip-align-annotations t)
 
 ;; from the "better defaults" github page source: https://github.com/technomancy/better-defaults/blob/master/better-defaults.el
 (global-set-key (kbd "C-s") 'isearch-forward-regexp)
@@ -81,7 +87,14 @@
 (eval-after-load "org"
   '(require 'org-tempo))
 
-(setq org-agenda-files (list "~/Nextcloud/Org/glusterfs.org"
-			     "~/Nextcloud/Org/School.org"
-			     "~/Nextcloud/Org/Work.org"
-			     "~/Nextcloud/Org/basics.org"))
+(setq diary-file "~/Nextcloud/emacs-diary")
+(setq org-agenda-include-diary t)
+
+;; (custom-set-variables
+;;  '(org-directory "~/Nextcloud/Org")
+;;  '(org-agenda-files (list org-directory)))
+
+;; (setq org-agenda-files (list "~/Nextcloud/Org/glusterfs.org"
+;; 			     "~/Nextcloud/Org/School.org"
+;; 			     "~/Nextcloud/Org/Work.org"
+;; 			     "~/Nextcloud/Org/basics.org"))
