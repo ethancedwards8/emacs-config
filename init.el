@@ -46,15 +46,15 @@
 			(awk-mode . "awk")
 			(other . "linux")))
 
-(require 'rust-mode)
-(add-hook 'rust-mode-hook
-	  (lambda () (setq indent-tabs-mode nil)))
-(define-key rust-mode-map (kbd "C-c C-c") 'rust-run)
-(add-hook 'rust-mode-hook #'racer-mode)
-(add-hook 'racer-mode-hook #'eldoc-mode)
-(add-hook 'racer-mode-hook #'company-mode)
-(define-key rust-mode-map (kbd "TAB") #'company-indent-or-compelete-common)
-(setq company-tooltip-align-annotations t)
+;;(require 'rust-mode)
+;;(add-hook 'rust-mode-hook
+;;	  (lambda () (setq indent-tabs-mode nil)))
+;; (define-key rust-mode-map (kbd "C-c C-c") 'rust-run)
+;; (add-hook 'rust-mode-hook #'racer-mode)
+;; (add-hook 'racer-mode-hook #'eldoc-mode)
+;; (add-hook 'racer-mode-hook #'company-mode)
+;; (define-key rust-mode-map (kbd "TAB") #'company-indent-or-compelete-common)
+;; (setq company-tooltip-align-annotations t)
 
 ;; from the "better defaults" github page source: https://github.com/technomancy/better-defaults/blob/master/better-defaults.el
 (global-set-key (kbd "C-s") 'isearch-forward-regexp)
