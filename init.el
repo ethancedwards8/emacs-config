@@ -36,10 +36,9 @@
  '(org-directory "~/Nextcloud/Org/")
  '(package-archives
    '(("gnu" . "https://elpa.gnu.org/packages/")
-     ("melpa" . "https://melpa.org/packages/")
-     ("ublt" . "https://elpa.ubolonton.org/packages/")))
+     ("melpa" . "https://melpa.org/packages/")))
  '(package-selected-packages
-   '(elcord chess fzf powerline hl-todo vterm docker-compose-mode dockerfile-mode org magit))
+   '(org-drill ox-twbs elcord chess fzf powerline hl-todo vterm docker-compose-mode dockerfile-mode org magit))
  '(scroll-bar-mode nil)
  '(tool-bar-mode nil))
 (custom-set-faces
