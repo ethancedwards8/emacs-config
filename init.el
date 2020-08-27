@@ -116,6 +116,14 @@
   (setq diary-file "~/Nextcloud/emacs-diary")
   (setq org-agenda-include-diary t))
 
+(use-package org-drill
+  :ensure t
+  :config
+  (require 'org-drill))
+
+(use-package ox-twbs
+  :ensure t)
+
 (use-package elcord
   :ensure t)
 
