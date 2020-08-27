@@ -2,6 +2,14 @@
 (unless (package-installed-p 'use-package)
   (package-install 'use-package)
   (require 'use-package))
+;; startup time function 
+(add-hook 'emacs-startup-hook
+          (lambda ()
+            (message "Emacs ready in %s with %d garbage collections."
+                     (format "%.2f seconds"
+                             (float-time
+                              (time-subtract after-init-time before-init-time)))
+                     gcs-done)))
 ;; Added by Package.el.  This must come before configurations of
 ;; installed packages.  Don't delete this line.  If you don't want it,
 ;; just comment it out by adding a semicolon to the start of the line.
@@ -27,7 +35,7 @@
      ("melpa" . "https://melpa.org/packages/")
      ("ublt" . "https://elpa.ubolonton.org/packages/")))
  '(package-selected-packages
-   '(use-package elcord chess fzf powerline hl-todo vterm docker-compose-mode dockerfile-mode org magit))
+   '(evil-collection magit-todos evil-magit evil elcord chess fzf powerline hl-todo vterm docker-compose-mode dockerfile-mode org magit))
  '(scroll-bar-mode nil)
  '(tool-bar-mode nil))
 (custom-set-faces
@@ -68,12 +76,33 @@
 (setq org-log-done t)
 (setq confirm-kill-emacs 'y-or-n-p)
 
+(require 'dired+)
+
 ;;; Packages
 
 (use-package evil
   :ensure t
+  :init
+  (setq evil-want-integration nil)
   :config
-  (require 'evil))
+  (require 'evil)
+  (evil-mode 1))
+
+(use-package evil-collection
+  :after evil
+  :ensure t
+  :config
+  (evil-collection-init))
+
+(use-package evil-magit
+  :ensure t
+  :config
+  (require 'evil-magit))
+
+(use-package magit-todos
+  :ensure t
+  :config
+  )
 
 (use-package org
   :ensure t
