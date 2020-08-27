@@ -32,9 +32,10 @@
  '(org-directory "~/Nextcloud/Org/")
  '(package-archives
    '(("gnu" . "https://elpa.gnu.org/packages/")
-     ("melpa" . "https://melpa.org/packages/")))
+     ("melpa" . "https://melpa.org/packages/")
+     ("ublt" . "https://elpa.ubolonton.org/packages/")))
  '(package-selected-packages
-   '(evil-collection magit-todos evil-magit evil org-drill ox-twbs elcord chess fzf powerline hl-todo vterm docker-compose-mode dockerfile-mode org magit))
+   '(use-package org-drill ox-twbs elcord chess fzf powerline hl-todo vterm docker-compose-mode dockerfile-mode org magit))
  '(scroll-bar-mode nil)
  '(tool-bar-mode nil))
 (custom-set-faces
@@ -75,7 +76,7 @@
 (setq org-log-done t)
 (setq confirm-kill-emacs 'y-or-n-p)
 
-(require 'dired+)
+;; (require 'dired+)
 
 ;;; Packages
 
@@ -83,6 +84,7 @@
   :ensure t
   :init
   (setq evil-want-integration nil)
+  (setq evil-want-keybinding nil)
   :config
   (require 'evil)
   (evil-mode 1))
