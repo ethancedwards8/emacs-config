@@ -35,7 +35,7 @@
      ("melpa" . "https://melpa.org/packages/")
      ("ublt" . "https://elpa.ubolonton.org/packages/")))
  '(package-selected-packages
-   '(use-package org-drill ox-twbs elcord chess fzf powerline hl-todo vterm docker-compose-mode dockerfile-mode org magit))
+   '(pdf-tools use-package org-drill ox-twbs elcord chess fzf powerline hl-todo vterm docker-compose-mode dockerfile-mode org magit))
  '(scroll-bar-mode nil)
  '(tool-bar-mode nil))
 (custom-set-faces
@@ -66,6 +66,7 @@
 
 ;; various different bindings, never can remember the org ones though :/
 (global-unset-key (kbd "C-z"))
+(global-set-key (kbd "C-S-v") 'scroll-up-command)
 (global-set-key (kbd "C-z f") 'fzf)
 (global-set-key (kbd "C-z l") 'ielm)
 (global-set-key (kbd "C-x g") 'magit-status)
@@ -83,11 +84,12 @@
 (use-package evil
   :ensure t
   :init
-  (setq evil-want-integration nil)
+  (setq evil-want-integration t)
   (setq evil-want-keybinding nil)
   :config
   (require 'evil)
-  (evil-mode 1))
+  (evil-mode 1)
+  (global-undo-tree-mode 0))
 
 (use-package evil-collection
   :after evil
@@ -103,7 +105,7 @@
 (use-package magit-todos
   :ensure t
   :config
-  )
+  (require 'magit-todos))
 
 (use-package org
   :ensure t
@@ -120,6 +122,11 @@
   :ensure t
   :config
   (require 'org-drill))
+
+(use-package pdf-tools
+  :ensure t
+  :config
+  (pdf-tools-install))
 
 (use-package ox-twbs
   :ensure t)
