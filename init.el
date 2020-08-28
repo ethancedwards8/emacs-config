@@ -1,7 +1,3 @@
-;;; Setting up use-package I think?
-(unless (package-installed-p 'use-package)
-  (package-install 'use-package)
-  (require 'use-package))
 ;; startup time function 
 (add-hook 'emacs-startup-hook
           (lambda ()
@@ -45,6 +41,10 @@
  ;; If there is more than one, they won't work right.
  '(default ((t (:inherit nil :stipple nil :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 98 :width normal :foundry "JB  " :family "JetBrains Mono")))))
 (setq backup-directory-alist `(("." . "~/.saves")))
+
+(package-install 'use-package)
+(require 'use-package)
+
 (when (version<= "26.0.50" emacs-version )
   (global-display-line-numbers-mode))
 (setq global-display-line-numbers-mode 'relative)
