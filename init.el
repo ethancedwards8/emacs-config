@@ -31,7 +31,7 @@
      ("melpa" . "https://melpa.org/packages/")
      ("ublt" . "https://elpa.ubolonton.org/packages/")))
  '(package-selected-packages
-   '(pdf-tools use-package org-drill ox-twbs elcord chess fzf powerline hl-todo vterm docker-compose-mode dockerfile-mode org magit))
+   '(haskell-mode pdf-tools use-package org-drill ox-twbs elcord chess fzf powerline hl-todo vterm docker-compose-mode dockerfile-mode org magit))
  '(scroll-bar-mode nil)
  '(tool-bar-mode nil))
 (custom-set-faces
@@ -122,6 +122,9 @@
   :ensure t
   :config
   (require 'org-drill))
+
+(use-package haskell-mode
+  :ensure t)
 
 (use-package pdf-tools
   :ensure t
