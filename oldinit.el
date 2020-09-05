@@ -29,10 +29,9 @@
  '(package-archives
    '(("gnu" . "https://elpa.gnu.org/packages/")
      ("melpa" . "https://melpa.org/packages/")
-     ("ublt" . "https://elpa.ubolonton.org/packages/")
-     ("org" . "https://orgmode.org/elpa/")))
+     ("ublt" . "https://elpa.ubolonton.org/packages/")))
  '(package-selected-packages
-   '(elcord ox-twbs org-drill hl-todo chess org powerline vterm docker-compose-mode dockerfile-mode magit use-package))
+   '(haskell-mode pdf-tools use-package org-drill ox-twbs elcord chess fzf powerline hl-todo vterm docker-compose-mode dockerfile-mode org magit))
  '(scroll-bar-mode nil)
  '(tool-bar-mode nil))
 (custom-set-faces
@@ -42,6 +41,9 @@
  ;; If there is more than one, they won't work right.
  '(default ((t (:inherit nil :stipple nil :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 98 :width normal :foundry "JB  " :family "JetBrains Mono")))))
 (setq backup-directory-alist `(("." . "~/.saves")))
+
+(package-install 'use-package)
+(require 'use-package)
 
 (when (version<= "26.0.50" emacs-version )
   (global-display-line-numbers-mode))
@@ -75,33 +77,35 @@
 (setq org-log-done t)
 (setq confirm-kill-emacs 'y-or-n-p)
 
+;; (require 'dired+)
+
 ;;; Packages
 
-;; (use-package evil
-;;   :ensure t
-;;   :init
-;;   (setq evil-want-integration t)
-;;   (setq evil-want-keybinding nil)
-;;   :config
-;;   (require 'evil)
-;;   (evil-mode 1)
-;;   (global-undo-tree-mode 0))
+(use-package evil
+  :ensure t
+  :init
+  (setq evil-want-integration t)
+  (setq evil-want-keybinding nil)
+  :config
+  (require 'evil)
+  (evil-mode 1)
+  (global-undo-tree-mode 0))
 
-;; (use-package evil-collection
-;;   :after evil
-;;   :ensure t
-;;   :config
-;;   (evil-collection-init))
+(use-package evil-collection
+  :after evil
+  :ensure t
+  :config
+  (evil-collection-init))
 
-;; (use-package evil-magit
-;;   :ensure t
-;;   :config
-;;   (require 'evil-magit))
+(use-package evil-magit
+  :ensure t
+  :config
+  (require 'evil-magit))
 
-;; (use-package magit-todos
-;;   :ensure t
-;;   :config
-;;   (require 'magit-todos))
+(use-package magit-todos
+  :ensure t
+  :config
+  (require 'magit-todos))
 
 (use-package org
   :ensure t
@@ -119,13 +123,13 @@
   :config
   (require 'org-drill))
 
-;; (use-package haskell-mode
-;;   :ensure t)
+(use-package haskell-mode
+  :ensure t)
 
-;; (use-package pdf-tools
-;;   :ensure t
-;;   :config
-;;   (pdf-tools-install))
+(use-package pdf-tools
+  :ensure t
+  :config
+  (pdf-tools-install))
 
 (use-package ox-twbs
   :ensure t)
@@ -136,8 +140,8 @@
 (use-package chess
   :ensure t)
 
-;; (use-package fzf
-;;   :ensure t)
+(use-package fzf
+  :ensure t)
 
 (use-package powerline
   :ensure t
