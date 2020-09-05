@@ -23,6 +23,7 @@
    ["black" "#d55e00" "#009e73" "#f8ec59" "#0072b2" "#cc79a7" "#56b4e9" "white"])
  '(blink-cursor-mode nil)
  '(custom-enabled-themes '(deeper-blue))
+ '(elcord-mode t nil (elcord))
  '(menu-bar-mode nil)
  '(org-agenda-files (list org-directory))
  '(org-directory "~/Nextcloud/Org/")
@@ -32,7 +33,7 @@
      ("ublt" . "https://elpa.ubolonton.org/packages/")
      ("org" . "https://orgmode.org/elpa/")))
  '(package-selected-packages
-   '(elcord ox-twbs org-drill hl-todo chess org powerline vterm docker-compose-mode dockerfile-mode magit use-package))
+   '(magit-todos evil-magit evil-commentary evil-collection evil elcord ox-twbs org-drill hl-todo chess org powerline vterm docker-compose-mode dockerfile-mode magit use-package))
  '(scroll-bar-mode nil)
  '(tool-bar-mode nil))
 (custom-set-faces
@@ -77,31 +78,37 @@
 
 ;;; Packages
 
-;; (use-package evil
-;;   :ensure t
-;;   :init
-;;   (setq evil-want-integration t)
-;;   (setq evil-want-keybinding nil)
-;;   :config
-;;   (require 'evil)
-;;   (evil-mode 1)
-;;   (global-undo-tree-mode 0))
+(use-package evil
+  :ensure t
+  :init
+  (setq evil-want-integration t)
+  (setq evil-want-keybinding nil)
+  :config
+  (require 'evil)
+  (evil-mode 1)
+  (global-undo-tree-mode 0))
 
-;; (use-package evil-collection
-;;   :after evil
-;;   :ensure t
-;;   :config
-;;   (evil-collection-init))
+(use-package evil-collection
+  :after evil
+  :ensure t
+  :config
+  (evil-collection-init))
 
-;; (use-package evil-magit
-;;   :ensure t
-;;   :config
-;;   (require 'evil-magit))
+(use-package evil-commentary
+  :ensure t
+  :config
+  (require 'evil-commentary)
+  (evil-commentary-mode))
 
-;; (use-package magit-todos
-;;   :ensure t
-;;   :config
-;;   (require 'magit-todos))
+(use-package evil-magit
+  :ensure t
+  :config
+  (require 'evil-magit))
+
+(use-package magit-todos
+  :ensure t
+  :config
+  (require 'magit-todos))
 
 (use-package org
   :ensure t
