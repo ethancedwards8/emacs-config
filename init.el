@@ -75,6 +75,16 @@
 (setq org-log-done t)
 (setq confirm-kill-emacs 'y-or-n-p)
 
+(defun my/custom-S-o-from-vim (times)
+  "Inserts a newline(s) above the line conataining the cursor.
+Very Similar to S-o from Vim"
+  (interactive "p")
+  (save-excursion 
+    (move-beginning-of-line 1)
+    (newline times)))
+
+(global-set-key (kbd "C-S-o")
+		'my/custom-S-o-from-vim)
 ;;; Packages
 
 (use-package evil
