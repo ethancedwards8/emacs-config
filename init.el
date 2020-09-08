@@ -32,7 +32,7 @@
      ("ublt" . "https://elpa.ubolonton.org/packages/")
      ("org" . "https://orgmode.org/elpa/")))
  '(package-selected-packages
-   '(debbugs haskell-mode magit-todos evil-magit evil-commentary evil-collection evil elcord ox-twbs org-drill hl-todo chess org powerline vterm docker-compose-mode dockerfile-mode magit use-package))
+   '(dashboard debbugs haskell-mode magit-todos evil-magit evil-commentary evil-collection evil elcord ox-twbs org-drill hl-todo chess org powerline vterm docker-compose-mode dockerfile-mode magit use-package))
  '(scroll-bar-mode nil)
  '(tool-bar-mode nil))
 (custom-set-faces
@@ -86,7 +86,18 @@ Very Similar to S-o from Vim"
 
 (global-set-key (kbd "C-S-o")
 		'my/custom-S-o-from-vim)
+
+;; (setq initial-buffer-choice (lambda () (get-buffer "*dashboard*")))
+
 ;;; Packages
+(use-package dashboard
+  :config
+  (setq dashboard-items '((recents  . 5)
+                        (bookmarks . 5)
+                        ;; (projects . 5)
+                        (agenda . 5)
+                        (registers . 5)))
+  (dashboard-setup-startup-hook))
 
 (use-package evil
   :ensure t
