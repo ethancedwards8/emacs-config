@@ -173,7 +173,9 @@ Very Similar to S-o from Vim"
   (powerline-default-theme))
   
 (use-package hl-todo
-  :ensure t)
+  :ensure t
+  :config
+  (hl-todo-mode))
 
 (use-package vterm
   :ensure t)
