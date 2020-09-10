@@ -73,6 +73,13 @@
 (global-set-key (kbd "C-c l") 'org-store-link)
 (global-set-key (kbd "C-c a") 'org-agenda)
 (global-set-key (kbd "C-c c") 'org-capture)
+
+;; keybings for window resizing
+(global-set-key (kbd "S-C-<left>") 'shrink-window-horizontally)
+(global-set-key (kbd "S-C-<right>") 'enlarge-window-horizontally)
+(global-set-key (kbd "S-C-<down>") 'enlarge-window)
+(global-set-key (kbd "S-C-<up>") 'shrink-window)
+
 (setq org-log-done t)
 (setq confirm-kill-emacs 'y-or-n-p)
 
