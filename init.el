@@ -32,7 +32,7 @@
      ("ublt" . "https://elpa.ubolonton.org/packages/")
      ("org" . "https://orgmode.org/elpa/")))
  '(package-selected-packages
-   '(dashboard debbugs haskell-mode magit-todos evil-magit evil-commentary evil-collection evil elcord ox-twbs org-drill hl-todo chess org powerline vterm docker-compose-mode dockerfile-mode magit use-package))
+   '(rustic flycheck lsp-ui lsp-mode dashboard debbugs haskell-mode magit-todos evil-magit evil-commentary evil-collection evil elcord ox-twbs org-drill hl-todo chess org powerline vterm docker-compose-mode dockerfile-mode magit use-package))
  '(scroll-bar-mode nil)
  '(tool-bar-mode nil))
 (custom-set-faces
@@ -99,6 +99,20 @@ Very Similar to S-o from Vim"
 ;; (setq initial-buffer-choice (lambda () (get-buffer "*dashboard*")))
 
 ;;; Packages
+(use-package lsp-ui)
+
+(use-package lsp-mode
+  ;; :hook (;; replace XXX-mode with concrete major-mode
+  :commands lsp)
+
+(use-package rustic
+  :ensure t
+  :config
+  (add-to-list 'auto-mode-alist '("\\.rs\\'" . rustic-mode)))
+
+(add-hook 'before-save-hook (lambda () (when (eq 'rust-mode major-mode)
+                                           (lsp-format-buffer))))
+	   
 (use-package dashboard
   :config
   (setq dashboard-items '((recents  . 5)
@@ -180,6 +194,7 @@ Very Similar to S-o from Vim"
 ;;   :ensure t
 ;;   :config
 ;;   (doom-modeline-mode))
+
 (use-package powerline
   :ensure t
   :config
