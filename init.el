@@ -57,6 +57,8 @@
 (setq user-full-name "Ethan Carter Edwards"
       user-mail-address "ethancarteredwards@gmail.com")
 
+(add-to-list 'load-path "~/.emacs.d/lisp")
+
 ;; from the "better defaults" github page source: https://github.com/technomancy/better-defaults/blob/master/better-defaults.el
 (global-set-key (kbd "C-s") 'isearch-forward-regexp)
 (global-set-key (kbd "C-r") 'isearch-backward-regexp)
@@ -174,6 +176,10 @@ Very Similar to S-o from Vim"
 ;; (use-package fzf
 ;;   :ensure t)
 
+;; (use-package doom-modeline
+;;   :ensure t
+;;   :config
+;;   (doom-modeline-mode))
 (use-package powerline
   :ensure t
   :config
