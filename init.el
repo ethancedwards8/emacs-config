@@ -32,7 +32,7 @@
      ("ublt" . "https://elpa.ubolonton.org/packages/")
      ("org" . "https://orgmode.org/elpa/")))
  '(package-selected-packages
-   '(2048-game rustic flycheck lsp-ui lsp-mode dashboard debbugs haskell-mode magit-todos evil-magit evil-commentary evil-collection evil elcord ox-twbs org-drill hl-todo chess org powerline vterm docker-compose-mode dockerfile-mode magit use-package))
+   '(spotify 2048-game rustic flycheck lsp-ui lsp-mode dashboard debbugs haskell-mode magit-todos evil-magit evil-commentary evil-collection evil elcord ox-twbs org-drill hl-todo chess org powerline vterm docker-compose-mode dockerfile-mode magit use-package))
  '(scroll-bar-mode nil)
  '(tool-bar-mode nil))
 (custom-set-faces
