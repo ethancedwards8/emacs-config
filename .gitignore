@@ -5,3 +5,5 @@ recentf
 /transient/
 /eshell/
 /eln-cache/
+/persist/
+.org-id-locations
