@@ -78,6 +78,9 @@
 (global-set-key (kbd "C-c a") 'org-agenda)
 (global-set-key (kbd "C-c c") 'org-capture)
 
+;; keybind for "u" to go up a directory in dired
+;; (global-set-key (kbd "u") 'dired-up-directory)
+
 ;; keybings for window resizing
 (global-set-key (kbd "S-C-<left>") 'shrink-window-horizontally)
 (global-set-key (kbd "S-C-<right>") 'enlarge-window-horizontally)
@@ -102,6 +105,9 @@ Very Similar to S-o from Vim"
 ;; (setq initial-buffer-choice (lambda () (get-buffer "*dashboard*")))
 
 ;;; Packages
+
+;; (use-package org-eldoc)
+
 (use-package rg
   :ensure t
   :config
