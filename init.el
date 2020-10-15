@@ -24,7 +24,8 @@
  '(blink-cursor-mode nil)
  '(custom-enabled-themes '(deeper-blue))
  '(menu-bar-mode nil)
- '(org-agenda-files (list org-directory))
+ '(org-agenda-files
+   '("/home/ece/Nextcloud/Org/Links.org" "/home/ece/Nextcloud/Org/Linux_Plus.org" "/home/ece/Nextcloud/Org/Math_RSA.org" "/home/ece/Nextcloud/Org/Projects.org" "/home/ece/Nextcloud/Org/Running.org" "/home/ece/Nextcloud/Org/School.org" "/home/ece/Nextcloud/Org/Work.org" "/home/ece/Nextcloud/Org/elisp.org" "/home/ece/Nextcloud/Org/gnu-structure.org" "/home/ece/Nextcloud/Org/ptable.org" "/home/ece/Nextcloud/Org/science_project.org"))
  '(org-directory "~/Nextcloud/Org/")
  '(package-archives
    '(("gnu" . "https://elpa.gnu.org/packages/")
