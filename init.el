@@ -32,7 +32,7 @@
      ("ublt" . "https://elpa.ubolonton.org/packages/")
      ("org" . "https://orgmode.org/elpa/")))
  '(package-selected-packages
-   '(spotify 2048-game rustic flycheck lsp-ui lsp-mode dashboard debbugs haskell-mode magit-todos evil-magit evil-commentary evil-collection evil elcord ox-twbs org-drill hl-todo chess org powerline vterm docker-compose-mode dockerfile-mode magit use-package))
+   '(rg pdf-tools spotify 2048-game rustic flycheck lsp-ui lsp-mode dashboard debbugs haskell-mode magit-todos evil-magit evil-commentary evil-collection evil elcord ox-twbs org-drill hl-todo chess org powerline vterm docker-compose-mode dockerfile-mode magit use-package))
  '(scroll-bar-mode nil)
  '(tool-bar-mode nil))
 (custom-set-faces
@@ -41,6 +41,8 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(default ((t (:inherit nil :stipple nil :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 98 :width normal :foundry "JB  " :family "JetBrains Mono")))))
+
+(defalias 'yes-or-no-p 'y-or-n-p)
 (setq backup-directory-alist `(("." . "~/.saves")))
 (set 'ad-redefinition-action 'accept)
 
@@ -96,9 +98,15 @@ Very Similar to S-o from Vim"
 (global-set-key (kbd "C-S-o")
 		'my/custom-S-o-from-vim)
 
+(setq truncate-lines t)
 ;; (setq initial-buffer-choice (lambda () (get-buffer "*dashboard*")))
 
 ;;; Packages
+(use-package rg
+  :ensure t
+  :config
+  (require 'rg))
+
 (use-package lsp-ui)
 
 (use-package lsp-mode
