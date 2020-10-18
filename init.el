@@ -24,8 +24,7 @@
  '(blink-cursor-mode nil)
  '(custom-enabled-themes '(deeper-blue))
  '(menu-bar-mode nil)
- '(org-agenda-files
-   '("/home/ece/Nextcloud/Org/Links.org" "/home/ece/Nextcloud/Org/Linux_Plus.org" "/home/ece/Nextcloud/Org/Math_RSA.org" "/home/ece/Nextcloud/Org/Projects.org" "/home/ece/Nextcloud/Org/Running.org" "/home/ece/Nextcloud/Org/School.org" "/home/ece/Nextcloud/Org/Work.org" "/home/ece/Nextcloud/Org/elisp.org" "/home/ece/Nextcloud/Org/gnu-structure.org" "/home/ece/Nextcloud/Org/ptable.org" "/home/ece/Nextcloud/Org/science_project.org"))
+ '(org-agenda-files (list org-directory))
  '(org-directory "~/Nextcloud/Org/")
  '(package-archives
    '(("gnu" . "https://elpa.gnu.org/packages/")
@@ -33,7 +32,7 @@
      ("ublt" . "https://elpa.ubolonton.org/packages/")
      ("org" . "https://orgmode.org/elpa/")))
  '(package-selected-packages
-   '(rg pdf-tools spotify 2048-game rustic flycheck lsp-ui lsp-mode dashboard debbugs haskell-mode magit-todos evil-magit evil-commentary evil-collection evil elcord ox-twbs org-drill hl-todo chess org powerline vterm docker-compose-mode dockerfile-mode magit use-package))
+   '(evil-org rg pdf-tools spotify 2048-game rustic flycheck lsp-ui lsp-mode dashboard debbugs haskell-mode magit-todos evil-magit evil-commentary evil-collection evil elcord ox-twbs org-drill hl-todo chess org powerline vterm docker-compose-mode dockerfile-mode magit use-package))
  '(scroll-bar-mode nil)
  '(tool-bar-mode nil))
 (custom-set-faces
@@ -152,6 +151,17 @@ Very Similar to S-o from Vim"
   :ensure t
   :config
   (evil-collection-init))
+
+(use-package evil-org
+  :ensure t
+  :after org
+  :config
+  (add-hook 'org-mode-hook 'evil-org-mode)
+  (add-hook 'evil-org-mode-hook
+            (lambda ()
+              (evil-org-set-key-theme)))
+  (require 'evil-org-agenda)
+  (evil-org-agenda-set-keys))
 
 (use-package evil-commentary
   :ensure t
