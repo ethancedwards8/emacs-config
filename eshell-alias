@@ -1,0 +1,4 @@
+alias ls exa --color=always $1
+alias ll exa --color=always -l $1
+alias la exa --color=always -a $1
+alias lah exa --color=always -lah $1
