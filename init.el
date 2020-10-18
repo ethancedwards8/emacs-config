@@ -23,6 +23,7 @@
    ["black" "#d55e00" "#009e73" "#f8ec59" "#0072b2" "#cc79a7" "#56b4e9" "white"])
  '(blink-cursor-mode nil)
  '(custom-enabled-themes '(deeper-blue))
+ '(eshell-aliases-file "/home/ece/.emacs.d/eshell-alias")
  '(menu-bar-mode nil)
  '(org-agenda-files
    '("/home/ece/Nextcloud/Org/Links.org" "/home/ece/Nextcloud/Org/Linux_Plus.org" "/home/ece/Nextcloud/Org/Math_RSA.org" "/home/ece/Nextcloud/Org/Projects.org" "/home/ece/Nextcloud/Org/Running.org" "/home/ece/Nextcloud/Org/School.org" "/home/ece/Nextcloud/Org/Work.org" "/home/ece/Nextcloud/Org/elisp.org" "/home/ece/Nextcloud/Org/gnu-structure.org" "/home/ece/Nextcloud/Org/ptable.org" "/home/ece/Nextcloud/Org/science_project.org"))
@@ -69,7 +70,7 @@
 (global-set-key (kbd "C-M-r") 'isearch-backward)
 
 ;; various different bindings, never can remember the org ones though :/
-(global-unset-key (kbd "C-z"))
+;; (global-unset-key (kbd "C-z"))
 (global-set-key (kbd "C-S-v") 'scroll-up-command)
 (global-set-key (kbd "C-z f") 'fzf)
 (global-set-key (kbd "C-z l") 'ielm)
