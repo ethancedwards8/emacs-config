@@ -47,6 +47,8 @@
 (setq backup-directory-alist `(("." . "~/.saves")))
 (set 'ad-redefinition-action 'accept)
 
+(setq initial-buffer-choice "~/Nextcloud/Org/Links.org")
+
 (when (version<= "26.0.50" emacs-version )
   (global-display-line-numbers-mode))
 (setq global-display-line-numbers-mode 'relative)
