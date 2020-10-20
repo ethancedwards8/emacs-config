@@ -73,8 +73,8 @@
 ;; various different bindings, never can remember the org ones though :/
 ;; (global-unset-key (kbd "C-z"))
 (global-set-key (kbd "C-S-v") 'scroll-up-command)
-(global-set-key (kbd "C-z f") 'fzf)
-(global-set-key (kbd "C-z l") 'ielm)
+;; (global-set-key (kbd "C-z f") 'fzf)
+;; (global-set-key (kbd "C-z l") 'ielm)
 (global-set-key (kbd "C-x g") 'magit-status)
 (global-set-key (kbd "C-x v") 'vterm)
 (global-set-key (kbd "C-c l") 'org-store-link)
