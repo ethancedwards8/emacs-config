@@ -69,6 +69,7 @@
 (global-set-key (kbd "C-r") 'isearch-backward-regexp)
 (global-set-key (kbd "C-M-s") 'isearch-forward)
 (global-set-key (kbd "C-M-r") 'isearch-backward)
+(global-set-key (kbd "C-x C-b") 'ibuffer)
 
 ;; various different bindings, never can remember the org ones though :/
 ;; (global-unset-key (kbd "C-z"))
