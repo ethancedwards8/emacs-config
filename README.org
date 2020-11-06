@@ -1,13 +1,25 @@
+#+TITLE: Ethan Edward's Emacs Configuration
+#+AUTHOR: Ethan Carter Edwards
+#+OPTIONS: toc:t
+#+PROPERTY: header-args:emacs-lisp :tangle ./test.el :mkdirp yes
 
+This setup was highly inspired by [[https://jamiecollinson.com/blog/my-emacs-config/#footnote-1][Jamie Collinson's config]]
 
+This is my Emacs Configuration, I've been using Emacs for a few months and I decided to go big or go home.
 
+After a while of having it all in a single elisp file it got annoying/hard to work with.
 
+I'm documenting it for fun, and I like notes so I'm linking to where I found each trick or configuration.
 
+I'll also probably put this somewhere on [[https://ethancedwards.com][my site]] and update it from time to time, but the "live" version is on my [[https://gitlab.com/ethancedwards/emacs-config][gitlab]].
 
+#+BEGIN_QUOTE
+"The Grind is not Glamorous."
+- Casey Neistat
+#+END_QUOTE
 
+* Setup
 
+** Configure package sources
 
-
-
-
-
+Add repo's. ELPA, MELPA, org, and ublt.

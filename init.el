@@ -1,3 +1,24 @@
+;; ;; Configure package.el to include MELPA.
+;; (require 'package)
+;; (add-to-list 'package-archives '("gnu" . "https://elpa.gnu.org/packages/") t)
+;; (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
+;; (add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/") t)
+;; (package-initialize)
+
+;; ;; Ensure that use-package is installed.
+;; ;;
+;; ;; If use-package isn't already installed, it's extremely likely that this is a
+;; ;; fresh installation! So we'll want to update the package repository and
+;; ;; install use-package before loading the literate configuration.
+;; (when (not (package-installed-p 'use-package))
+;;   (package-refresh-contents)
+;;   (package-install 'use-package))
+
+;; (org-babel-load-file
+;;  (expand-file-name
+;;   "README.org"
+;;   user-emacs-directory))
+
 ;; startup time function 
 (add-hook 'emacs-startup-hook
           (lambda ()
@@ -33,7 +54,7 @@
      ("ublt" . "https://elpa.ubolonton.org/packages/")
      ("org" . "https://orgmode.org/elpa/")))
  '(package-selected-packages
-   '(rainbow-delimiters helpful evil-org rg pdf-tools spotify 2048-game rustic flycheck lsp-ui lsp-mode dashboard debbugs haskell-mode magit-todos evil-magit evil-commentary evil-collection evil elcord ox-twbs org-drill hl-todo chess org powerline vterm docker-compose-mode dockerfile-mode magit use-package))
+   '(nix-mode rainbow-delimiters helpful evil-org rg pdf-tools spotify 2048-game rustic flycheck lsp-ui lsp-mode dashboard debbugs haskell-mode magit-todos evil-magit evil-commentary evil-collection evil elcord ox-twbs org-drill hl-todo chess org powerline vterm docker-compose-mode dockerfile-mode magit use-package))
  '(scroll-bar-mode nil)
  '(tool-bar-mode nil))
 (custom-set-faces
@@ -109,24 +130,27 @@ Very Similar to S-o from Vim"
 
 ;;; Packages
 
+(use-package nix-mode
+  :mode "\\.nix\\'")
+
 ;; (use-package org-eldoc)
 
-;; (use-package helpful
-;;   :ensure t
-;;   :bind (("C-h f" . helpful-callable)
-;; 	 ("C-h v" . helpful-variable)
-;; 	 ("C-h k" . helpful-key)
-;; 	 ())
-
 (use-package helpful
-  :custom
-  (counsel-describe-function-function #'helpful-callable)
-  (counsel-describe-variable-function #'helpful-variable)
-  :bind
-  ([remap describe-function] . counsel-describe-function)
-  ([remap describe-command] . helpful-command)
-  ([remap describe-variable] . counsel-describe-variable)
-  ([remap describe-key] . helpful-key))
+  :ensure t
+  :bind (("C-h f" . helpful-callable)
+	 ("C-h v" . helpful-variable)
+	 ("C-h k" . helpful-key)
+	 ()))
+
+;; (use-package helpful
+  ;; ;; :custom
+  ;; ;; (counsel-describe-function-function #'helpful-callable)
+  ;; ;; (counsel-describe-variable-function #'helpful-variable)
+  ;; :bind
+  ;; ;; ([remap describe-function] . counsel-describe-function)
+  ;; ([remap describe-command] . helpful-command)
+  ;; ;; ([remap describe-variable] . counsel-describe-variable)
+  ;; ([remap describe-key] . helpful-key))
 
 (use-package rainbow-delimiters
   :hook (prog-mode . rainbow-delimiters-mode))
