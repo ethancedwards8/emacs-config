@@ -20,6 +20,179 @@ I'll also probably put this somewhere on [[https://ethancedwards.com][my site]] 
 
 * Setup
 
-** Configure package sources
+** Configure package sources and =use-package= + Garbage Collection
 
-Add repo's. ELPA, MELPA, org, and ublt.
+Add repo's. ELPA, MELPA, org, and ublt. =package-enable-at-startup= improves startup time.
+
+#+begin_src emacs-lisp
+  ;; NOTE: init.el is now generated from Emacs.org.  Please edit that file
+  ;;       in Emacs and init.el will be generated automatically!
+  (setq gc-cons-threshold (* 50 1000 1000))
+
+  ;; initialize package sources
+  (require 'package)
+  (setq package-archives '(("gnu" . "https://elpa.gnu.org/packages/")
+			   ("melpa" . "https://melpa.org/packages/")
+			   ("ublt" . "https://elpa.ubolonton.org/packages/")
+			   ("org" . "https://orgmode.org/elpa/")))
+
+  (package-initialize)
+  (unless package-archive-contents
+    (package-refresh-contents))
+
+  (unless (package-installed-p 'use-package)
+    (package-install 'use-package))
+
+  (require 'use-package)
+  (setq use-package-always-ensure t)
+#+end_src
+
+** Benchmark startup
+
+Benchmark's my startup, when running as daemon I won't see this message so I can view it in =*Messages*=
+
+#+begin_src emacs-lisp
+
+  (add-hook 'emacs-startup-hook
+	    (lambda ()
+	      (message "Emacs ready in %s with %d garbage collections."
+		       (format "%.2f seconds"
+			       (float-time
+				(time-subtract after-init-time before-init-time)))
+		       gcs-done)))
+#+end_src
+
+** Find config function
+
+#+begin_src emacs-lisp
+  (defun find-config ()
+    "Edit README.org/init.el"
+    (interactive)
+    (find-file "~/.emacs.d/README.org"))
+
+  (global-set-key (kbd "C-c I") 'find-config
+#+end_src
+
+** Set custom settings to load in own file
+
+Stops Emacs from adding weird things to =init.el= This creates a temporary file that'll be destroyed.
+
+#+begin_src emacs-lisp
+  ;; (setq custom-file (make-temp-file "emacs-custom"))
+  (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
+#+end_src
+
+** Add elisp directory to load-path
+
+I have my custom/stolen elisp code in ~/.emacs.d/lisp/. This will add that to my load path
+
+#+begin_src emacs-lisp
+  (add-to-list 'load-path "~/.emacs.d/lisp/")
+#+end_src
+
+* Preferences
+
+Turn off ugly window deocration.
+
+#+begin_src emacs-lisp
+  (tool-bar-mode -1)
+  (scroll-bar-mode -1)
+  (menu-bar-mode -1)
+  (blink-cursor-mode -1)
+#+end_src
+
+Shorten the =yes or no= prompts
+
+#+begin_src emacs-lisp
+  (defalias 'yes-or-no-p 'y-or-n-p)
+#+end_src
+
+Move all of the extra save files to ~/.saves
+
+#+begin_src emacs-lisp
+  (setq backup-directory-alist `(("." . "~/.saves")))
+#+end_src
+
+Confirm to kill Emacs whenever not running in Daemon mode
+
+#+begin_src emacs-lisp
+  (setq confirm-kill-emacs 'y-or-n-p)
+#+end_src
+
+Just some user information
+
+#+begin_src emacs-lisp
+  (setq user-full-name "Ethan Carter Edwards"
+	user-mail-address "ethancarteredwards@gmail.com")
+#+end_src
+
+* Misc. Keybinds
+
+From the [[https://github.com/technomancy/better-defaults/blob/master/better-defaults.el]["better defaults" github page]]
+(I'm pretty sure these get overwriteen by Swiper but its okay :) )
+ 
+#+begin_src emacs-lisp
+  (global-set-key (kbd "C-s") 'isearch-forward-regexp)
+  (global-set-key (kbd "C-r") 'isearch-backward-regexp)
+  (global-set-key (kbd "C-M-s") 'isearch-forward)
+  (global-set-key (kbd "C-M-r") 'isearch-backward)
+#+end_src
+
+Enable ibuffer, this thing is amazing, wouldn't use anything else.
+
+#+begin_src emacs-lisp
+  (global-set-key (kbd "C-x C-b") 'ibuffer)
+#+end_src
+
+Keybinds to change the size of windows
+
+#+begin_src emacs-lisp
+  (global-set-key (kbd "S-C-<left>") 'shrink-window-horizontally)
+  (global-set-key (kbd "S-C-<right>") 'enlarge-window-horizontally)
+  (global-set-key (kbd "S-C-<down>") 'enlarge-window)
+  (global-set-key (kbd "S-C-<up>") 'shrink-window)
+#+end_src
+
+Rebind C-S-v to the opposite of M-v, EVIL binds over C-v so I want this back.
+
+#+begin_src emacs-lisp
+  (global-set-key (kbd "C-S-v") 'scroll-up-command)
+#+end_src
+
+* Custom Elisp
+
+Fun little elisp function I wrote following a Howard Abram's tutorial, nothing special.
+
+#+begin_src emacs-lisp
+  (defun my/custom-S-o-from-vim (times)
+    "Inserts a newline(s) above the line conataining the cursor.
+  Very Similar to S-o from Vim"
+    (interactive "p")
+    (save-excursion 
+      (move-beginning-of-line 1)
+      (newline times)))
+
+  (global-set-key (kbd "C-S-o")
+		  'my/custom-S-o-from-vim)
+#+end_src
+
+* Packages
+
+** Theming and Fonts/Faces
+
+*** Fonts/Faces
+
+JetBrains Mono Font, my favorite, I see no reason to use anything else.
+
+#+begin_src emacs-lisp
+  (setq default ((t (:inherit nil :stipple nil :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 98 :width normal :foundry "JB  " :family "JetBrains Mono"))))
+#+end_src
+
+Not super sure what these are, I'm going to comment them out for now...
+
+#+begin_src emacs-lisp
+  (setq ansi-color-faces-vector
+    [default default default italic underline success warning error])
+  (setq ansi-color-names-vector
+    ["black" "#d55e00" "#009e73" "#f8ec59" "#0072b2" "#cc79a7" "#56b4e9" "white"]))
+#+end_src

@@ -38,36 +38,37 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(ansi-color-faces-vector
-   [default default default italic underline success warning error])
- '(ansi-color-names-vector
-   ["black" "#d55e00" "#009e73" "#f8ec59" "#0072b2" "#cc79a7" "#56b4e9" "white"])
+ ;; '(ansi-color-faces-vector
+ ;;   [default default default italic underline success warning error])
+ ;; '(ansi-color-names-vector
+ ;;   ["black" "#d55e00" "#009e73" "#f8ec59" "#0072b2" "#cc79a7" "#56b4e9" "white"])
  '(blink-cursor-mode nil)
  '(custom-enabled-themes '(deeper-blue))
  '(eshell-aliases-file "/home/ece/.emacs.d/eshell-alias")
- '(menu-bar-mode nil)
+ '(ivy-mode t)
+ ;; '(menu-bar-mode nil)
  '(org-agenda-files (list org-directory))
  '(org-directory "~/Nextcloud/Org/")
- '(package-archives
-   '(("gnu" . "https://elpa.gnu.org/packages/")
-     ("melpa" . "https://melpa.org/packages/")
-     ("ublt" . "https://elpa.ubolonton.org/packages/")
-     ("org" . "https://orgmode.org/elpa/")))
- '(package-selected-packages
-   '(nix-mode rainbow-delimiters helpful evil-org rg pdf-tools spotify 2048-game rustic flycheck lsp-ui lsp-mode dashboard debbugs haskell-mode magit-todos evil-magit evil-commentary evil-collection evil elcord ox-twbs org-drill hl-todo chess org powerline vterm docker-compose-mode dockerfile-mode magit use-package))
- '(scroll-bar-mode nil)
- '(tool-bar-mode nil))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(default ((t (:inherit nil :stipple nil :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 98 :width normal :foundry "JB  " :family "JetBrains Mono")))))
+ ;; '(package-archives
+ ;;   '(("gnu" . "https://elpa.gnu.org/packages/")
+ ;;     ("melpa" . "https://melpa.org/packages/")
+ ;;     ("ublt" . "https://elpa.ubolonton.org/packages/")
+ ;;     ("org" . "https://orgmode.org/elpa/")))
+ ;; '(package-selected-packages
+ ;;   '(eshell-git-prompt ivy-rich counsel nix-mode rainbow-delimiters helpful evil-org rg pdf-tools spotify 2048-game rustic flycheck lsp-ui lsp-mode dashboard debbugs haskell-mode magit-todos evil-magit evil-commentary evil-collection evil elcord ox-twbs org-drill hl-todo chess org powerline vterm docker-compose-mode dockerfile-mode magit use-package))
+ ;; '(scroll-bar-mode nil)
+ ;; '(tool-bar-mode nil))
+;; (custom-set-faces
+;;  ;; custom-set-faces was added by Custom.
+;;  ;; If you edit it by hand, you could mess it up, so be careful.
+;;  ;; Your init file should contain only one such instance.
+;;  ;; If there is more than one, they won't work right.
+;;  '(default ((t (:inherit nil :stipple nil :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 98 :width normal :foundry "JB  " :family "JetBrains Mono")))))
 (defalias 'yes-or-no-p 'y-or-n-p)
 (setq backup-directory-alist `(("." . "~/.saves")))
 (set 'ad-redefinition-action 'accept)
 
-(setq initial-buffer-choice "~/Nextcloud/Org/Links.org")
+;; (setq initial-buffer-choice "~/Nextcloud/Org/Links.org")
 
 (when (version<= "26.0.50" emacs-version )
   (global-display-line-numbers-mode))
@@ -125,32 +126,96 @@ Very Similar to S-o from Vim"
 (global-set-key (kbd "C-S-o")
 		'my/custom-S-o-from-vim)
 
-(setq truncate-lines t)
-;; (setq initial-buffer-choice (lambda () (get-buffer "*dashboard*")))
+;; (setq truncate-lines t)
+(setq initial-buffer-choice (lambda () (get-buffer "*dashboard*")))
 
 ;;; Packages
 
 (use-package nix-mode
+  :ensure t
   :mode "\\.nix\\'")
+
+
+;; (ivy-mode 1)
+;; (setq ivy-use-virtual-buffers t)
+;; (setq enable-recursive-minibuffers t)
+;; ;; enable this if you want `swiper' to use it
+;; ;; (setq search-default-mode #'char-fold-to-regexp)
+;; (global-set-key "\C-s" 'swiper)
+;; (global-set-key (kbd "C-c C-r") 'ivy-resume)
+;; (global-set-key (kbd "<f6>") 'ivy-resume)
+;; (global-set-key (kbd "M-x") 'counsel-M-x)
+;; (global-set-key (kbd "C-x C-f") 'counsel-find-file)
+;; (global-set-key (kbd "<f1> f") 'counsel-describe-function)
+;; (global-set-key (kbd "<f1> v") 'counsel-describe-variable)
+;; (global-set-key (kbd "<f1> o") 'counsel-describe-symbol)
+;; (global-set-key (kbd "<f1> l") 'counsel-find-library)
+;; (global-set-key (kbd "<f2> i") 'counsel-info-lookup-symbol)
+;; (global-set-key (kbd "<f2> u") 'counsel-unicode-char)
+;; (global-set-key (kbd "C-c g") 'counsel-git)
+;; (global-set-key (kbd "C-c j") 'counsel-git-grep)
+;; (global-set-key (kbd "C-c k") 'counsel-ag)
+;; (global-set-key (kbd "C-x l") 'counsel-locate)
+;; (global-set-key (kbd "C-S-o") 'counsel-rhythmbox)
+;; (define-key minibuffer-local-map (kbd "C-r") 'counsel-minibuffer-history)
+
+(use-package eshell-git-prompt :ensure t)
+
+(use-package eshell
+  :ensure nil
+  :config
+  (eshell-git-prompt-use-theme 'git-radar))
+
+
+(use-package ivy-rich
+  :ensure t
+  :init
+  (ivy-rich-mode 1))
+
+(use-package counsel
+  :bind (("C-M-j" . 'counsel-switch-buffer)
+         :map minibuffer-local-map
+         ("C-r" . 'counsel-minibuffer-history))
+  :config
+  (counsel-mode 1))
+
+(use-package ivy
+  :diminish
+  :bind (("C-s" . swiper)
+         :map ivy-minibuffer-map
+         ("TAB" . ivy-alt-done)
+         ("C-l" . ivy-alt-done)
+         ("C-j" . ivy-next-line)
+         ("C-k" . ivy-previous-line)
+         :map ivy-switch-buffer-map
+         ("C-k" . ivy-previous-line)
+         ("C-l" . ivy-done)
+         ("C-d" . ivy-switch-buffer-kill)
+         :map ivy-reverse-i-search-map
+         ("C-k" . ivy-previous-line)
+         ("C-d" . ivy-reverse-i-search-kill))
+  :config
+  (setq ivy-initial-inputs-alist nil)
+  (ivy-mode 1))
 
 ;; (use-package org-eldoc)
 
-(use-package helpful
-  :ensure t
-  :bind (("C-h f" . helpful-callable)
-	 ("C-h v" . helpful-variable)
-	 ("C-h k" . helpful-key)
-	 ()))
-
 ;; (use-package helpful
-  ;; ;; :custom
-  ;; ;; (counsel-describe-function-function #'helpful-callable)
-  ;; ;; (counsel-describe-variable-function #'helpful-variable)
-  ;; :bind
-  ;; ;; ([remap describe-function] . counsel-describe-function)
-  ;; ([remap describe-command] . helpful-command)
-  ;; ;; ([remap describe-variable] . counsel-describe-variable)
-  ;; ([remap describe-key] . helpful-key))
+;;   :ensure t
+;;   :bind (("C-h f" . helpful-callable)
+;; 	 ("C-h v" . helpful-variable)
+;; 	 ("C-h k" . helpful-key)
+;; 	 ()))
+
+(use-package helpful
+  :custom
+  (counsel-describe-function-function #'helpful-callable)
+  (counsel-describe-variable-function #'helpful-variable)
+  :bind
+  ([remap describe-function] . counsel-describe-function)
+  ([remap describe-command] . helpful-command)
+  ([remap describe-variable] . counsel-describe-variable)
+  ([remap describe-key] . helpful-key))
 
 (use-package rainbow-delimiters
   :hook (prog-mode . rainbow-delimiters-mode))
@@ -175,8 +240,13 @@ Very Similar to S-o from Vim"
                                            (lsp-format-buffer))))
 	   
 (use-package dashboard
+  :custom
+  (setq initial-buffer-choice (lambda () (get-buffer "*dashboard*")))
+  (dashboard-banner-logo-title "The Grind is not Glamorous - Casey Neistat")
+  ;; (dashboard-startup-banner "~/.emacs.d/ee.png")
+  (dashboard-startup-banner 'logo)
   :config
-  (setq dashboard-items '((recents  . 10)
+  (setq dashboard-items '((recents  . 5)
                         (bookmarks . 5)
                         ;; (projects . 5)
                         (agenda . 5)

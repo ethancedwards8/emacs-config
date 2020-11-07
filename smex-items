@@ -1,0 +1,24 @@
+
+;; ----- smex-history -----
+(
+ dashboard-mode
+ eval-buffer
+ hoogle
+ whois
+ elcord-mode
+ counsel-M-x
+ eshell
+)
+
+;; ----- smex-data -----
+(
+ (load-file . 9)
+ (ftp . 2)
+ (whois . 3)
+ (eshell . 6)
+ (eval-buffer . 2)
+ (counsel-M-x . 1)
+ (elcord-mode . 1)
+ (hoogle . 1)
+ (dashboard-mode . 4)
+)
