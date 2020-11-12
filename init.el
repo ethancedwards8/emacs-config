@@ -35,7 +35,8 @@
 (global-set-key (kbd "C-c I") 'find-config)
 
 ;; (setq custom-file (make-temp-file "emacs-custom"))
-(setq custom-file (expand-file-name "custom.el" user-emacs-directory))
+;; (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
+(setq custom-file (make-temp-file "emacs-custom.el"))
 
 (add-to-list 'load-path "~/.emacs.d/lisp/")
 
@@ -48,15 +49,22 @@
 
 (setq backup-directory-alist `(("." . "~/.saves")))
 
-(when (version<= "26.0.50" emacs-version )
-  (global-display-line-numbers-mode))
+;; (when (version<= "26.0.50" emacs-version )
+;;   (global-display-line-numbers-mode))
 
 ;; (add-hook 'prog-mode-hook 'display-line-numbers-mode)
+
+(dolist (mode '(text-mode-hook
+		prog-mode-hook
+		conf-mode-hook))
+  (add-hook mode (lambda () (display-line-numbers-mode 1))))
 
 (setq confirm-kill-emacs 'y-or-n-p)
 
 (setq user-full-name "Ethan Carter Edwards"
       user-mail-address "ethancarteredwards@gmail.com")
+
+(setq initial-buffer-choice (lambda () (get-buffer "*dashboard*")))
 
 (global-set-key (kbd "C-s") 'isearch-forward-regexp)
 (global-set-key (kbd "C-r") 'isearch-backward-regexp)
@@ -113,7 +121,6 @@ Very Similar to S-o from Vim"
 
 (use-package dashboard
   :custom
-  (initial-buffer-choice (lambda () (get-buffer "*dashboard*")))
   (dashboard-banner-logo-title "The Grind is not Glamorous - Casey Neistat")
   (dashboard-startup-banner "~/.emacs.d/images/floating-meditate.png")
   ;; (dashboard-startup-banner 'logo)
@@ -243,9 +250,10 @@ Very Similar to S-o from Vim"
 (use-package dockerfile-mode)
 
 (use-package elcord
-  :config
-  (when (string= (system-name) "archpc")
-    (elcord-mode)))
+  ;; :config
+  ;; (when (string= (system-name) "archpc")
+  ;;   (elcord-mode))
+  )
 
 (use-package chess)
 

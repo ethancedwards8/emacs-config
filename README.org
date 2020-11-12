@@ -80,7 +80,8 @@ Stops Emacs from adding weird things to =init.el= This creates a temporary file 
 
 #+begin_src emacs-lisp
   ;; (setq custom-file (make-temp-file "emacs-custom"))
-  (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
+  ;; (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
+  (setq custom-file (make-temp-file "emacs-custom.el"))
 #+end_src
 
 ** Add elisp directory to load-path
@@ -117,10 +118,15 @@ Move all of the extra save files to ~/.saves
 Display line numbers, might change only to prog, text, and conf mode later
 
 #+begin_src emacs-lisp
-  (when (version<= "26.0.50" emacs-version )
-    (global-display-line-numbers-mode))
+  ;; (when (version<= "26.0.50" emacs-version )
+  ;;   (global-display-line-numbers-mode))
 
   ;; (add-hook 'prog-mode-hook 'display-line-numbers-mode)
+
+  (dolist (mode '(text-mode-hook
+		  prog-mode-hook
+		  conf-mode-hook))
+    (add-hook mode (lambda () (display-line-numbers-mode 1))))
 #+end_src
 
 Confirm to kill Emacs whenever not running in Daemon mode
@@ -134,6 +140,12 @@ Just some user information
 #+begin_src emacs-lisp
   (setq user-full-name "Ethan Carter Edwards"
 	user-mail-address "ethancarteredwards@gmail.com")
+#+end_src
+
+Set Dashboard as my initial buffer
+
+#+begin_src emacs-lisp
+  (setq initial-buffer-choice (lambda () (get-buffer "*dashboard*")))
 #+end_src
 
 * Misc. Keybinds
@@ -251,7 +263,6 @@ Dashboard is a package that runs at startup that has useful imformation and quic
 #+begin_src emacs-lisp
   (use-package dashboard
     :custom
-    (initial-buffer-choice (lambda () (get-buffer "*dashboard*")))
     (dashboard-banner-logo-title "The Grind is not Glamorous - Casey Neistat")
     (dashboard-startup-banner "~/.emacs.d/images/floating-meditate.png")
     ;; (dashboard-startup-banner 'logo)
@@ -489,9 +500,10 @@ These packages are kinda fun, don't really have much of a point
 Elcord - Discord rich presence 
 #+begin_src emacs-lisp
   (use-package elcord
-    :config
-    (when (string= (system-name) "archpc")
-      (elcord-mode)))
+    ;; :config
+    ;; (when (string= (system-name) "archpc")
+    ;;   (elcord-mode))
+    )
 #+end_src
 
 Chess - play chess inside of Emacs!
