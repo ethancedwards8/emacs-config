@@ -83,6 +83,16 @@ Very Similar to S-o from Vim"
 (global-set-key (kbd "C-S-o")
 		'my/custom-S-o-from-vim)
 
+;; Automatically tangle our Emacs.org config file when we save it
+(defun my/org-babel-tangle-config ()
+  (when (string-equal (buffer-file-name)
+		      (expand-file-name "~/.emacs.d/README.org"))
+    ;; Dynamic scoping to the rescue
+    (let ((org-confirm-babel-evaluate nil))
+      (org-babel-tangle))))
+
+(add-hook 'org-mode-hook (lambda () (add-hook 'after-save-hook #'my/org-babel-tangle-config)))
+
 ;; (setq default ((t (:inherit nil :stipple nil :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 98 :width normal :foundry "JB  " :family "JetBrains Mono"))))
 
 (set-face-attribute 'default t :inherit nil :stipple nil :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant 'normal :weight 'normal :height 98 :width 'normal :foundry "JB  " :family "JetBrains Mono")
@@ -198,6 +208,11 @@ Very Similar to S-o from Vim"
     (setq eshell-visual-commands '("htop" "iotop")))
 
   (eshell-git-prompt-use-theme 'git-radar))
+
+(use-package rainbow-mode
+  :config
+  ;; (setq rainbow-x-colors nil)
+  (add-hook 'prog-mode-hook 'rainbow-mode))
 
 (use-package rainbow-delimiters
   :hook (prog-mode . rainbow-delimiters-mode))

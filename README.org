@@ -2,6 +2,7 @@
 #+AUTHOR: Ethan Carter Edwards
 #+OPTIONS: toc:t
 #+PROPERTY: header-args:emacs-lisp :tangle ./init.el :mkdirp yes
+#+LATEX_HEADER: \usepackage[a4paper, left=1.5cm, right=1.5cm, top=2cm, bottom=2cm]{geometry}
 
 This setup was highly inspired by [[https://jamiecollinson.com/blog/my-emacs-config/#footnote-1][Jamie Collinson's config]]
 
@@ -137,7 +138,7 @@ Just some user information
 
 * Misc. Keybinds
 
-From the [[https://github.com/technomancy/better-defaults/blob/master/better-defaults.el]["better defaults" github page]]
+From the [[https://github.com/technomancy/better-defaults/blob/master/better-defaults.el][better defaults github page]]
 (I'm pretty sure these get overwriteen by Swiper but its okay :) )
  
 #+begin_src emacs-lisp
@@ -183,6 +184,20 @@ Fun little elisp function I wrote following a Howard Abram's tutorial, nothing s
 
   (global-set-key (kbd "C-S-o")
 		  'my/custom-S-o-from-vim)
+#+end_src
+
+[[https://github.com/daviwil/emacs-from-scratch/blob/master/Emacs.org#auto-tangle-configuration-files][Stolen from David]] :)
+
+#+begin_src emacs-lisp
+  ;; Automatically tangle our Emacs.org config file when we save it
+  (defun my/org-babel-tangle-config ()
+    (when (string-equal (buffer-file-name)
+			(expand-file-name "~/.emacs.d/README.org"))
+      ;; Dynamic scoping to the rescue
+      (let ((org-confirm-babel-evaluate nil))
+	(org-babel-tangle))))
+
+  (add-hook 'org-mode-hook (lambda () (add-hook 'after-save-hook #'my/org-babel-tangle-config)))
 #+end_src
 
 * Packages
@@ -392,6 +407,14 @@ eshell-git-prompt gives me a git prompt for eshell, kinda in the name xD
 ** General tools
 
 These are some general tools that I use, they don't really belong in any category.
+
+Rainbow-mode
+#+begin_src emacs-lisp
+  (use-package rainbow-mode
+    :config
+    ;; (setq rainbow-x-colors nil)
+    (add-hook 'prog-mode-hook 'rainbow-mode))
+#+end_src
 
 Rainbow-delimiters
 #+begin_src emacs-lisp
