@@ -1,7 +1,7 @@
 #+TITLE: Ethan Edward's Emacs Configuration
 #+AUTHOR: Ethan Carter Edwards
 #+OPTIONS: toc:t
-#+PROPERTY: header-args:emacs-lisp :tangle ./test.el :mkdirp yes
+#+PROPERTY: header-args:emacs-lisp :tangle ./init.el :mkdirp yes
 
 This setup was highly inspired by [[https://jamiecollinson.com/blog/my-emacs-config/#footnote-1][Jamie Collinson's config]]
 
@@ -70,7 +70,7 @@ Benchmark's my startup, when running as daemon I won't see this message so I can
     (interactive)
     (find-file "~/.emacs.d/README.org"))
 
-  (global-set-key (kbd "C-c I") 'find-config
+  (global-set-key (kbd "C-c I") 'find-config)
 #+end_src
 
 ** Set custom settings to load in own file
@@ -113,6 +113,15 @@ Move all of the extra save files to ~/.saves
   (setq backup-directory-alist `(("." . "~/.saves")))
 #+end_src
 
+Display line numbers, might change only to prog, text, and conf mode later
+
+#+begin_src emacs-lisp
+  (when (version<= "26.0.50" emacs-version )
+    (global-display-line-numbers-mode))
+
+  ;; (add-hook 'prog-mode-hook 'display-line-numbers-mode)
+#+end_src
+
 Confirm to kill Emacs whenever not running in Daemon mode
 
 #+begin_src emacs-lisp
@@ -153,7 +162,7 @@ Keybinds to change the size of windows
   (global-set-key (kbd "S-C-<up>") 'shrink-window)
 #+end_src
 
-Rebind C-S-v to the opposite of M-v, EVIL binds over C-v so I want this back.
+Rebind C-S-v to the opposite of M-v, EVIL binds over C-v and I want this back.
 
 #+begin_src emacs-lisp
   (global-set-key (kbd "C-S-v") 'scroll-up-command)
@@ -185,7 +194,9 @@ Fun little elisp function I wrote following a Howard Abram's tutorial, nothing s
 JetBrains Mono Font, my favorite, I see no reason to use anything else.
 
 #+begin_src emacs-lisp
-  (setq default ((t (:inherit nil :stipple nil :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 98 :width normal :foundry "JB  " :family "JetBrains Mono"))))
+  ;; (setq default ((t (:inherit nil :stipple nil :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 98 :width normal :foundry "JB  " :family "JetBrains Mono"))))
+
+  (set-face-attribute 'default t :inherit nil :stipple nil :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant 'normal :weight 'normal :height 98 :width 'normal :foundry "JB  " :family "JetBrains Mono")
 #+end_src
 
 Not super sure what these are, I'm going to comment them out for now...
@@ -194,5 +205,289 @@ Not super sure what these are, I'm going to comment them out for now...
   (setq ansi-color-faces-vector
     [default default default italic underline success warning error])
   (setq ansi-color-names-vector
-    ["black" "#d55e00" "#009e73" "#f8ec59" "#0072b2" "#cc79a7" "#56b4e9" "white"]))
+    ["black" "#d55e00" "#009e73" "#f8ec59" "#0072b2" "#cc79a7" "#56b4e9" "white"])
 #+end_src
+
+*** Themes
+
+The doom themes are really nice, I might switch back to the `deeper-blue' theme .
+
+#+Begin_src emacs-lisp
+  (use-package spacegray-theme :defer t)
+  (use-package doom-themes
+    :defer t
+    :init (load-theme 'doom-palenight t))
+#+end_src
+
+*** Modeline
+
+Powerline modeline, has everything I need, I might switch to doom-modeline
+
+#+begin_src emacs-lisp
+  (use-package powerline
+    :config
+    (powerline-default-theme))
+#+end_src
+
+*** Dashboard
+
+Dashboard is a package that runs at startup that has useful imformation and quick links to files.
+
+#+begin_src emacs-lisp
+  (use-package dashboard
+    :custom
+    (initial-buffer-choice (lambda () (get-buffer "*dashboard*")))
+    (dashboard-banner-logo-title "The Grind is not Glamorous - Casey Neistat")
+    (dashboard-startup-banner "~/.emacs.d/images/floating-meditate.png")
+    ;; (dashboard-startup-banner 'logo)
+    :config
+    (setq dashboard-items '((recents  . 5)
+			  (bookmarks . 5)
+			  ;; (projects . 5)
+			  (agenda . 5)
+			  (registers . 5)))
+    (dashboard-setup-startup-hook))
+#+end_src
+
+** Interface
+
+This is the packages that integrate with my workflow, Ivy, Evil, Magit, Org stuff, etc.
+
+*** Evil Mode
+
+Evil mode emulates Vi/Vim keybinds for Emacs
+
+#+begin_src emacs-lisp
+  (use-package evil
+    :init
+    (setq evil-want-integration t)
+    (setq evil-want-keybinding nil)
+    :config
+    (evil-mode 1))
+#+end_src
+
+Evil-collection adds Evil binds to the rest of Emacs
+
+#+begin_src emacs-lisp
+  (use-package evil-collection
+    :after evil
+    :config
+    (evil-collection-init))
+#+end_src
+
+Evil-commentary adds better commenting functionality to evil, =gcc= comments out any line.
+
+#+begin_src emacs-lisp
+  (use-package evil-commentary
+    :diminish
+    :config
+    (evil-commentary-mode))
+#+end_src
+
+Evil-org adds evil functionality to org mode, very helpful
+
+#+begin_src emacs-lisp
+  (use-package evil-org
+    ;; :diminish evil-org
+    :after org
+    :config
+    (add-hook 'org-mode-hook 'evil-org-mode)
+    (add-hook 'evil-org-mode-hook
+	      (lambda ()
+		(evil-org-set-key-theme)))
+    (require 'evil-org-agenda)
+    (evil-org-agenda-set-keys))
+#+end_src
+
+*** Magit
+
+Magit, the Git client for Emacs, I love it, you love it, everyone loves it.
+
+Also installing evil-magit for evil integration with magit, evil-collection should replace it soon :tm: 
+
+#+begin_src emacs-lisp
+  (use-package magit
+    :bind (("C-x g" . magit-status)))
+
+  ;; (global-set-key (kbd "C-x g") 'magit-status)
+
+  (use-package evil-magit
+    :after magit)
+
+  (use-package magit-todos
+    :defer t)
+
+  ;; Pulled from David Wilson's config, probably won't use
+  (global-set-key (kbd "C-M-;") 'magit-status)
+#+end_src
+  
+*** Org mode
+
+Org mode is literally the best, I'm writing this config in org, what else do you need?
+
+The recursive agenda bit can be [[https://www.reddit.com/r/orgmode/comments/6q6cdk/adding_files_to_the_agenda_list_recursively/dkvokt1?utm_source=share&utm_medium=web2x&context=3][found here]]
+#+begin_src emacs-lisp
+  (use-package org
+    :custom
+    (org-directory "~/Nextcloud/org")
+    (diary-file "~/Nextcloud/emacs-diary")
+    (org-log-done t)
+    (org-agenda-include-diary t)
+    :bind (("C-c l" . org-stored-link)
+	   ("C-c a" . org-agenda)
+	   ("C-c c" . org-capture))
+    :config
+    (eval-after-load "org"
+      '(require 'ox-md nil t))
+    (eval-after-load "org"
+      '(require 'org-tempo))
+    ;; (setq org-log-done t)
+    ;; (setq diary-file "~/Nextcloud/emacs-diary")
+
+    ;; Have org-agenda files list recursively
+    (setq org-agenda-files (apply 'append
+				  (mapcar
+				   (lambda (directory)
+				     (directory-files-recursively
+				      directory org-agenda-file-regexp))
+				   '("~/Nextcloud/Org/")))))
+#+end_src
+
+ox-twbs - Org mode export twitter bootstrap I think? Not sure how I got this packages installed.
+#+begin_src emacs-lisp
+  (use-package ox-twbs)
+#+end_src
+ 
+*** Terminal modes
+
+**** vterm
+
+I use vterm for the cases when I need a terminal emulator, I try to use eshell as much as possible.
+
+#+begin_src emacs-lisp
+  (use-package vterm
+    :bind (("C-x v" . vterm)))
+#+end_src
+
+**** eshell
+ 
+Eshell is probably my favorite shell for Emacs, its fast and just works :tm:
+
+eshell-git-prompt gives me a git prompt for eshell, kinda in the name xD
+
+#+begin_src emacs-lisp
+  (use-package eshell-git-prompt)
+
+  (use-package eshell
+    :ensure nil
+    :custom (eshell-aliases-file "~/.emacs.d/eshell-alias")
+    :config
+    (with-eval-after-load 'esh-opt
+      (setq eshell-destory-buffer-when-process-dies t)
+      (setq eshell-visual-commands '("htop" "iotop")))
+
+    (eshell-git-prompt-use-theme 'git-radar))
+#+end_src
+
+** General tools
+
+These are some general tools that I use, they don't really belong in any category.
+
+Rainbow-delimiters
+#+begin_src emacs-lisp
+  (use-package rainbow-delimiters
+    :hook (prog-mode . rainbow-delimiters-mode))
+#+end_src
+
+Helpful - better help buffer
+#+begin_src emacs-lisp
+  (use-package helpful
+    :custom
+    (counsel-describe-function-function #'helpful-callable)
+    (counsel-describe-variable-function #'helpful-variable)
+    :bind
+    ([remap describe-function] . counsel-describe-function)
+    ([remap describe-command] . helpful-command)
+    ([remap describe-variable] . counsel-describe-variable)
+    ([remap describe-key] . helpful-key))
+#+end_src
+
+Rg - Ripgrep inside of Emacs
+#+begin_src emacs-lisp
+  (use-package rg)
+#+end_src
+
+Hl-todo - highlight TODO keywords and the like
+#+begin_src emacs-lisp
+    (use-package hl-todo
+      :config
+      (hl-todo-mode))
+#+end_src
+
+** Programming
+
+*** Nix
+
+Nix is a fully function programming language centered around the NixOS ecosystem, I'm learning it currently and plan to switch soon :tm:
+
+#+begin_src emacs-lisp
+  (use-package nix-mode
+    :mode "\\.nix\\'")
+#+end_src
+
+*** Haskell
+
+Haskell is a general purpose, statically typed, purely function programming language with type inference and lazy evaluation.
+
+I have a bit of a thing for functional programming, learning Haskell is on my list of TODO's
+
+#+begin_src emacs-lisp
+  (use-package haskell-mode)
+#+end_src
+
+*** Docker
+
+I use Docker everyday for work, home, testing out programs, etc. So consequently I edit a LOT of yaml files.
+
+This gives better syntax highlighting, code completion, etc in docker-compose.yml files
+#+begin_src emacs-lisp
+  (use-package docker-compose-mode)
+#+end_src
+
+Same as above except for in Dockerfiles
+#+begin_src emacs-lisp
+  (use-package dockerfile-mode)
+#+end_src
+
+** Fun packages
+
+These packages are kinda fun, don't really have much of a point
+
+Elcord - Discord rich presence 
+#+begin_src emacs-lisp
+  (use-package elcord
+    :config
+    (when (string= (system-name) "archpc")
+      (elcord-mode)))
+#+end_src
+
+Chess - play chess inside of Emacs!
+#+Begin_src emacs-lisp
+  (use-package chess)
+#+end_src
+
+* TODO Sort out eventually
+
+Figure out what to do with =(custom-enabled-themes '(deeper-blue))=, I'll probably put all my themes in a Hydra.
+
+I had this in my old config =(set 'ad-redefinition-action 'accept)=, not sure what its for.
+
+Have these too, need to sort out eventually...
+#+begin_src emacs-lisp
+  (setq-default c-basic-offset 8)
+  (setq c-default-style '((java-mode . "java")
+			  (awk-mode . "awk")
+			  (other . "linux")))
+#+end_src
+
+Get ivy up and running

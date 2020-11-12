@@ -103,7 +103,7 @@ Very Similar to S-o from Vim"
 
 (use-package dashboard
   :custom
-  (initial-buffer-choice (lambda () (get-buffer "*dashboard*")))
+  (setq initial-buffer-choice (lambda () (get-buffer "*dashboard*")))
   (dashboard-banner-logo-title "The Grind is not Glamorous - Casey Neistat")
   (dashboard-startup-banner "~/.emacs.d/images/floating-meditate.png")
   ;; (dashboard-startup-banner 'logo)
@@ -180,7 +180,7 @@ Very Similar to S-o from Vim"
 				 (lambda (directory)
 				   (directory-files-recursively
 				    directory org-agenda-file-regexp))
-				 '("~/Nextcloud/Org/")))))
+				 '("~/Nextcloud/Org/"))))
 
 (use-package ox-twbs)
 

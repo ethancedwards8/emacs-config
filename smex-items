@@ -1,13 +1,13 @@
 
 ;; ----- smex-history -----
 (
- dashboard-mode
- eval-buffer
- hoogle
- whois
- elcord-mode
- counsel-M-x
- eshell
+ org-babel-tangle
+ imenu
+ counsel-imenu
+ hl-todo-mode
+ evil-org-mode
+ customize
+ package-install
 )
 
 ;; ----- smex-data -----
@@ -15,10 +15,24 @@
  (load-file . 9)
  (ftp . 2)
  (whois . 3)
- (eshell . 6)
+ (eshell . 12)
  (eval-buffer . 2)
  (counsel-M-x . 1)
- (elcord-mode . 1)
+ (elcord-mode . 3)
  (hoogle . 1)
  (dashboard-mode . 4)
+ (counsel-imenu . 7)
+ (counsel-fzf . 1)
+ (eww . 1)
+ (imenu . 3)
+ (vterm . 1)
+ (customize-themes . 1)
+ (org-babel-tangle . 22)
+ (shell-command . 1)
+ (cycle-spacing . 2)
+ (package-install . 3)
+ (package-refresh-contents . 1)
+ (customize . 1)
+ (evil-org-mode . 8)
+ (hl-todo-mode . 5)
 )
