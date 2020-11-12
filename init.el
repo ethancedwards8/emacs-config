@@ -66,6 +66,12 @@
 
 (setq initial-buffer-choice (lambda () (get-buffer "*dashboard*")))
 
+;; '(warning-suppress-log-types '((comp) (comp)))
+ ;; '(warning-suppress-types '((comp))))
+
+(setq warning-supress-log-types '((comp)))
+(setq warning-supress-types '((comp)))
+
 (global-set-key (kbd "C-s") 'isearch-forward-regexp)
 (global-set-key (kbd "C-r") 'isearch-backward-regexp)
 (global-set-key (kbd "C-M-s") 'isearch-forward)
@@ -215,6 +221,33 @@ Very Similar to S-o from Vim"
     (setq eshell-visual-commands '("htop" "iotop")))
 
   (eshell-git-prompt-use-theme 'git-radar))
+
+(use-package ivy
+  :diminish
+  :custom (ivy-initial-inputs-alist nil)
+  :bind (("C-s" . counsel-grep-or-swiper)
+         ("C-S-s" . swiper)
+	 :map ivy-minibuffer-map
+	 ("TAB" . ivy-alt-done)
+	 ("C-j" . ivy-next-line)
+	 ("C-k" . ivy-previous-line)
+	 :map ivy-switch-buffer-map
+	 ("C-k" . ivy-previous-line)
+	 ("C-j" . ivy-next-line)
+	 ("C-d" . ivy-switch-buffer-kill))
+  :config
+  (ivy-mode 1))
+
+(use-package ivy-rich
+  :init
+  (ivy-rich-mode 1))
+
+(use-package counsel
+  :bind (("C-x j" . 'counsel-switch-buffer)
+	 :map minibuffer-local-map
+	 ("C-r" . 'counsel-minibuffer-history))
+  :config
+  (counsel-mode 1))
 
 (use-package rainbow-mode
   :config

@@ -148,6 +148,16 @@ Set Dashboard as my initial buffer
   (setq initial-buffer-choice (lambda () (get-buffer "*dashboard*")))
 #+end_src
 
+Disable nativecomp logs, they're very annoying.
+
+#+begin_src emacs-lisp
+   ;; '(warning-suppress-log-types '((comp) (comp)))
+   ;; '(warning-suppress-types '((comp))))
+
+  (setq warning-supress-log-types '((comp)))
+  (setq warning-supress-types '((comp)))
+#+end_src
+
 * Misc. Keybinds
 
 From the [[https://github.com/technomancy/better-defaults/blob/master/better-defaults.el][better defaults github page]]
@@ -413,6 +423,48 @@ eshell-git-prompt gives me a git prompt for eshell, kinda in the name xD
       (setq eshell-visual-commands '("htop" "iotop")))
 
     (eshell-git-prompt-use-theme 'git-radar))
+#+end_src
+
+*** Completion framework(s)
+
+I use Ivy, it's a completion framework for Emacs, I'm in the process of learning how to configure mine.
+
+This is the initial setup of Ivy, this is bound to change drastically over time.
+#+begin_src emacs-lisp
+  (use-package ivy
+    :diminish
+    :custom (ivy-initial-inputs-alist nil)
+    :bind (("C-s" . counsel-grep-or-swiper)
+           ("C-S-s" . swiper)
+	   :map ivy-minibuffer-map
+	   ("TAB" . ivy-alt-done)
+	   ("C-j" . ivy-next-line)
+	   ("C-k" . ivy-previous-line)
+	   :map ivy-switch-buffer-map
+	   ("C-k" . ivy-previous-line)
+	   ("C-j" . ivy-next-line)
+	   ("C-d" . ivy-switch-buffer-kill))
+    :config
+    (ivy-mode 1))
+#+end_src
+
+Ivy Rich provides a nicer interface to Ivy in my opinion.
+
+#+begin_src emacs-lisp
+  (use-package ivy-rich
+    :init
+    (ivy-rich-mode 1))
+#+end_src
+
+Counsel takes Ivy further.
+
+#+begin_src emacs-lisp
+  (use-package counsel
+    :bind (("C-x j" . 'counsel-switch-buffer)
+	   :map minibuffer-local-map
+	   ("C-r" . 'counsel-minibuffer-history))
+    :config
+    (counsel-mode 1))
 #+end_src
 
 ** General tools
