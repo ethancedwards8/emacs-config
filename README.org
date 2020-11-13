@@ -23,7 +23,7 @@ I'll also probably put this somewhere on [[https://ethancedwards.com][my site]] 
 
 ** Configure package sources and =use-package= + Garbage Collection
 
-Add repo's. ELPA, MELPA, org, and ublt. =package-enable-at-startup= improves startup time.
+Add repo's. ELPA, MELPA, org, and ublt. 
 
 #+begin_src emacs-lisp
   ;; NOTE: init.el is now generated from Emacs.org.  Please edit that file
@@ -402,7 +402,14 @@ I use vterm for the cases when I need a terminal emulator, I try to use eshell a
 
 #+begin_src emacs-lisp
   (use-package vterm
-    :bind (("C-x v" . vterm)))
+    :custom
+    (vterm-always-compile-module t)
+    (vterm-kill-buffer-on-exit t)
+    :bind (("C-x v" . vterm)
+	   ("C-x 4 v" . vterm-other-window)
+	   :map vterm-mode-map
+	   ;; came up with this myself, pretty proud of it not going to lie :)
+	   ("<C-backspace>" . (lambda () (interactive) (vterm-send-meta-backspace)))))
 #+end_src
 
 **** eshell
@@ -422,7 +429,7 @@ eshell-git-prompt gives me a git prompt for eshell, kinda in the name xD
       (setq eshell-destory-buffer-when-process-dies t)
       (setq eshell-visual-commands '("htop" "iotop")))
 
-    (eshell-git-prompt-use-theme 'git-radar))
+    (eshell-git-prompt-use-theme 'powerline))
 #+end_src
 
 *** Completion framework(s)
@@ -465,6 +472,34 @@ Counsel takes Ivy further.
 	   ("C-r" . 'counsel-minibuffer-history))
     :config
     (counsel-mode 1))
+#+end_src
+
+** Keybinds
+
+*** Leader key
+
+#+begin_src emacs-lisp
+  (use-package general
+    :config
+    (general-auto-unbind-keys)
+    (general-override-mode +1)
+
+    (general-create-definer my/leader-key
+      :states '(normal insert visual emacs treemacs)
+      :keymap 'override
+      :prefix "SPC"
+      :global-prefix "C-SPC"
+      :non-normal-prefix "C-SPC"))
+#+end_src
+
+*** Hydra's
+
+*** Leader functions
+    
+#+begin_src emacs-lisp
+  (my/leader-key 
+	"SPC"   '(counsel-find-file :wk "counsel find file")
+	"TAB" '(evil-switch-to-windows-last-buffer :wk "switch to previous buffer"))
 #+end_src
 
 ** General tools
@@ -567,8 +602,6 @@ Chess - play chess inside of Emacs!
 
 Figure out what to do with =(custom-enabled-themes '(deeper-blue))=, I'll probably put all my themes in a Hydra.
 
-I had this in my old config =(set 'ad-redefinition-action 'accept)=, not sure what its for.
-
 Have these too, need to sort out eventually...
 #+begin_src emacs-lisp
   (setq-default c-basic-offset 8)
@@ -576,5 +609,3 @@ Have these too, need to sort out eventually...
 			  (awk-mode . "awk")
 			  (other . "linux")))
 #+end_src
-
-Get ivy up and running

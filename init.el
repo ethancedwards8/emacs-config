@@ -208,7 +208,14 @@ Very Similar to S-o from Vim"
 (use-package ox-twbs)
 
 (use-package vterm
-  :bind (("C-x v" . vterm)))
+  :custom
+  (vterm-always-compile-module t)
+  (vterm-kill-buffer-on-exit t)
+  :bind (("C-x v" . vterm)
+	 ("C-x 4 v" . vterm-other-window)
+	 :map vterm-mode-map
+	 ;; came up with this myself, pretty proud of it not going to lie :)
+	 ("<C-backspace>" . (lambda () (interactive) (vterm-send-meta-backspace)))))
 
 (use-package eshell-git-prompt)
 
@@ -220,7 +227,7 @@ Very Similar to S-o from Vim"
     (setq eshell-destory-buffer-when-process-dies t)
     (setq eshell-visual-commands '("htop" "iotop")))
 
-  (eshell-git-prompt-use-theme 'git-radar))
+  (eshell-git-prompt-use-theme 'powerline))
 
 (use-package ivy
   :diminish
@@ -248,6 +255,22 @@ Very Similar to S-o from Vim"
 	 ("C-r" . 'counsel-minibuffer-history))
   :config
   (counsel-mode 1))
+
+(use-package general
+  :config
+  (general-auto-unbind-keys)
+  (general-override-mode +1)
+
+  (general-create-definer my/leader-key
+    :states '(normal insert visual emacs treemacs)
+    :keymap 'override
+    :prefix "SPC"
+    :global-prefix "C-SPC"
+    :non-normal-prefix "C-SPC"))
+
+(my/leader-key 
+      "SPC"   '(counsel-find-file :wk "counsel find file")
+      "TAB" '(evil-switch-to-windows-last-buffer :wk "switch to previous buffer"))
 
 (use-package rainbow-mode
   :config
