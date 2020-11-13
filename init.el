@@ -10,9 +10,6 @@
 			 ("org" . "https://orgmode.org/elpa/")))
 
 (package-initialize)
-(unless package-archive-contents
-  (package-refresh-contents))
-
 (unless (package-installed-p 'use-package)
   (package-install 'use-package))
 
@@ -72,10 +69,12 @@
 (setq warning-supress-log-types '((comp)))
 (setq warning-supress-types '((comp)))
 
-(global-set-key (kbd "C-s") 'isearch-forward-regexp)
-(global-set-key (kbd "C-r") 'isearch-backward-regexp)
-(global-set-key (kbd "C-M-s") 'isearch-forward)
-(global-set-key (kbd "C-M-r") 'isearch-backward)
+;; (global-set-key (kbd "C-s") 'isearch-forward-regexp)
+;; (global-set-key (kbd "C-r") 'isearch-backward-regexp)
+;; (global-set-key (kbd "C-M-s") 'isearch-forward)
+;; (global-set-key (kbd "C-M-r") 'isearch-backward)
+(global-set-key (kbd "C-M-s") 'isearch-forward-regexp)
+(global-set-key (kbd "C-M-r") 'isearch-backward-regexp)
 
 (global-set-key (kbd "C-x C-b") 'ibuffer)
 
@@ -121,9 +120,13 @@ Very Similar to S-o from Vim"
   :defer t
   :init (load-theme 'doom-palenight t))
 
-(use-package powerline
-  :config
-  (powerline-default-theme))
+;; (use-package powerline
+;;   :config
+;;   (powerline-default-theme))
+
+(use-package doom-modeline
+  :init (doom-modeline-mode 1)
+  :custom ((doom-modeline-height 30)))
 
 (use-package dashboard
   :custom
@@ -194,23 +197,26 @@ Very Similar to S-o from Vim"
     '(require 'ox-md nil t))
   (eval-after-load "org"
     '(require 'org-tempo))
-  ;; (setq org-log-done t)
-  ;; (setq diary-file "~/Nextcloud/emacs-diary")
+  (add-to-list 'org-structure-template-alist '("sh" . "src shell"))
+  (add-to-list 'org-structure-template-alist '("el" . "src emacs-lisp"))
+  (add-to-list 'org-structure-template-alist '("py" . "src python"))
 
   ;; Have org-agenda files list recursively
-  (setq org-agenda-files (apply 'append
-				(mapcar
-				 (lambda (directory)
-				   (directory-files-recursively
-				    directory org-agenda-file-regexp))
-				 '("~/Nextcloud/Org/")))))
+  (defun refresh-org-files ()
+    (interactive)
+    (setq org-agenda-files (apply 'append
+				  (mapcar
+				   (lambda (directory)
+				     (directory-files-recursively
+				      directory org-agenda-file-regexp))
+				   '("~/Nextcloud/Org/")))))
+  (refresh-org-files))
 
 (use-package ox-twbs)
 
 (use-package vterm
   :custom
   (vterm-always-compile-module t)
-  (vterm-kill-buffer-on-exit t)
   :bind (("C-x v" . vterm)
 	 ("C-x 4 v" . vterm-other-window)
 	 :map vterm-mode-map
@@ -300,6 +306,10 @@ Very Similar to S-o from Vim"
   :mode "\\.nix\\'")
 
 (use-package haskell-mode)
+
+(use-package yaml-mode
+  :mode ("\\.yml\\'" . yaml-mode)
+	("\\.yaml\\'" . yaml-mode))
 
 (use-package docker-compose-mode)
 
