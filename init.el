@@ -263,10 +263,7 @@ Very Similar to S-o from Vim"
   :config
   (counsel-mode 1))
 
-(use-package exwm
-  :config
-  (require 'exwm-config)
-  (exwm-config-example))
+(use-package exwm)
 
 (use-package general
   :config

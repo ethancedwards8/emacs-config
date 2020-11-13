@@ -499,10 +499,7 @@ Counsel takes Ivy further.
 EXWM is an X window manager for Emacs. Currently I use bspwm but I'm open to trying EXWM out.
 
 #+begin_src emacs-lisp
-  (use-package exwm
-    :config
-    (require 'exwm-config)
-    (exwm-config-example))
+  (use-package exwm)
 #+end_src
 
 ** Keybinds
