@@ -32,8 +32,8 @@
 (global-set-key (kbd "C-c I") 'find-config)
 
 ;; (setq custom-file (make-temp-file "emacs-custom"))
-;; (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
-(setq custom-file (make-temp-file "emacs-custom.el"))
+(setq custom-file (expand-file-name "custom.el" user-emacs-directory))
+;; (setq custom-file (make-temp-file "emacs-custom.el"))
 
 (add-to-list 'load-path "~/.emacs.d/lisp/")
 
@@ -263,6 +263,11 @@ Very Similar to S-o from Vim"
   :config
   (counsel-mode 1))
 
+(use-package exwm
+  :config
+  (require 'exwm-config)
+  (exwm-config-example))
+
 (use-package general
   :config
   (general-auto-unbind-keys)
@@ -278,7 +283,8 @@ Very Similar to S-o from Vim"
 (my/leader-key 
       "SPC"  '(counsel-find-file :wk "counsel find file")
       "o r" '(my/refresh-org-files :wk "refresh my org files")
-      "o A" '(org-agenda :wk "org agenda")
+      "I" '(find-config :wk "edit README.org/init.el")
+      ;; "o a" '(org-agenda :wk "org agenda")
       "TAB" '(evil-switch-to-windows-last-buffer :wk "switch to previous buffer"))
 
 (use-package rainbow-mode

@@ -50,7 +50,6 @@ Add repo's. ELPA, MELPA, org, and ublt.
 Benchmark's my startup, when running as daemon I won't see this message so I can view it in =*Messages*=
 
 #+begin_src emacs-lisp
-
   (add-hook 'emacs-startup-hook
 	    (lambda ()
 	      (message "Emacs ready in %s with %d garbage collections."
@@ -77,8 +76,8 @@ Stops Emacs from adding weird things to =init.el= This creates a temporary file 
 
 #+begin_src emacs-lisp
   ;; (setq custom-file (make-temp-file "emacs-custom"))
-  ;; (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
-  (setq custom-file (make-temp-file "emacs-custom.el"))
+  (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
+  ;; (setq custom-file (make-temp-file "emacs-custom.el"))
 #+end_src
 
 ** Add elisp directory to load-path
@@ -192,6 +191,8 @@ Rebind C-S-v to the opposite of M-v, EVIL binds over C-v and I want this back.
 
 * Custom Elisp
 
+** Howard Abram's tutorial lisp
+
 Fun little elisp function I wrote following a Howard Abram's tutorial, nothing special.
 
 #+begin_src emacs-lisp
@@ -206,6 +207,8 @@ Fun little elisp function I wrote following a Howard Abram's tutorial, nothing s
   (global-set-key (kbd "C-S-o")
 		  'my/custom-S-o-from-vim)
 #+end_src
+
+** Auto bablel README.org after saving
 
 [[https://github.com/daviwil/emacs-from-scratch/blob/master/Emacs.org#auto-tangle-configuration-files][Stolen from David]] :)
 
@@ -491,6 +494,17 @@ Counsel takes Ivy further.
     (counsel-mode 1))
 #+end_src
 
+** EXWM
+
+EXWM is an X window manager for Emacs. Currently I use bspwm but I'm open to trying EXWM out.
+
+#+begin_src emacs-lisp
+  (use-package exwm
+    :config
+    (require 'exwm-config)
+    (exwm-config-example))
+#+end_src
+
 ** Keybinds
 
 *** Leader key
@@ -523,7 +537,8 @@ Here I can define functions with my leader key.
   (my/leader-key 
 	"SPC"  '(counsel-find-file :wk "counsel find file")
 	"o r" '(my/refresh-org-files :wk "refresh my org files")
-	"o A" '(org-agenda :wk "org agenda")
+	"I" '(find-config :wk "edit README.org/init.el")
+	;; "o a" '(org-agenda :wk "org agenda")
 	"TAB" '(evil-switch-to-windows-last-buffer :wk "switch to previous buffer"))
 #+end_src
 
