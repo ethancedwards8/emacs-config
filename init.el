@@ -106,6 +106,16 @@ Very Similar to S-o from Vim"
 
 (add-hook 'org-mode-hook (lambda () (add-hook 'after-save-hook #'my/org-babel-tangle-config)))
 
+;; Have org-agenda files list recursively
+(defun my/refresh-org-files ()
+      (interactive)
+      (setq org-agenda-files (apply 'append
+				    (mapcar
+				     (lambda (directory)
+				       (directory-files-recursively
+					directory org-agenda-file-regexp))
+				     '("~/Nextcloud/Org/")))))
+
 ;; (setq default ((t (:inherit nil :stipple nil :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 98 :width normal :foundry "JB  " :family "JetBrains Mono"))))
 
 (set-face-attribute 'default t :inherit nil :stipple nil :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant 'normal :weight 'normal :height 98 :width 'normal :foundry "JB  " :family "JetBrains Mono")
@@ -201,16 +211,7 @@ Very Similar to S-o from Vim"
   (add-to-list 'org-structure-template-alist '("el" . "src emacs-lisp"))
   (add-to-list 'org-structure-template-alist '("py" . "src python"))
 
-  ;; Have org-agenda files list recursively
-  (defun refresh-org-files ()
-    (interactive)
-    (setq org-agenda-files (apply 'append
-				  (mapcar
-				   (lambda (directory)
-				     (directory-files-recursively
-				      directory org-agenda-file-regexp))
-				   '("~/Nextcloud/Org/")))))
-  (refresh-org-files))
+  (my/refresh-org-files))
 
 (use-package ox-twbs)
 
@@ -275,7 +276,9 @@ Very Similar to S-o from Vim"
     :non-normal-prefix "C-SPC"))
 
 (my/leader-key 
-      "SPC"   '(counsel-find-file :wk "counsel find file")
+      "SPC"  '(counsel-find-file :wk "counsel find file")
+      "o r" '(my/refresh-org-files :wk "refresh my org files")
+      "o A" '(org-agenda :wk "org agenda")
       "TAB" '(evil-switch-to-windows-last-buffer :wk "switch to previous buffer"))
 
 (use-package rainbow-mode

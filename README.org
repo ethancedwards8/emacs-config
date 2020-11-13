@@ -90,7 +90,7 @@ I have my custom/stolen elisp code in ~/.emacs.d/lisp/. This will add that to my
 #+end_src
 
 * Preferences
-
+  
 ** Turn off ugly window deocration.
 
 #+begin_src emacs-lisp
@@ -219,6 +219,23 @@ Fun little elisp function I wrote following a Howard Abram's tutorial, nothing s
 	(org-babel-tangle))))
 
   (add-hook 'org-mode-hook (lambda () (add-hook 'after-save-hook #'my/org-babel-tangle-config)))
+#+end_src
+
+** Refresh org files
+
+If I move a file agenda freaks out, so I can just run this and fix it.
+
+The recursive agenda bit can be [[https://www.reddit.com/r/orgmode/comments/6q6cdk/adding_files_to_the_agenda_list_recursively/dkvokt1?utm_source=share&utm_medium=web2x&context=3][found here]]
+#+begin_src emacs-lisp
+  ;; Have org-agenda files list recursively
+  (defun my/refresh-org-files ()
+	(interactive)
+	(setq org-agenda-files (apply 'append
+				      (mapcar
+				       (lambda (directory)
+					 (directory-files-recursively
+					  directory org-agenda-file-regexp))
+				       '("~/Nextcloud/Org/")))))
 #+end_src
 
 * Packages
@@ -368,7 +385,6 @@ Also installing evil-magit for evil integration with magit, evil-collection shou
 
 Org mode is literally the best, I'm writing this config in org, what else do you need?
 
-The recursive agenda bit can be [[https://www.reddit.com/r/orgmode/comments/6q6cdk/adding_files_to_the_agenda_list_recursively/dkvokt1?utm_source=share&utm_medium=web2x&context=3][found here]]
 #+begin_src emacs-lisp
   (use-package org
     :custom
@@ -388,16 +404,7 @@ The recursive agenda bit can be [[https://www.reddit.com/r/orgmode/comments/6q6c
     (add-to-list 'org-structure-template-alist '("el" . "src emacs-lisp"))
     (add-to-list 'org-structure-template-alist '("py" . "src python"))
 
-    ;; Have org-agenda files list recursively
-    (defun refresh-org-files ()
-      (interactive)
-      (setq org-agenda-files (apply 'append
-				    (mapcar
-				     (lambda (directory)
-				       (directory-files-recursively
-					directory org-agenda-file-regexp))
-				     '("~/Nextcloud/Org/")))))
-    (refresh-org-files))
+    (my/refresh-org-files))
 #+end_src
 
 ox-twbs - Org mode export twitter bootstrap I think? Not sure how I got this packages installed.
@@ -488,6 +495,8 @@ Counsel takes Ivy further.
 
 *** Leader key
 
+I use general.el to set my "leader" key, =SPC=, or =C-SPC=.
+
 #+begin_src emacs-lisp
   (use-package general
     :config
@@ -504,11 +513,17 @@ Counsel takes Ivy further.
 
 *** Hydra's
 
+Nothing yet :)
+
 *** Leader functions
     
+Here I can define functions with my leader key. 
+
 #+begin_src emacs-lisp
   (my/leader-key 
-	"SPC"   '(counsel-find-file :wk "counsel find file")
+	"SPC"  '(counsel-find-file :wk "counsel find file")
+	"o r" '(my/refresh-org-files :wk "refresh my org files")
+	"o A" '(org-agenda :wk "org agenda")
 	"TAB" '(evil-switch-to-windows-last-buffer :wk "switch to previous buffer"))
 #+end_src
 
