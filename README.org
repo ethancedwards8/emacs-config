@@ -593,6 +593,12 @@ Nix is a fully function programming language centered around the NixOS ecosystem
     :mode "\\.nix\\'")
 #+end_src
 
+*** Guix
+
+#+begin_src emacs-lisp
+  (use-package guix)
+#+end_src
+
 *** Haskell
 
 Haskell is a general purpose, statically typed, purely function programming language with type inference and lazy evaluation.

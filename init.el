@@ -311,6 +311,8 @@ Very Similar to S-o from Vim"
 (use-package nix-mode
   :mode "\\.nix\\'")
 
+(use-package guix)
+
 (use-package haskell-mode)
 
 (use-package yaml-mode
