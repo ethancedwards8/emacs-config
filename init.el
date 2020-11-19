@@ -14,6 +14,7 @@
   (package-install 'use-package))
 
 (require 'use-package)
+;; (setq use-package-compute-statistics t)
 (setq use-package-always-ensure t)
 
 (add-hook 'emacs-startup-hook
@@ -139,11 +140,9 @@ Very Similar to S-o from Vim"
   :custom ((doom-modeline-height 30)))
 
 (use-package dashboard
-  :custom
-  (dashboard-banner-logo-title "The Grind is not Glamorous - Casey Neistat")
-  (dashboard-startup-banner "~/.emacs.d/images/floating-meditate.png")
-  ;; (dashboard-startup-banner 'logo)
   :config
+  (setq dashboard-banner-logo-title "The Grind is not Glamorous - Casey Neistat")
+  (setq dashboard-startup-banner "~/.emacs.d/images/floating-meditate.png")
   (setq dashboard-items '((recents  . 5)
 			(bookmarks . 5)
 			;; (projects . 5)
@@ -213,7 +212,8 @@ Very Similar to S-o from Vim"
 
   (my/refresh-org-files))
 
-(use-package ox-twbs)
+(use-package ox-twbs
+  :defer t)
 
 (use-package vterm
   :custom
@@ -282,6 +282,7 @@ Very Similar to S-o from Vim"
       "o r" '(my/refresh-org-files :wk "refresh my org files")
       "I" '(find-config :wk "edit README.org/init.el")
       ;; "o a" '(org-agenda :wk "org agenda")
+      "e" '(eshell :wk "eshell")
       "TAB" '(evil-switch-to-windows-last-buffer :wk "switch to previous buffer"))
 
 (use-package rainbow-mode
@@ -302,7 +303,8 @@ Very Similar to S-o from Vim"
   ([remap describe-variable] . counsel-describe-variable)
   ([remap describe-key] . helpful-key))
 
-(use-package rg)
+(use-package rg
+  :defer t)
 
 (use-package hl-todo
   :config
@@ -319,17 +321,22 @@ Very Similar to S-o from Vim"
   :mode ("\\.yml\\'" . yaml-mode)
 	("\\.yaml\\'" . yaml-mode))
 
-(use-package docker-compose-mode)
+(use-package docker-compose-mode
+  :mode ("docker-compose.yml\\'" . docker-compose-mode)
+	("docker-compose.yaml\\'" . docker-compose-mode)
+	("stack.yml\\'" . docker-compose-mode))
 
 (use-package dockerfile-mode)
 
 (use-package elcord
+  :defer t
   ;; :config
   ;; (when (string= (system-name) "archpc")
   ;;   (elcord-mode))
   )
 
-(use-package chess)
+(use-package chess
+  :defer t)
 
 (setq-default c-basic-offset 8)
 (setq c-default-style '((java-mode . "java")

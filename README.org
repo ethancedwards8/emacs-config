@@ -20,7 +20,7 @@ I'll also probably put this somewhere on [[https://ethancedwards.com][my site]] 
 #+END_QUOTE
 
 * Setup
-
+  
 ** Configure package sources and =use-package= + Garbage Collection
 
 Add repo's. ELPA, MELPA, org, and ublt. 
@@ -42,6 +42,7 @@ Add repo's. ELPA, MELPA, org, and ublt.
     (package-install 'use-package))
 
   (require 'use-package)
+  ;; (setq use-package-compute-statistics t)
   (setq use-package-always-ensure t)
 #+end_src
 
@@ -299,11 +300,9 @@ Dashboard is a package that runs at startup that has useful imformation and quic
 
 #+begin_src emacs-lisp
   (use-package dashboard
-    :custom
-    (dashboard-banner-logo-title "The Grind is not Glamorous - Casey Neistat")
-    (dashboard-startup-banner "~/.emacs.d/images/floating-meditate.png")
-    ;; (dashboard-startup-banner 'logo)
     :config
+    (setq dashboard-banner-logo-title "The Grind is not Glamorous - Casey Neistat")
+    (setq dashboard-startup-banner "~/.emacs.d/images/floating-meditate.png")
     (setq dashboard-items '((recents  . 5)
 			  (bookmarks . 5)
 			  ;; (projects . 5)
@@ -412,7 +411,8 @@ Org mode is literally the best, I'm writing this config in org, what else do you
 
 ox-twbs - Org mode export twitter bootstrap I think? Not sure how I got this packages installed.
 #+begin_src emacs-lisp
-  (use-package ox-twbs)
+  (use-package ox-twbs
+    :defer t)
 #+end_src
  
 *** Terminal modes
@@ -536,6 +536,7 @@ Here I can define functions with my leader key.
 	"o r" '(my/refresh-org-files :wk "refresh my org files")
 	"I" '(find-config :wk "edit README.org/init.el")
 	;; "o a" '(org-agenda :wk "org agenda")
+	"e" '(eshell :wk "eshell")
 	"TAB" '(evil-switch-to-windows-last-buffer :wk "switch to previous buffer"))
 #+end_src
 
@@ -543,7 +544,7 @@ Here I can define functions with my leader key.
 
 These are some general tools that I use, they don't really belong in any category.
 
-Rainbow-mode
+*** Rainbow-mode
 #+begin_src emacs-lisp
   (use-package rainbow-mode
     :config
@@ -551,13 +552,13 @@ Rainbow-mode
     (add-hook 'prog-mode-hook 'rainbow-mode))
 #+end_src
 
-Rainbow-delimiters
+*** Rainbow-delimiters
 #+begin_src emacs-lisp
   (use-package rainbow-delimiters
     :hook (prog-mode . rainbow-delimiters-mode))
 #+end_src
 
-Helpful - better help buffer
+*** Helpful - better help buffer
 #+begin_src emacs-lisp
   (use-package helpful
     :custom
@@ -570,12 +571,13 @@ Helpful - better help buffer
     ([remap describe-key] . helpful-key))
 #+end_src
 
-Rg - Ripgrep inside of Emacs
+*** Rg - Ripgrep inside of Emacs
 #+begin_src emacs-lisp
-  (use-package rg)
+  (use-package rg
+    :defer t)
 #+end_src
 
-Hl-todo - highlight TODO keywords and the like
+*** Hl-todo - highlight TODO keywords and the like
 #+begin_src emacs-lisp
     (use-package hl-todo
       :config
@@ -627,7 +629,10 @@ I use Docker everyday for work, home, testing out programs, etc. So consequently
 
 This gives better syntax highlighting, code completion, etc in docker-compose.yml files
 #+begin_src emacs-lisp
-  (use-package docker-compose-mode)
+  (use-package docker-compose-mode
+    :mode ("docker-compose.yml\\'" . docker-compose-mode)
+	  ("docker-compose.yaml\\'" . docker-compose-mode)
+	  ("stack.yml\\'" . docker-compose-mode))
 #+end_src
 
 Same as above except for in Dockerfiles
@@ -642,6 +647,7 @@ These packages are kinda fun, don't really have much of a point
 Elcord - Discord rich presence 
 #+begin_src emacs-lisp
   (use-package elcord
+    :defer t
     ;; :config
     ;; (when (string= (system-name) "archpc")
     ;;   (elcord-mode))
@@ -650,7 +656,8 @@ Elcord - Discord rich presence
 
 Chess - play chess inside of Emacs!
 #+Begin_src emacs-lisp
-  (use-package chess)
+  (use-package chess
+    :defer t)
 #+end_src
 
 * TODO Sort out eventually
