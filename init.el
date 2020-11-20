@@ -154,6 +154,8 @@ Very Similar to S-o from Vim"
   :init
   (setq evil-want-integration t)
   (setq evil-want-keybinding nil)
+  ;; :bind (:map evil-motion-state-map
+  ;;       ("/" . counsel-grep-or-swiper))
   :config
   (evil-mode 1))
 
