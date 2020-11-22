@@ -194,6 +194,12 @@ Very Similar to S-o from Vim"
 ;; Pulled from David Wilson's config, probably won't use
 (global-set-key (kbd "C-M-;") 'magit-status)
 
+(use-package projectile
+  :bind (:map projectile-mode-map
+	      (("C-c p" . projectile-command-map))))
+  ;; :config
+  ;; (projectile-mode +1))
+
 (use-package org
   :custom
   (org-directory "~/Nextcloud/org")

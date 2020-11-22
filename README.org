@@ -385,6 +385,16 @@ Also installing evil-magit for evil integration with magit, evil-collection shou
   (global-set-key (kbd "C-M-;") 'magit-status)
 #+end_src
   
+*** Projectile
+
+#+begin_src emacs-lisp
+  (use-package projectile
+    :bind (:map projectile-mode-map
+		(("C-c p" . projectile-command-map))))
+    ;; :config
+    ;; (projectile-mode +1))
+#+end_src
+
 *** Org mode
 
 Org mode is literally the best, I'm writing this config in org, what else do you need?
