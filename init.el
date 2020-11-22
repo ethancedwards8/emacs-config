@@ -154,6 +154,8 @@ Very Similar to S-o from Vim"
   :init
   (setq evil-want-integration t)
   (setq evil-want-keybinding nil)
+  ;; :bind (:map evil-motion-state-map
+  ;;       ("/" . counsel-grep-or-swiper))
   :config
   (evil-mode 1))
 
@@ -212,6 +214,19 @@ Very Similar to S-o from Vim"
 
   (my/refresh-org-files))
 
+(use-package org-roam
+      :hook
+      (after-init . org-roam-mode)
+      :custom
+      (org-roam-directory "~/Nextcloud/Org")
+      :bind (:map org-roam-mode-map
+	      (("C-c n l" . org-roam)
+	       ("C-c n f" . org-roam-find-file)
+	       ("C-c n g" . org-roam-graph))
+	      :map org-mode-map
+	      (("C-c n i" . org-roam-insert))
+	      (("C-c n I" . org-roam-insert-immediate))))
+
 (use-package ox-twbs
   :defer t)
 
@@ -263,7 +278,7 @@ Very Similar to S-o from Vim"
   :config
   (counsel-mode 1))
 
-(use-package exwm)
+;; (use-package exwm)
 
 (use-package general
   :config
