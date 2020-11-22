@@ -298,6 +298,10 @@ Very Similar to S-o from Vim"
       "I" '(find-config :wk "edit README.org/init.el")
       ;; "o a" '(org-agenda :wk "org agenda")
       "e" '(eshell :wk "eshell")
+      "w h" '(evil-window-left :wk "move to left window")
+      "w j" '(evil-window-down :wk "move to down window")
+      "w k" '(evil-window-up :wk "move to up window")
+      "w l" '(evil-window-right :wk "move to right window")
       "TAB" '(evil-switch-to-windows-last-buffer :wk "switch to previous buffer"))
 
 (use-package rainbow-mode
