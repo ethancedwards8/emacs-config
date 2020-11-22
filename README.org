@@ -632,6 +632,14 @@ I have a bit of a thing for functional programming, learning Haskell is on my li
   (use-package haskell-mode)
 #+end_src
 
+*** GDScript
+
+GDScript, a high-level, dynamically typed programming language. Its used for programming in the Godot Game engine language.
+
+#+begin_src emacs-lisp
+  (use-package gdscript-mode) 
+#+end_src
+
 *** Yaml
 
 Its yaml, what more is their to say? Better than json but still *sucks*

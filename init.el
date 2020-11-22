@@ -336,6 +336,8 @@ Very Similar to S-o from Vim"
 
 (use-package haskell-mode)
 
+(use-package gdscript-mode)
+
 (use-package yaml-mode
   :mode ("\\.yml\\'" . yaml-mode)
 	("\\.yaml\\'" . yaml-mode))
