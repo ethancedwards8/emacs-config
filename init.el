@@ -97,6 +97,15 @@ Very Similar to S-o from Vim"
 (global-set-key (kbd "C-S-o")
 		'my/custom-S-o-from-vim)
 
+(defun stop ()
+"Proves I'm sane, not losing my sanity whatsoever"
+  (interactive)
+  (defvar name "*I can quit at any time*")
+  (generate-new-buffer name)
+  (switch-to-buffer name)
+  (insert "I can stop at any time\n")
+  (insert "I am in control"))
+
 ;; Automatically tangle our Emacs.org config file when we save it
 (defun my/org-babel-tangle-config ()
   (when (string-equal (buffer-file-name)
@@ -145,7 +154,7 @@ Very Similar to S-o from Vim"
   (setq dashboard-startup-banner "~/.emacs.d/images/floating-meditate.png")
   (setq dashboard-items '((recents  . 5)
 			(bookmarks . 5)
-			;; (projects . 5)
+			(projects . 5)
 			(agenda . 5)
 			(registers . 5)))
   (dashboard-setup-startup-hook))
@@ -196,9 +205,9 @@ Very Similar to S-o from Vim"
 
 (use-package projectile
   :bind (:map projectile-mode-map
-	      (("C-c p" . projectile-command-map))))
-  ;; :config
-  ;; (projectile-mode +1))
+	      (("C-c p" . projectile-command-map)))
+  :config
+  (defalias 'enable-projectile 'projectile-mode))
 
 (use-package org
   :custom
@@ -363,6 +372,9 @@ Very Similar to S-o from Vim"
   )
 
 (use-package chess
+  :defer t)
+
+(use-package gnugo
   :defer t)
 
 (setq-default c-basic-offset 8)

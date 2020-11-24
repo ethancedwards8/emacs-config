@@ -209,6 +209,21 @@ Fun little elisp function I wrote following a Howard Abram's tutorial, nothing s
 		  'my/custom-S-o-from-vim)
 #+end_src
 
+** =M-x stop=
+
+Funny little function from user =jeetelongname#5927= on Discord :)
+
+#+begin_src emacs-lisp
+  (defun stop ()
+  "Proves I'm sane, not losing my sanity whatsoever"
+    (interactive)
+    (defvar name "*I can quit at any time*")
+    (generate-new-buffer name)
+    (switch-to-buffer name)
+    (insert "I can stop at any time\n")
+    (insert "I am in control"))
+#+end_src
+
 ** Auto bablel README.org after saving
 
 [[https://github.com/daviwil/emacs-from-scratch/blob/master/Emacs.org#auto-tangle-configuration-files][Stolen from David]] :)
@@ -305,7 +320,7 @@ Dashboard is a package that runs at startup that has useful imformation and quic
     (setq dashboard-startup-banner "~/.emacs.d/images/floating-meditate.png")
     (setq dashboard-items '((recents  . 5)
 			  (bookmarks . 5)
-			  ;; (projects . 5)
+			  (projects . 5)
 			  (agenda . 5)
 			  (registers . 5)))
     (dashboard-setup-startup-hook))
@@ -390,9 +405,9 @@ Also installing evil-magit for evil integration with magit, evil-collection shou
 #+begin_src emacs-lisp
   (use-package projectile
     :bind (:map projectile-mode-map
-		(("C-c p" . projectile-command-map))))
-    ;; :config
-    ;; (projectile-mode +1))
+		(("C-c p" . projectile-command-map)))
+    :config
+    (defalias 'enable-projectile 'projectile-mode))
 #+end_src
 
 *** Org mode
@@ -634,7 +649,7 @@ Nix is a fully function programming language centered around the NixOS ecosystem
 
 *** Haskell
 
-Haskell is a general purpose, statically typed, purely function programming language with type inference and lazy evaluation.
+Haskell is a general pureshelopose, statically typed, purely function programming language with type inference and lazy evaluation.
 
 I have a bit of a thing for functional programming, learning Haskell is on my list of TODO's
 
@@ -696,6 +711,12 @@ Elcord - Discord rich presence
 Chess - play chess inside of Emacs!
 #+Begin_src emacs-lisp
   (use-package chess
+    :defer t)
+#+end_src
+
+gnugo - Play GO inside of Emacs!
+#+begin_src emacs-lisp
+  (use-package gnugo
     :defer t)
 #+end_src
 
