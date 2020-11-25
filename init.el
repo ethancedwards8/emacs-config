@@ -32,6 +32,13 @@
 
 (global-set-key (kbd "C-c I") 'find-config)
 
+(defun find-main ()
+  "Find Main.org, Main Org file"
+  (interactive)
+  (find-file "~/Nextcloud/Org/Main.org"))
+
+(global-set-key (kbd "C-c O") 'find-main)
+
 ;; (setq custom-file (make-temp-file "emacs-custom"))
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
 ;; (setq custom-file (make-temp-file "emacs-custom.el"))
@@ -251,7 +258,7 @@ Very Similar to S-o from Vim"
   :bind (("C-x v" . vterm)
 	 ("C-x 4 v" . vterm-other-window)
 	 :map vterm-mode-map
-	 ;; came up with this myself, pretty proud of it not going to lie :)
+	 ;; came up with this myself, fixes C-backspace, pretty proud of it not going to lie :)
 	 ("<C-backspace>" . (lambda () (interactive) (vterm-send-meta-backspace)))))
 
 (use-package eshell-git-prompt)

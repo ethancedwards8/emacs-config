@@ -71,6 +71,17 @@ Benchmark's my startup, when running as daemon I won't see this message so I can
   (global-set-key (kbd "C-c I") 'find-config)
 #+end_src
 
+** Find Main org file function
+
+#+begin_src emacs-lisp
+  (defun find-main ()
+    "Find Main.org, Main Org file"
+    (interactive)
+    (find-file "~/Nextcloud/Org/Main.org"))
+
+  (global-set-key (kbd "C-c O") 'find-main)
+#+end_src
+
 ** Set custom settings to load in own file
 
 Stops Emacs from adding weird things to =init.el= This creates a temporary file that'll be destroyed.
@@ -470,7 +481,7 @@ I use vterm for the cases when I need a terminal emulator, I try to use eshell a
     :bind (("C-x v" . vterm)
 	   ("C-x 4 v" . vterm-other-window)
 	   :map vterm-mode-map
-	   ;; came up with this myself, pretty proud of it not going to lie :)
+	   ;; came up with this myself, fixes C-backspace, pretty proud of it not going to lie :)
 	   ("<C-backspace>" . (lambda () (interactive) (vterm-send-meta-backspace)))))
 #+end_src
 
