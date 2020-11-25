@@ -655,7 +655,7 @@ Nix is a fully function programming language centered around the NixOS ecosystem
 
 *** Haskell
 
-Haskell is a general pureshelopose, statically typed, purely function programming language with type inference and lazy evaluation.
+Haskell is a general purpose, statically typed, purely function programming language with type inference and lazy evaluation.
 
 I have a bit of a thing for functional programming, learning Haskell is on my list of TODO's
 
