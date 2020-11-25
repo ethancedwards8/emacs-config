@@ -199,11 +199,6 @@ Very Similar to S-o from Vim"
 (use-package magit
   :bind (("C-x g" . magit-status)))
 
-;; (global-set-key (kbd "C-x g") 'magit-status)
-
-(use-package evil-magit
-  :after magit)
-
 (use-package magit-todos
   :defer t)
 
