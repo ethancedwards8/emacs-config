@@ -413,7 +413,8 @@ Also installing evil-magit for evil integration with magit, evil-collection shou
     :bind (:map projectile-mode-map
 		(("C-c p" . projectile-command-map)))
     :config
-    (defalias 'enable-projectile 'projectile-mode))
+    ;; I don't really want this running all the time, so I `toggle' it from time to time
+    (defalias 'toggle-projectile 'projectile-mode))
 #+end_src
 
 *** Org mode
@@ -463,6 +464,23 @@ ox-twbs - Org mode export twitter bootstrap I think? Not sure how I got this pac
     :defer t)
 #+end_src
  
+*** mu4e
+
+mu4e is an email client for Emacs. Currently I use neomutt and I'm very happy with it, but I'm willing to experiment.
+
+#+begin_src emacs-lisp
+  ;; (use-package mu4e
+  ;;   :ensure nil
+  ;;   ;; :if (and (eq system-type 'gnu/linux) (string-equal system-name "archpc"))
+  ;;   :config
+  ;;   ;; add mu4e to the load path on Arch
+  ;;   (add-to-list 'load-path "/usr/share/emacs/site-lisp/mu4e/")
+  ;;   (require 'mu4e))
+
+  (add-to-list 'load-path "/usr/share/emacs/site-lisp/mu4e/")
+  (require 'mu4e)
+#+end_src
+
 *** Terminal modes
 
 **** vterm

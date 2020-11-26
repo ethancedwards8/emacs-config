@@ -209,7 +209,8 @@ Very Similar to S-o from Vim"
   :bind (:map projectile-mode-map
 	      (("C-c p" . projectile-command-map)))
   :config
-  (defalias 'enable-projectile 'projectile-mode))
+  ;; I don't really want this running all the time, so I `toggle' it from time to time
+  (defalias 'toggle-projectile 'projectile-mode))
 
 (use-package org
   :custom
@@ -246,6 +247,17 @@ Very Similar to S-o from Vim"
 
 (use-package ox-twbs
   :defer t)
+
+;; (use-package mu4e
+;;   :ensure nil
+;;   ;; :if (and (eq system-type 'gnu/linux) (string-equal system-name "archpc"))
+;;   :config
+;;   ;; add mu4e to the load path on Arch
+;;   (add-to-list 'load-path "/usr/share/emacs/site-lisp/mu4e/")
+;;   (require 'mu4e))
+
+(add-to-list 'load-path "/usr/share/emacs/site-lisp/mu4e/")
+(require 'mu4e)
 
 (use-package vterm
   :custom
