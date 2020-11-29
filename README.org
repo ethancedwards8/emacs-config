@@ -327,7 +327,8 @@ Dashboard is a package that runs at startup that has useful imformation and quic
 #+begin_src emacs-lisp
   (use-package dashboard
     :config
-    (setq dashboard-banner-logo-title "The Grind is not Glamorous - Casey Neistat")
+    ;;(setq dashboard-banner-logo-title "The Grind is not Glamorous - Casey Neistat")
+    (setq dashboard-banner-logo-title "Ad Victoriam - Paladin Danse")
     (setq dashboard-startup-banner "~/.emacs.d/images/floating-meditate.png")
     (setq dashboard-items '((recents  . 5)
 			  (bookmarks . 5)
