@@ -216,7 +216,7 @@ Very Similar to S-o from Vim"
 (use-package org
   :custom
   (org-directory "~/Nextcloud/org")
-  (diary-file "~/Nextcloud/emacs-diary")
+  (diary-file "~/Nextcloud/Org/emacs-diary")
   (org-log-done t)
   (org-agenda-include-diary t)
   :bind (("C-c L" . org-stored-link)
