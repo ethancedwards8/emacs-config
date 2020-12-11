@@ -157,7 +157,8 @@ Very Similar to S-o from Vim"
 
 (use-package dashboard
   :config
-  (setq dashboard-banner-logo-title "The Grind is not Glamorous - Casey Neistat")
+  ;;(setq dashboard-banner-logo-title "The Grind is not Glamorous - Casey Neistat")
+  (setq dashboard-banner-logo-title "Ad Victoriam - Paladin Danse")
   (setq dashboard-startup-banner "~/.emacs.d/images/floating-meditate.png")
   (setq dashboard-items '((recents  . 5)
 			(bookmarks . 5)
@@ -218,7 +219,7 @@ Very Similar to S-o from Vim"
   (diary-file "~/Nextcloud/emacs-diary")
   (org-log-done t)
   (org-agenda-include-diary t)
-  :bind (("C-c l" . org-stored-link)
+  :bind (("C-c L" . org-stored-link)
 	 ("C-c a" . org-agenda)
 	 ("C-c c" . org-capture))
   :config
@@ -331,6 +332,10 @@ Very Similar to S-o from Vim"
       "w j" '(evil-window-down :wk "move to down window")
       "w k" '(evil-window-up :wk "move to up window")
       "w l" '(evil-window-right :wk "move to right window")
+      "w c" '(evil-window-delete :wk "move to right window")
+      "w v" '(evil-window-vsplit :wk "move to right window")
+      "w s" '(evil-window-split :wk "move to right window")
+      "w o" '(delete-other-windows :wk "move to right window")
       "TAB" '(evil-switch-to-windows-last-buffer :wk "switch to previous buffer"))
 
 (use-package rainbow-mode
@@ -358,6 +363,19 @@ Very Similar to S-o from Vim"
   :config
   (hl-todo-mode))
 
+(use-package lsp-mode
+  :commands (lsp lsp-defferred)
+  :init
+  (setq lsp-keymap-prefix "C-c l")
+  :config
+  )
+
+(use-package typescript-mode
+  :mode "\\.ts\\'"
+  :hook (typescript-mode lsp-deferred)
+  :config
+  (setq typescript-indent-level 2))
+
 (use-package nix-mode
   :mode "\\.nix\\'")
 
@@ -384,6 +402,9 @@ Very Similar to S-o from Vim"
   ;; (when (string= (system-name) "archpc")
   ;;   (elcord-mode))
   )
+
+(use-package spotify
+  :defer t)
 
 (use-package chess
   :defer t)

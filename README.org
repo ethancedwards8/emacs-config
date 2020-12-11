@@ -429,7 +429,7 @@ Org mode is literally the best, I'm writing this config in org, what else do you
     (diary-file "~/Nextcloud/emacs-diary")
     (org-log-done t)
     (org-agenda-include-diary t)
-    :bind (("C-c l" . org-stored-link)
+    :bind (("C-c L" . org-stored-link)
 	   ("C-c a" . org-agenda)
 	   ("C-c c" . org-capture))
     :config
@@ -608,6 +608,10 @@ Here I can define functions with my leader key.
 	"w j" '(evil-window-down :wk "move to down window")
 	"w k" '(evil-window-up :wk "move to up window")
 	"w l" '(evil-window-right :wk "move to right window")
+	"w c" '(evil-window-delete :wk "move to right window")
+	"w v" '(evil-window-vsplit :wk "move to right window")
+	"w s" '(evil-window-split :wk "move to right window")
+	"w o" '(delete-other-windows :wk "move to right window")
 	"TAB" '(evil-switch-to-windows-last-buffer :wk "switch to previous buffer"))
 #+end_src
 
@@ -656,6 +660,27 @@ These are some general tools that I use, they don't really belong in any categor
 #+end_src
 
 ** Programming
+   
+*** lsp-mode
+    
+#+begin_src emacs-lisp
+  (use-package lsp-mode
+    :commands (lsp lsp-defferred)
+    :init
+    (setq lsp-keymap-prefix "C-c l")
+    :config
+    )
+#+end_src
+
+*** Typescript
+
+#+begin_src emacs-lisp
+  (use-package typescript-mode
+    :mode "\\.ts\\'"
+    :hook (typescript-mode lsp-deferred)
+    :config
+    (setq typescript-indent-level 2))
+#+end_src
 
 *** Nix
 
@@ -731,6 +756,13 @@ Elcord - Discord rich presence
     ;; (when (string= (system-name) "archpc")
     ;;   (elcord-mode))
     )
+#+end_src
+
+Spotify - Control the Spotify app in emacs
+
+#+begin_src emacs-lisp
+  (use-package spotify
+    :defer t)
 #+end_src
 
 Chess - play chess inside of Emacs!

@@ -2,10 +2,13 @@
 /auto-save-list/
 bookmarks
 elpa
+custom.el
 smex-items
 recentf
 org-roam.db
 ido.last
+.cache
+*lsp*
 /transient/
 /eln-cache/
 /persist/
