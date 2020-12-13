@@ -387,6 +387,11 @@ Very Similar to S-o from Vim"
 
 (use-package guix)
 
+(use-package geiser
+  :config
+  (setq geiser-default-implementation 'guile)
+  (setq geiser-active-implementations '(gambit guile)))
+
 (use-package haskell-mode)
 
 (use-package gdscript-mode)
