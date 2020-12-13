@@ -273,7 +273,7 @@ Very Similar to S-o from Vim"
 
 (use-package eshell
   :ensure nil
-  :custom (eshell-aliases-file "~/.emacs.d/eshell-alias")
+  :custom (eshell-aliases-file "~/.emacs.d/eshell/eshell-alias")
   :config
   (with-eval-after-load 'esh-opt
     (setq eshell-destory-buffer-when-process-dies t)
