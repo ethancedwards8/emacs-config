@@ -338,6 +338,12 @@ Very Similar to S-o from Vim"
       "w o" '(delete-other-windows :wk "move to right window")
       "TAB" '(evil-switch-to-windows-last-buffer :wk "switch to previous buffer"))
 
+(use-package which-key
+  :init (which-key-mode)
+  :diminish which-key-mode
+  :config
+  (setq which-key-idle-delay 5))
+
 (use-package rainbow-mode
   :config
   ;; (setq rainbow-x-colors nil)

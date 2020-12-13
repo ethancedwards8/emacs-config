@@ -720,6 +720,16 @@ Here I can define functions with my leader key.
 	"TAB" '(evil-switch-to-windows-last-buffer :wk "switch to previous buffer"))
 #+end_src
 
+*** Which-key
+
+#+begin_src emacs-lisp
+  (use-package which-key
+    :init (which-key-mode)
+    :diminish which-key-mode
+    :config
+    (setq which-key-idle-delay 5))
+#+end_src
+
 ** General tools
 
 These are some general tools that I use, they don't really belong in any category.
