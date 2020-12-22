@@ -158,7 +158,8 @@ Very Similar to S-o from Vim"
 (use-package dashboard
   :config
   ;;(setq dashboard-banner-logo-title "The Grind is not Glamorous - Casey Neistat")
-  (setq dashboard-banner-logo-title "Ad Victoriam - Paladin Danse")
+  ;;(setq dashboard-banner-logo-title "Ad Victoriam - Paladin Danse")
+  (setq dashboard-banner-logo-title "I'm just a simple man, trying to make my way in the universe. - Jango Fett")
   (setq dashboard-startup-banner "~/.emacs.d/images/floating-meditate.png")
   (setq dashboard-items '((recents  . 5)
 			(bookmarks . 5)
