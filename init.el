@@ -135,7 +135,11 @@ Very Similar to S-o from Vim"
 
 ;; (setq default ((t (:inherit nil :stipple nil :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 98 :width normal :foundry "JB  " :family "JetBrains Mono"))))
 
+
 (set-face-attribute 'default nil :inherit nil :stipple nil :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant 'normal :weight 'normal :height 98 :width 'normal :foundry "JB  " :family "JetBrains Mono")
+
+(when (string= system-type "darwin")
+  (set-face-attribute 'default nil :inherit nil :stipple nil :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant 'normal :weight 'normal :height 130 :width 'normal :foundry "JB  " :family "JetBrains Mono"))
 
 (setq ansi-color-faces-vector
   [default default default italic underline success warning error])
@@ -257,8 +261,9 @@ Very Similar to S-o from Vim"
 ;;   (add-to-list 'load-path "/usr/share/emacs/site-lisp/mu4e/")
 ;;   (require 'mu4e))
 
-(add-to-list 'load-path "/usr/share/emacs/site-lisp/mu4e/")
-(require 'mu4e)
+(when (string= (system-name) "archpc")
+  (add-to-list 'load-path "/usr/share/emacs/site-lisp/mu4e/")
+  (require 'mu4e))
 
 (use-package vterm
   :custom
