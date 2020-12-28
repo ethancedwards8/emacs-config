@@ -67,7 +67,7 @@
 (setq confirm-kill-emacs 'y-or-n-p)
 
 (setq user-full-name "Ethan Carter Edwards"
-      user-mail-address "ethancarteredwards@gmail.com")
+      user-mail-address "ethan@ethancedwards.com")
 
 (setq initial-buffer-choice (lambda () (get-buffer "*dashboard*")))
 
@@ -157,7 +157,13 @@ Very Similar to S-o from Vim"
 
 (use-package doom-modeline
   :init (doom-modeline-mode 1)
-  :custom ((doom-modeline-height 30)))
+  :custom ((doom-modeline-height 30))
+  :config
+  (display-time-mode)
+  (setq display-time-load-average nil)
+  ;; https://emacs.stackexchange.com/questions/20783/remove-load-average-from-time-string-displayed-in-mode-line
+  (setq display-time-default-load-average nil)
+  (display-battery-mode))
 
 (use-package dashboard
   :config
@@ -211,12 +217,26 @@ Very Similar to S-o from Vim"
 ;; Pulled from David Wilson's config, probably won't use
 (global-set-key (kbd "C-M-;") 'magit-status)
 
+(use-package dired
+  :ensure nil
+  :config
+  (when (string= system-type "darwin")
+    (setq dired-use-ls-dired nil)))
+
 (use-package projectile
   :bind (:map projectile-mode-map
 	      (("C-c p" . projectile-command-map)))
+  :custom ((projectile-completion-system 'ivy))
+  :init
+  (when (file-directory-p "~/git")
+    (setq projectile-project-search-path '("~/git")))
+  (setq projectile-switch-project-action #'projectile-dired)
   :config
   ;; I don't really want this running all the time, so I `toggle' it from time to time
   (defalias 'toggle-projectile 'projectile-mode))
+
+;; (use-package counsel-projectile
+;;   :config (counsel-projectile-mode))
 
 (use-package org
   :custom
@@ -272,8 +292,8 @@ Very Similar to S-o from Vim"
   :bind (("C-x v" . vterm)
 	 ("C-x 4 v" . vterm-other-window)
 	 :map vterm-mode-map
-	 ;; came up with this myself, fixes C-backspace, pretty proud of it not going to lie :)
 	 ("<C-backspace>" . (lambda () (interactive) (vterm-send-meta-backspace)))))
+	 ;; came up with this myself, fixes C-backspace, pretty proud of it not going to lie :)
 
 (use-package eshell-git-prompt)
 
@@ -375,12 +395,31 @@ Very Similar to S-o from Vim"
   :config
   (hl-todo-mode))
 
+(use-package exec-path-from-shell
+  :config
+  (when (memq window-system '(mac ns))
+    (exec-path-from-shell-initialize))
+  (when (daemonp)
+    (exec-path-from-shell-initialize))
+  )
+
+(use-package spdx
+  :bind (:map prog-mode-map
+	 ("C-c i l" . spdx-insert-spdx))
+  :custom
+  (spdx-copyright-holder 'auto)
+  (spdx-project-detection 'auto))
+
 (use-package lsp-mode
   :commands (lsp lsp-defferred)
   :init
   (setq lsp-keymap-prefix "C-c l")
   :config
   )
+
+(use-package company
+  :config
+  (add-hook 'after-init-hook 'global-company-mode))
 
 (use-package typescript-mode
   :mode "\\.ts\\'"
@@ -428,6 +467,10 @@ Very Similar to S-o from Vim"
 
 (use-package gnugo
   :defer t)
+
+(use-package 2048-game)
+
+(use-package snow)
 
 (setq-default c-basic-offset 8)
 (setq c-default-style '((java-mode . "java")

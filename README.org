@@ -153,7 +153,7 @@ I have my custom/stolen elisp code in ~/.emacs.d/lisp/. This will add that to my
 
 #+begin_src emacs-lisp
   (setq user-full-name "Ethan Carter Edwards"
-	user-mail-address "ethancarteredwards@gmail.com")
+	user-mail-address "ethan@ethancedwards.com")
 #+end_src
 
 ** Set Dashboard as my initial buffer
@@ -333,7 +333,13 @@ Trying out doom-line, lets see how this goes!
 #+begin_src emacs-lisp
   (use-package doom-modeline
     :init (doom-modeline-mode 1)
-    :custom ((doom-modeline-height 30)))
+    :custom ((doom-modeline-height 30))
+    :config
+    (display-time-mode)
+    (setq display-time-load-average nil)
+    ;; https://emacs.stackexchange.com/questions/20783/remove-load-average-from-time-string-displayed-in-mode-line
+    (setq display-time-default-load-average nil)
+    (display-battery-mode))
 #+end_src
 
 #+begin_src scheme :noweb-ref packages :noweb-sep ""
@@ -460,15 +466,35 @@ Also installing evil-magit for evil integration with magit, evil-collection shou
 
 #+end_src
 
+*** Dired
+
+Dired is a file manager built into Emacs, its pretty great.
+
+#+begin_src emacs-lisp
+  (use-package dired
+    :ensure nil
+    :config
+    (when (string= system-type "darwin")
+      (setq dired-use-ls-dired nil)))
+#+end_src
+
 *** Projectile
 
 #+begin_src emacs-lisp
   (use-package projectile
     :bind (:map projectile-mode-map
 		(("C-c p" . projectile-command-map)))
+    :custom ((projectile-completion-system 'ivy))
+    :init
+    (when (file-directory-p "~/git")
+      (setq projectile-project-search-path '("~/git")))
+    (setq projectile-switch-project-action #'projectile-dired)
     :config
     ;; I don't really want this running all the time, so I `toggle' it from time to time
     (defalias 'toggle-projectile 'projectile-mode))
+
+  ;; (use-package counsel-projectile
+  ;;   :config (counsel-projectile-mode))
 #+end_src
 
 #+begin_src scheme :noweb-ref packages :noweb-sep ""
@@ -576,8 +602,8 @@ I use vterm for the cases when I need a terminal emulator, I try to use eshell a
     :bind (("C-x v" . vterm)
 	   ("C-x 4 v" . vterm-other-window)
 	   :map vterm-mode-map
-	   ;; came up with this myself, fixes C-backspace, pretty proud of it not going to lie :)
 	   ("<C-backspace>" . (lambda () (interactive) (vterm-send-meta-backspace)))))
+	   ;; came up with this myself, fixes C-backspace, pretty proud of it not going to lie :)
 #+end_src
 
 #+begin_src scheme :noweb-ref packages :noweb-sep ""
@@ -608,9 +634,11 @@ eshell-git-prompt gives me a git prompt for eshell, kinda in the name xD
 
 *** Completion framework(s)
 
-I use Ivy, it's a completion framework for Emacs, I'm in the process of learning how to configure mine.
+**** Ivy
 
+I use Ivy, it's a completion framework for Emacs, I'm in the process of learning how to configure mine.
 This is the initial setup of Ivy, this is bound to change drastically over time.
+
 #+begin_src emacs-lisp
   (use-package ivy
     :diminish
@@ -635,6 +663,8 @@ This is the initial setup of Ivy, this is bound to change drastically over time.
 
 #+end_src
 
+**** Ivy Rich
+
 Ivy Rich provides a nicer interface to Ivy in my opinion.
 
 #+begin_src emacs-lisp
@@ -649,6 +679,8 @@ Ivy Rich provides a nicer interface to Ivy in my opinion.
 
 #+end_src
 
+**** Counsel
+ 
 Counsel takes Ivy further.
 
 #+begin_src emacs-lisp
@@ -810,6 +842,28 @@ These are some general tools that I use, they don't really belong in any categor
 
 #+end_src
 
+*** exec-path-from-shell - enable $PATH on MacOSX
+
+#+begin_src emacs-lisp
+  (use-package exec-path-from-shell
+    :config
+    (when (memq window-system '(mac ns))
+      (exec-path-from-shell-initialize))
+    (when (daemonp)
+      (exec-path-from-shell-initialize))
+    )
+#+end_src
+   
+*** spdx - insert spdx headers
+
+#+begin_src emacs-lisp
+  (use-package spdx
+    :bind (:map prog-mode-map
+	   ("C-c i l" . spdx-insert-spdx))
+    :custom
+    (spdx-copyright-holder 'auto)
+    (spdx-project-detection 'auto))
+#+end_src
 ** Programming
    
 *** lsp-mode
@@ -827,6 +881,14 @@ These are some general tools that I use, they don't really belong in any categor
 
 "emacs-lsp-mode"
 
+#+end_src
+
+*** company-mode
+
+#+begin_src emacs-lisp
+  (use-package company
+    :config
+    (add-hook 'after-init-hook 'global-company-mode))
 #+end_src
 
 *** Typescript
@@ -968,7 +1030,7 @@ Same as above except for in Dockerfiles
 
 These packages are kinda fun, don't really have much of a point
 
-Elcord - Discord rich presence 
+*** Elcord - Discord rich presence
 #+begin_src emacs-lisp
   (use-package elcord
     :defer t
@@ -978,14 +1040,14 @@ Elcord - Discord rich presence
     )
 #+end_src
 
-Spotify - Control the Spotify app in emacs
+*** Spotify - Control the Spotify app in emacs
 
 #+begin_src emacs-lisp
   (use-package spotify
     :defer t)
 #+end_src
 
-Chess - play chess inside of Emacs!
+*** Chess - play chess inside of Emacs!
 #+Begin_src emacs-lisp
   (use-package chess
     :defer t)
@@ -997,7 +1059,7 @@ Chess - play chess inside of Emacs!
 
 #+end_src
 
-gnugo - Play GO inside of Emacs!
+*** gnugo - Play GO inside of Emacs!
 #+begin_src emacs-lisp
   (use-package gnugo
     :defer t)
@@ -1007,6 +1069,18 @@ gnugo - Play GO inside of Emacs!
 
 "emacs-gnugo"
 
+#+end_src
+
+*** 2048-game - play 2048 inside of emacs!
+
+#+begin_src emacs-lisp
+  (use-package 2048-game)
+#+end_src
+
+*** snow.el - Let it snow in Emacs!
+
+#+begin_src emacs-lisp
+  (use-package snow)
 #+end_src
 
 * Emacs Guix Profiles
