@@ -211,7 +211,7 @@ visible and will not be hidden."
   (if (eq eshell-toggle--toggle-buffer-p t)
       (unless keep-visible
         ;; if selected window is eshell-toggle buffer itself just delete its window
-        (delete-window))    
+        (delete-window))
     (let ((buf-name (eshell-toggle--make-buffer-name)))
       (if (get-buffer buf-name)
 	  ;; buffer is already created

@@ -936,11 +936,11 @@ These are some general tools that I use, they don't really belong in any categor
 
 #+begin_src emacs-lisp
   (use-package lsp-mode
-    :commands (lsp lsp-defferred)
+    :commands (lsp lsp-deferred)
     :init
     (setq lsp-keymap-prefix "C-c l")
     :config
-    )
+    (lsp-enable-which-key-integration t))
 #+end_src
 
 #+begin_src scheme :noweb-ref packages :noweb-sep ""
@@ -949,15 +949,74 @@ These are some general tools that I use, they don't really belong in any categor
 
 #+end_src
 
+*** lsp-ui
+
+#+begin_src emacs-lisp
+  (use-package lsp-ui
+    :hook (lsp-mode . lsp-ui-mode)
+    :custom
+    (lsp-ui-doc-position 'bottom))
+#+end_src
+
+#+begin_src scheme :noweb-ref packages :noweb-sep ""
+
+"emacs-lsp-ui"
+
+#+end_src
+
 *** company-mode
 
 #+begin_src emacs-lisp
   (use-package company
-    :config
-    (add-hook 'after-init-hook 'global-company-mode))
+    :after lsp-mode
+    :hook (lsp-mode . company-mode)
+    :bind (:map company-active-map
+		("<tab>" . company-complete-selection))
+	  (:map lsp-mode-map
+		("<tab>" . company-indent-or-complete-common)))
 #+end_src
 
-*** Typescript
+*** flycheck
+
+Syntax checking for GNU Emacs
+
+#+begin_src emacs-lisp
+  (use-package flycheck
+    :hook (lsp-deferred . flycheck-mode))
+#+end_src
+
+*** Rust
+
+I'll be using [[https://github.com/brotzeit/rustic][rustic]] for Rust development inside of Emacs
+
+#+begin_src emacs-lisp
+  (use-package rustic
+    :mode ("\\.rs\\'" . rustic-mode)
+    :hook (rustic-mode . lsp-deferred))
+#+end_src
+
+*** Web dev
+
+**** web-mode - HTML + CSS
+
+#+begin_src emacs-lisp
+  (use-package web-mode
+    :mode ("\\.html\\'" . web-mode)
+    :mode ("\\.xhtml\\'" . web-mode)
+    :mode ("\\.css\\'" . css-mode)
+    :mode ("\\.scss\\'" . scss-mode))
+#+end_src
+
+**** Javascript
+
+#+begin_src emacs-lisp
+  (use-package rjsx-mode
+    :config
+    :mode ("\\.js\\'" . rjsx-mode)
+    :mode ("\\.jsx\\'" . rjsx-mode))
+#+end_src
+
+**** Typescript
 
 #+begin_src emacs-lisp
   (use-package typescript-mode
@@ -979,7 +1038,13 @@ Nix is a fully function programming language centered around the NixOS ecosystem
 
 #+begin_src emacs-lisp
   (use-package nix-mode
-    :mode "\\.nix\\'")
+    :config
+    (require 'lsp)
+    (add-to-list 'lsp-language-id-configuration '(nix-mode . "nix"))
+    (lsp-register-client
+     (make-lsp-client :new-connection (lsp-stdio-connection '("rnix-lsp"))
+		      :major-modes '(nix-mode)
+		      :server-id 'nix)))
 #+end_src
 
 #+begin_src scheme :noweb-ref packages :noweb-sep ""

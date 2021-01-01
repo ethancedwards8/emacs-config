@@ -452,15 +452,42 @@ Very Similar to S-o from Vim"
 (use-package debbugs)
 
 (use-package lsp-mode
-  :commands (lsp lsp-defferred)
+  :commands (lsp lsp-deferred)
   :init
   (setq lsp-keymap-prefix "C-c l")
   :config
-  )
+  (lsp-enable-which-key-integration t))
+
+(use-package lsp-ui
+  :hook (lsp-mode . lsp-ui-mode)
+  :custom
+  (lsp-ui-doc-position 'bottom))
 
 (use-package company
+  :after lsp-mode
+  :hook (lsp-mode . company-mode)
+  :bind (:map company-active-map
+	      ("<tab>" . company-complete-selection))
+	(:map lsp-mode-map
+	      ("<tab>" . company-indent-or-complete-common)))
+
+(use-package flycheck
+  :hook (lsp-deferred . flycheck-mode))
+
+(use-package rustic
+  :mode ("\\.rs\\'" . rustic-mode)
+  :hook (rustic-mode . lsp-deferred))
+
+(use-package web-mode
+  :mode ("\\.html\\'" . web-mode)
+  :mode ("\\.xhtml\\'" . web-mode)
+  :mode ("\\.css\\'" . css-mode)
+  :mode ("\\.scss\\'" . scss-mode))
+
+(use-package rjsx-mode
   :config
-  (add-hook 'after-init-hook 'global-company-mode))
+  :mode ("\\.js\\'" . rjsx-mode)
+  :mode ("\\.jsx\\'" . rjsx-mode))
 
 (use-package typescript-mode
   :mode "\\.ts\\'"
@@ -469,7 +496,13 @@ Very Similar to S-o from Vim"
   (setq typescript-indent-level 2))
 
 (use-package nix-mode
-  :mode "\\.nix\\'")
+  :config
+  (require 'lsp)
+  (add-to-list 'lsp-language-id-configuration '(nix-mode . "nix"))
+  (lsp-register-client
+   (make-lsp-client :new-connection (lsp-stdio-connection '("rnix-lsp"))
+		    :major-modes '(nix-mode)
+		    :server-id 'nix)))
 
 (use-package guix)
 
