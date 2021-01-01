@@ -97,7 +97,7 @@
   "Inserts a newline(s) above the line conataining the cursor.
 Very Similar to S-o from Vim"
   (interactive "p")
-  (save-excursion 
+  (save-excursion
     (move-beginning-of-line 1)
     (newline times)))
 
@@ -132,6 +132,30 @@ Very Similar to S-o from Vim"
 				       (directory-files-recursively
 					directory org-agenda-file-regexp))
 				     '("~/Nextcloud/Org/")))))
+
+(use-package general
+  :config
+  (general-auto-unbind-keys)
+  (general-override-mode +1)
+
+  (general-create-definer my/leader-key
+    :states '(normal insert visual emacs treemacs)
+    :keymap 'override
+    :prefix "SPC"
+    :global-prefix "C-SPC"
+    :non-normal-prefix "C-SPC"))
+
+(use-package hydra)
+
+(my/leader-key
+      "SPC"  '(counsel-find-file :wk "counsel find file")
+      "I" '(find-config :wk "edit README.org/init.el"))
+
+(use-package which-key
+  :init (which-key-mode)
+  :diminish which-key-mode
+  :config
+  (setq which-key-idle-delay 5))
 
 ;; (setq default ((t (:inherit nil :stipple nil :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 98 :width normal :foundry "JB  " :family "JetBrains Mono"))))
 
@@ -185,7 +209,31 @@ Very Similar to S-o from Vim"
   ;; :bind (:map evil-motion-state-map
   ;;       ("/" . counsel-grep-or-swiper))
   :config
-  (evil-mode 1))
+  (evil-mode 1)
+
+  (defhydra my/window-hydra ()
+    ("h" evil-window-left)
+    ("j" evil-window-down)
+    ("k" evil-window-up)
+    ("l" evil-window-right)
+    ("c" evil-window-delete)
+    ("v" evil-window-vsplit)
+    ("s" evil-window-split)
+    ("o" delete-other-windows)
+    ("q" nil "quit"))
+
+  (my/leader-key
+      "w"   '(:ignore t :wk "window")
+      "w h" '(evil-window-left :wk "move to left window")
+      "w j" '(evil-window-down :wk "move to down window")
+      "w k" '(evil-window-up :wk "move to up window")
+      "w l" '(evil-window-right :wk "move to right window")
+      "w c" '(evil-window-delete :wk "move to right window")
+      "w v" '(evil-window-vsplit :wk "move to right window")
+      "w s" '(evil-window-split :wk "move to right window")
+      "w o" '(delete-other-windows :wk "move to right window")
+      "TAB" '(evil-switch-to-windows-last-buffer :wk "switch to previous buffer")
+      "w w" '(my/window-hydra/body :wk "window hydra")))
 
 (use-package evil-collection
   :after evil
@@ -238,6 +286,13 @@ Very Similar to S-o from Vim"
 ;; (use-package counsel-projectile
 ;;   :config (counsel-projectile-mode))
 
+(use-package treemacs)
+
+(use-package treemacs-evil
+  :after (treemacs evil))
+
+;; (use-package lsp-treemacs)
+
 (use-package org
   :custom
   (org-directory "~/Nextcloud/org")
@@ -255,6 +310,10 @@ Very Similar to S-o from Vim"
   (add-to-list 'org-structure-template-alist '("sh" . "src shell"))
   (add-to-list 'org-structure-template-alist '("el" . "src emacs-lisp"))
   (add-to-list 'org-structure-template-alist '("py" . "src python"))
+
+  (my/leader-key
+      "o r" '(my/refresh-org-files :wk "refresh my org files")
+      "o a" '(org-agenda :wk "org agenda"))
 
   (my/refresh-org-files))
 
@@ -301,6 +360,10 @@ Very Similar to S-o from Vim"
   :ensure nil
   :custom (eshell-aliases-file "~/.emacs.d/eshell/eshell-alias")
   :config
+
+  (my/leader-key
+      "e" '(eshell :wk "eshell"))
+
   (with-eval-after-load 'esh-opt
     (setq eshell-destory-buffer-when-process-dies t)
     (setq eshell-visual-commands '("htop" "iotop")))
@@ -336,40 +399,6 @@ Very Similar to S-o from Vim"
 
 ;; (use-package exwm)
 
-(use-package general
-  :config
-  (general-auto-unbind-keys)
-  (general-override-mode +1)
-
-  (general-create-definer my/leader-key
-    :states '(normal insert visual emacs treemacs)
-    :keymap 'override
-    :prefix "SPC"
-    :global-prefix "C-SPC"
-    :non-normal-prefix "C-SPC"))
-
-(my/leader-key 
-      "SPC"  '(counsel-find-file :wk "counsel find file")
-      "o r" '(my/refresh-org-files :wk "refresh my org files")
-      "I" '(find-config :wk "edit README.org/init.el")
-      ;; "o a" '(org-agenda :wk "org agenda")
-      "e" '(eshell :wk "eshell")
-      "w h" '(evil-window-left :wk "move to left window")
-      "w j" '(evil-window-down :wk "move to down window")
-      "w k" '(evil-window-up :wk "move to up window")
-      "w l" '(evil-window-right :wk "move to right window")
-      "w c" '(evil-window-delete :wk "move to right window")
-      "w v" '(evil-window-vsplit :wk "move to right window")
-      "w s" '(evil-window-split :wk "move to right window")
-      "w o" '(delete-other-windows :wk "move to right window")
-      "TAB" '(evil-switch-to-windows-last-buffer :wk "switch to previous buffer"))
-
-(use-package which-key
-  :init (which-key-mode)
-  :diminish which-key-mode
-  :config
-  (setq which-key-idle-delay 5))
-
 (use-package rainbow-mode
   :config
   ;; (setq rainbow-x-colors nil)
@@ -386,7 +415,13 @@ Very Similar to S-o from Vim"
   ([remap describe-function] . counsel-describe-function)
   ([remap describe-command] . helpful-command)
   ([remap describe-variable] . counsel-describe-variable)
-  ([remap describe-key] . helpful-key))
+  ([remap describe-key] . helpful-key)
+  :config
+  (my/leader-key
+    "h" '(:ignore t :wk "helpful")
+    "h f" '(counsel-describe-function :wk "describe function")
+    "h v" '(counsel-describe-variable :wk "describe variable")
+    "h k" '(helpful-key :wk "describe keybind")))
 
 (use-package rg
   :defer t)
@@ -410,16 +445,49 @@ Very Similar to S-o from Vim"
   (spdx-copyright-holder 'auto)
   (spdx-project-detection 'auto))
 
+(use-package direnv
+ :config
+ (direnv-mode))
+
+(use-package debbugs)
+
 (use-package lsp-mode
-  :commands (lsp lsp-defferred)
+  :commands (lsp lsp-deferred)
   :init
   (setq lsp-keymap-prefix "C-c l")
   :config
-  )
+  (lsp-enable-which-key-integration t))
+
+(use-package lsp-ui
+  :hook (lsp-mode . lsp-ui-mode)
+  :custom
+  (lsp-ui-doc-position 'bottom))
 
 (use-package company
+  :after lsp-mode
+  :hook (lsp-mode . company-mode)
+  :bind (:map company-active-map
+	      ("<tab>" . company-complete-selection))
+	(:map lsp-mode-map
+	      ("<tab>" . company-indent-or-complete-common)))
+
+(use-package flycheck
+  :hook (lsp-deferred . flycheck-mode))
+
+(use-package rustic
+  :mode ("\\.rs\\'" . rustic-mode)
+  :hook (rustic-mode . lsp-deferred))
+
+(use-package web-mode
+  :mode ("\\.html\\'" . web-mode)
+  :mode ("\\.xhtml\\'" . web-mode)
+  :mode ("\\.css\\'" . css-mode)
+  :mode ("\\.scss\\'" . scss-mode))
+
+(use-package rjsx-mode
   :config
-  (add-hook 'after-init-hook 'global-company-mode))
+  :mode ("\\.js\\'" . rjsx-mode)
+  :mode ("\\.jsx\\'" . rjsx-mode))
 
 (use-package typescript-mode
   :mode "\\.ts\\'"
@@ -428,7 +496,13 @@ Very Similar to S-o from Vim"
   (setq typescript-indent-level 2))
 
 (use-package nix-mode
-  :mode "\\.nix\\'")
+  :config
+  (require 'lsp)
+  (add-to-list 'lsp-language-id-configuration '(nix-mode . "nix"))
+  (lsp-register-client
+   (make-lsp-client :new-connection (lsp-stdio-connection '("rnix-lsp"))
+		    :major-modes '(nix-mode)
+		    :server-id 'nix)))
 
 (use-package guix)
 
