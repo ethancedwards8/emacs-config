@@ -692,6 +692,17 @@ mu4e is an email client for Emacs. Currently I use neomutt and I'm very happy wi
 #+begin_src scheme :noweb-ref packages :noweb-sep ""
 #+end_src
 
+*** emms
+
+EMMS is a Music player/interface for Emacs. I've heard good things about it and I'm willing to try it out.
+
+#+begin_src emacs-lisp
+  (use-package emms
+    :commands emms)
+    ;; :config
+  
+#+end_src
+
 *** Terminal modes
 
 **** vterm

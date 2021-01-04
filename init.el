@@ -345,6 +345,10 @@ Very Similar to S-o from Vim"
   (add-to-list 'load-path "/usr/share/emacs/site-lisp/mu4e/")
   (require 'mu4e))
 
+(use-package emms
+  :commands emms)
+  ;; :config
+
 (use-package vterm
   :custom
   (vterm-always-compile-module t)
