@@ -20,10 +20,10 @@ I'll also probably put this somewhere on [[https://ethancedwards.com][my site]] 
 #+END_QUOTE
 
 * Setup
-  
+
 ** Configure package sources and =use-package= + Garbage Collection
 
-Add repo's. ELPA, MELPA, org, and ublt. 
+Add repo's. ELPA, MELPA, org, and ublt.
 
 #+begin_src emacs-lisp
   ;; NOTE: init.el is now generated from Emacs.org.  Please edit that file
@@ -107,7 +107,7 @@ I have my custom/stolen elisp code in ~/.emacs.d/lisp/. This will add that to my
 #+end_src
 
 * Preferences
-  
+
 ** Turn off ugly window deocration.
 
 #+begin_src emacs-lisp
@@ -176,7 +176,7 @@ I have my custom/stolen elisp code in ~/.emacs.d/lisp/. This will add that to my
 
 From the [[https://github.com/technomancy/better-defaults/blob/master/better-defaults.el][better defaults github page]]
 (I'm pretty sure these get overwriteen by Swiper but its okay :) )
- 
+
 #+begin_src emacs-lisp
   ;; (global-set-key (kbd "C-s") 'isearch-forward-regexp)
   ;; (global-set-key (kbd "C-r") 'isearch-backward-regexp)
@@ -218,7 +218,7 @@ Fun little elisp function I wrote following a Howard Abram's tutorial, nothing s
     "Inserts a newline(s) above the line conataining the cursor.
   Very Similar to S-o from Vim"
     (interactive "p")
-    (save-excursion 
+    (save-excursion
       (move-beginning-of-line 1)
       (newline times)))
 
@@ -275,6 +275,60 @@ The recursive agenda bit can be [[https://www.reddit.com/r/orgmode/comments/6q6c
 #+end_src
 
 * Packages
+
+** Keybinds
+
+*** Leader key
+
+I use general.el to set my "leader" key, =SPC=, or =C-SPC=.
+
+#+begin_src emacs-lisp
+  (use-package general
+    :config
+    (general-auto-unbind-keys)
+    (general-override-mode +1)
+
+    (general-create-definer my/leader-key
+      :states '(normal insert visual emacs treemacs)
+      :keymap 'override
+      :prefix "SPC"
+      :global-prefix "C-SPC"
+      :non-normal-prefix "C-SPC"))
+#+end_src
+
+#+begin_src scheme :noweb-ref packages :noweb-sep ""
+
+"emacs-general"
+
+#+end_src
+
+*** Hydra's
+
+Hydra's are a way you can make Emacs binds "stick around"
+
+#+begin_src emacs-lisp
+  (use-package hydra)
+#+end_src
+
+*** Leader functions
+
+Here I can define functions with my leader key.
+
+#+begin_src emacs-lisp
+  (my/leader-key
+	"SPC"  '(counsel-find-file :wk "counsel find file")
+	"I" '(find-config :wk "edit README.org/init.el"))
+#+end_src
+
+*** Which-key
+
+#+begin_src emacs-lisp
+  (use-package which-key
+    :init (which-key-mode)
+    :diminish which-key-mode
+    :config
+    (setq which-key-idle-delay 5))
+#+end_src
 
 ** Theming and Fonts/Faces
 
@@ -382,14 +436,38 @@ This is the packages that integrate with my workflow, Ivy, Evil, Magit, Org stuf
 Evil mode emulates Vi/Vim keybinds for Emacs
 
 #+begin_src emacs-lisp
-  (use-package evil
-    :init
-    (setq evil-want-integration t)
-    (setq evil-want-keybinding nil)
-    ;; :bind (:map evil-motion-state-map
-    ;;       ("/" . counsel-grep-or-swiper))
-    :config
-    (evil-mode 1))
+    (use-package evil
+      :init
+      (setq evil-want-integration t)
+      (setq evil-want-keybinding nil)
+      ;; :bind (:map evil-motion-state-map
+      ;;       ("/" . counsel-grep-or-swiper))
+      :config
+      (evil-mode 1)
+
+      (defhydra my/window-hydra ()
+	("h" evil-window-left)
+	("j" evil-window-down)
+	("k" evil-window-up)
+	("l" evil-window-right)
+	("c" evil-window-delete)
+	("v" evil-window-vsplit)
+	("s" evil-window-split)
+	("o" delete-other-windows)
+	("q" nil "quit"))
+
+      (my/leader-key
+	  "w"   '(:ignore t :wk "window")
+	  "w h" '(evil-window-left :wk "move to left window")
+	  "w j" '(evil-window-down :wk "move to down window")
+	  "w k" '(evil-window-up :wk "move to up window")
+	  "w l" '(evil-window-right :wk "move to right window")
+	  "w c" '(evil-window-delete :wk "move to right window")
+	  "w v" '(evil-window-vsplit :wk "move to right window")
+	  "w s" '(evil-window-split :wk "move to right window")
+	  "w o" '(delete-other-windows :wk "move to right window")
+	  "TAB" '(evil-switch-to-windows-last-buffer :wk "switch to previous buffer")
+	  "w w" '(my/window-hydra/body :wk "window hydra")))
 #+end_src
 
 #+begin_src scheme :noweb-ref packages :noweb-sep ""
@@ -447,7 +525,7 @@ Evil-org adds evil functionality to org mode, very helpful
 
 Magit, the Git client for Emacs, I love it, you love it, everyone loves it.
 
-Also installing evil-magit for evil integration with magit, evil-collection should replace it soon :tm: 
+Also installing evil-magit for evil integration with magit, evil-collection should replace it soon :tm:
 
 #+begin_src emacs-lisp
   (use-package magit
@@ -459,7 +537,7 @@ Also installing evil-magit for evil integration with magit, evil-collection shou
   ;; Pulled from David Wilson's config, probably won't use
   (global-set-key (kbd "C-M-;") 'magit-status)
 #+end_src
-  
+
 #+begin_src scheme :noweb-ref packages :noweb-sep ""
 
 "emacs-magit"
@@ -503,6 +581,27 @@ Dired is a file manager built into Emacs, its pretty great.
 
 #+end_src
 
+*** Treemacs
+
+Treemacs is similar to nerdtree in Vim, I don't use it much but am interested in treemacs-lsp
+
+#+begin_src emacs-lisp
+  (use-package treemacs)
+#+end_src
+
+This is for evil support in treemacs
+
+#+begin_src emacs-lisp
+  (use-package treemacs-evil
+    :after (treemacs evil))
+#+end_src
+
+TODO - use lsp-treemacs
+
+#+begin_src emacs-lisp
+  ;; (use-package lsp-treemacs)
+#+end_src
+
 *** Org mode
 
 Org mode is literally the best, I'm writing this config in org, what else do you need?
@@ -525,6 +624,10 @@ Org mode is literally the best, I'm writing this config in org, what else do you
     (add-to-list 'org-structure-template-alist '("sh" . "src shell"))
     (add-to-list 'org-structure-template-alist '("el" . "src emacs-lisp"))
     (add-to-list 'org-structure-template-alist '("py" . "src python"))
+
+    (my/leader-key
+	"o r" '(my/refresh-org-files :wk "refresh my org files")
+	"o a" '(org-agenda :wk "org agenda"))
 
     (my/refresh-org-files))
 #+end_src
@@ -561,7 +664,7 @@ ox-twbs - Org mode export twitter bootstrap I think? Not sure how I got this pac
   (use-package ox-twbs
     :defer t)
 #+end_src
- 
+
 #+begin_src scheme :noweb-ref packages :noweb-sep ""
 
 "emacs-ox-twbs"
@@ -589,6 +692,17 @@ mu4e is an email client for Emacs. Currently I use neomutt and I'm very happy wi
 #+begin_src scheme :noweb-ref packages :noweb-sep ""
 #+end_src
 
+*** emms
+
+EMMS is a Music player/interface for Emacs. I've heard good things about it and I'm willing to try it out.
+
+#+begin_src emacs-lisp
+  (use-package emms
+    :commands emms)
+    ;; :config
+  
+#+end_src
+
 *** Terminal modes
 
 **** vterm
@@ -613,7 +727,7 @@ I use vterm for the cases when I need a terminal emulator, I try to use eshell a
 #+end_src
 
 **** eshell
- 
+
 Eshell is probably my favorite shell for Emacs, its fast and just works :tm:
 
 eshell-git-prompt gives me a git prompt for eshell, kinda in the name xD
@@ -625,6 +739,10 @@ eshell-git-prompt gives me a git prompt for eshell, kinda in the name xD
     :ensure nil
     :custom (eshell-aliases-file "~/.emacs.d/eshell/eshell-alias")
     :config
+
+    (my/leader-key
+	"e" '(eshell :wk "eshell"))
+
     (with-eval-after-load 'esh-opt
       (setq eshell-destory-buffer-when-process-dies t)
       (setq eshell-visual-commands '("htop" "iotop")))
@@ -680,7 +798,7 @@ Ivy Rich provides a nicer interface to Ivy in my opinion.
 #+end_src
 
 **** Counsel
- 
+
 Counsel takes Ivy further.
 
 #+begin_src emacs-lisp
@@ -704,68 +822,6 @@ EXWM is an X window manager for Emacs. Currently I use bspwm but I'm open to try
 
 #+begin_src emacs-lisp
   ;; (use-package exwm)
-#+end_src
-
-** Keybinds
-
-*** Leader key
-
-I use general.el to set my "leader" key, =SPC=, or =C-SPC=.
-
-#+begin_src emacs-lisp
-  (use-package general
-    :config
-    (general-auto-unbind-keys)
-    (general-override-mode +1)
-
-    (general-create-definer my/leader-key
-      :states '(normal insert visual emacs treemacs)
-      :keymap 'override
-      :prefix "SPC"
-      :global-prefix "C-SPC"
-      :non-normal-prefix "C-SPC"))
-#+end_src
-
-#+begin_src scheme :noweb-ref packages :noweb-sep ""
-
-"emacs-general"
-
-#+end_src
-
-*** Hydra's
-
-Nothing yet :)
-
-*** Leader functions
-    
-Here I can define functions with my leader key. 
-
-#+begin_src emacs-lisp
-  (my/leader-key 
-	"SPC"  '(counsel-find-file :wk "counsel find file")
-	"o r" '(my/refresh-org-files :wk "refresh my org files")
-	"I" '(find-config :wk "edit README.org/init.el")
-	;; "o a" '(org-agenda :wk "org agenda")
-	"e" '(eshell :wk "eshell")
-	"w h" '(evil-window-left :wk "move to left window")
-	"w j" '(evil-window-down :wk "move to down window")
-	"w k" '(evil-window-up :wk "move to up window")
-	"w l" '(evil-window-right :wk "move to right window")
-	"w c" '(evil-window-delete :wk "move to right window")
-	"w v" '(evil-window-vsplit :wk "move to right window")
-	"w s" '(evil-window-split :wk "move to right window")
-	"w o" '(delete-other-windows :wk "move to right window")
-	"TAB" '(evil-switch-to-windows-last-buffer :wk "switch to previous buffer"))
-#+end_src
-
-*** Which-key
-
-#+begin_src emacs-lisp
-  (use-package which-key
-    :init (which-key-mode)
-    :diminish which-key-mode
-    :config
-    (setq which-key-idle-delay 5))
 #+end_src
 
 ** General tools
@@ -808,7 +864,13 @@ These are some general tools that I use, they don't really belong in any categor
     ([remap describe-function] . counsel-describe-function)
     ([remap describe-command] . helpful-command)
     ([remap describe-variable] . counsel-describe-variable)
-    ([remap describe-key] . helpful-key))
+    ([remap describe-key] . helpful-key)
+    :config
+    (my/leader-key
+      "h" '(:ignore t :wk "helpful")
+      "h f" '(counsel-describe-function :wk "describe function")
+      "h v" '(counsel-describe-variable :wk "describe variable")
+      "h k" '(helpful-key :wk "describe keybind")))
 #+end_src
 
 #+begin_src scheme :noweb-ref packages :noweb-sep ""
@@ -853,7 +915,7 @@ These are some general tools that I use, they don't really belong in any categor
       (exec-path-from-shell-initialize))
     )
 #+end_src
-   
+
 *** spdx - insert spdx headers
 
 #+begin_src emacs-lisp
@@ -864,17 +926,32 @@ These are some general tools that I use, they don't really belong in any categor
     (spdx-copyright-holder 'auto)
     (spdx-project-detection 'auto))
 #+end_src
+
+*** direnv - emacs direnv integration
+
+#+begin_src emacs-lisp
+  (use-package direnv
+   :config
+   (direnv-mode))
+#+end_src
+
+*** debbugs - access the gnu bug tracker form inside emacs
+
+#+begin_src emacs-lisp
+  (use-package debbugs)
+#+end_src
+
 ** Programming
-   
+
 *** lsp-mode
-    
+
 #+begin_src emacs-lisp
   (use-package lsp-mode
-    :commands (lsp lsp-defferred)
+    :commands (lsp lsp-deferred)
     :init
     (setq lsp-keymap-prefix "C-c l")
     :config
-    )
+    (lsp-enable-which-key-integration t))
 #+end_src
 
 #+begin_src scheme :noweb-ref packages :noweb-sep ""
@@ -883,15 +960,74 @@ These are some general tools that I use, they don't really belong in any categor
 
 #+end_src
 
+*** lsp-ui
+
+#+begin_src emacs-lisp
+  (use-package lsp-ui
+    :hook (lsp-mode . lsp-ui-mode)
+    :custom
+    (lsp-ui-doc-position 'bottom))
+#+end_src
+
+#+begin_src scheme :noweb-ref packages :noweb-sep ""
+
+"emacs-lsp-ui"
+
+#+end_src
+
 *** company-mode
 
 #+begin_src emacs-lisp
   (use-package company
-    :config
-    (add-hook 'after-init-hook 'global-company-mode))
+    :after lsp-mode
+    :hook (lsp-mode . company-mode)
+    :bind (:map company-active-map
+		("<tab>" . company-complete-selection))
+	  (:map lsp-mode-map
+		("<tab>" . company-indent-or-complete-common)))
 #+end_src
 
-*** Typescript
+*** flycheck
+
+Syntax checking for GNU Emacs
+
+#+begin_src emacs-lisp
+  (use-package flycheck
+    :hook (lsp-deferred . flycheck-mode))
+#+end_src
+
+*** Rust
+
+I'll be using [[https://github.com/brotzeit/rustic][rustic]] for Rust development inside of Emacs
+
+#+begin_src emacs-lisp
+  (use-package rustic
+    :mode ("\\.rs\\'" . rustic-mode)
+    :hook (rustic-mode . lsp-deferred))
+#+end_src
+
+*** Web dev
+
+**** web-mode - HTML + CSS
+
+#+begin_src emacs-lisp
+  (use-package web-mode
+    :mode ("\\.html\\'" . web-mode)
+    :mode ("\\.xhtml\\'" . web-mode)
+    :mode ("\\.css\\'" . css-mode)
+    :mode ("\\.scss\\'" . scss-mode))
+#+end_src
+
+**** Javascript
+
+#+begin_src emacs-lisp
+  (use-package rjsx-mode
+    :config
+    :mode ("\\.js\\'" . rjsx-mode)
+    :mode ("\\.jsx\\'" . rjsx-mode))
+#+end_src
+
+**** Typescript
 
 #+begin_src emacs-lisp
   (use-package typescript-mode
@@ -913,7 +1049,13 @@ Nix is a fully function programming language centered around the NixOS ecosystem
 
 #+begin_src emacs-lisp
   (use-package nix-mode
-    :mode "\\.nix\\'")
+    :config
+    (require 'lsp)
+    (add-to-list 'lsp-language-id-configuration '(nix-mode . "nix"))
+    (lsp-register-client
+     (make-lsp-client :new-connection (lsp-stdio-connection '("rnix-lsp"))
+		      :major-modes '(nix-mode)
+		      :server-id 'nix)))
 #+end_src
 
 #+begin_src scheme :noweb-ref packages :noweb-sep ""
@@ -970,7 +1112,7 @@ I have a bit of a thing for functional programming, learning Haskell is on my li
 GDScript, a high-level, dynamically typed programming language. Its used for programming in the Godot Game engine language.
 
 #+begin_src emacs-lisp
-  (use-package gdscript-mode) 
+  (use-package gdscript-mode)
 #+end_src
 
 #+begin_src scheme :noweb-ref packages :noweb-sep ""
@@ -983,7 +1125,7 @@ GDScript, a high-level, dynamically typed programming language. Its used for pro
 
 Its yaml, what more is their to say? Better than json but still *sucks*
 
-PS: adding this package also helps not break =docker-compose-mode= for some reason 
+PS: adding this package also helps not break =docker-compose-mode= for some reason
 
 #+begin_src emacs-lisp
   (use-package yaml-mode
@@ -1089,7 +1231,7 @@ These packages are kinda fun, don't really have much of a point
 
 *.config/guix/manifests/emacs.scm:*
 
-#+begin_src scheme :scheme guile :tangle ~/.config/guix/manifests/emacs.scm :noweb yes 
+#+begin_src scheme :scheme guile :tangle ~/.config/guix/manifests/emacs.scm :noweb yes
   (specifications->manifest
    ;; '("emacs"
    '(

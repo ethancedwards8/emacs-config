@@ -1,1 +1,1 @@
-./configure --with-json --with-cairo --with-harfbuzz --without-libotf --with-modules --with-sound --with-mailutils --with-x-toolkit=lucid --with-nativecomp
+./configure --with-json --with-cairo --with-harfbuzz --without-libotf --with-modules --with-sound --with-mailutils --with-nativecomp
