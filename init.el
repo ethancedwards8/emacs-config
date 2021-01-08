@@ -546,9 +546,11 @@ Very Similar to S-o from Vim"
 (use-package gnugo
   :defer t)
 
-(use-package 2048-game)
+(use-package 2048-game
+  :defer t)
 
-(use-package snow)
+(use-package snow
+  :defer t)
 
 (setq-default c-basic-offset 8)
 (setq c-default-style '((java-mode . "java")

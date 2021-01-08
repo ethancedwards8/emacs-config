@@ -1216,13 +1216,15 @@ These packages are kinda fun, don't really have much of a point
 *** 2048-game - play 2048 inside of emacs!
 
 #+begin_src emacs-lisp
-  (use-package 2048-game)
+  (use-package 2048-game
+    :defer t)
 #+end_src
 
 *** snow.el - Let it snow in Emacs!
 
 #+begin_src emacs-lisp
-  (use-package snow)
+  (use-package snow
+    :defer t)
 #+end_src
 
 * Emacs Guix Profiles
