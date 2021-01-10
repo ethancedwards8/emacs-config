@@ -39,6 +39,7 @@ Add repo's. ELPA, MELPA, org, and ublt.
 
   (package-initialize)
   (unless (package-installed-p 'use-package)
+    (package-refresh-contents)
     (package-install 'use-package))
 
   (require 'use-package)
@@ -596,12 +597,6 @@ This is for evil support in treemacs
     :after (treemacs evil))
 #+end_src
 
-TODO - use lsp-treemacs
-
-#+begin_src emacs-lisp
-  ;; (use-package lsp-treemacs)
-#+end_src
-
 *** Org mode
 
 Org mode is literally the best, I'm writing this config in org, what else do you need?
@@ -960,6 +955,15 @@ These are some general tools that I use, they don't really belong in any categor
 
 #+end_src
 
+*** lsp-treemacs
+
+lsp-treemacs allows for IDE like function navigation and documentation viewing
+
+#+begin_src emacs-lisp
+  (use-package lsp-treemacs
+    :after lsp)
+#+end_src
+
 *** lsp-ui
 
 #+begin_src emacs-lisp
@@ -980,7 +984,7 @@ These are some general tools that I use, they don't really belong in any categor
 #+begin_src emacs-lisp
   (use-package company
     :after lsp-mode
-    :hook (lsp-mode . company-mode)
+    :hook (after-init . global-company-mode)
     :bind (:map company-active-map
 		("<tab>" . company-complete-selection))
 	  (:map lsp-mode-map

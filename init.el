@@ -11,6 +11,7 @@
 
 (package-initialize)
 (unless (package-installed-p 'use-package)
+  (package-refresh-contents)
   (package-install 'use-package))
 
 (require 'use-package)
@@ -291,8 +292,6 @@ Very Similar to S-o from Vim"
 (use-package treemacs-evil
   :after (treemacs evil))
 
-;; (use-package lsp-treemacs)
-
 (use-package org
   :custom
   (org-directory "~/Nextcloud/org")
@@ -462,6 +461,9 @@ Very Similar to S-o from Vim"
   :config
   (lsp-enable-which-key-integration t))
 
+(use-package lsp-treemacs
+  :after lsp)
+
 (use-package lsp-ui
   :hook (lsp-mode . lsp-ui-mode)
   :custom
@@ -469,7 +471,7 @@ Very Similar to S-o from Vim"
 
 (use-package company
   :after lsp-mode
-  :hook (lsp-mode . company-mode)
+  :hook (after-init . global-company-mode)
   :bind (:map company-active-map
 	      ("<tab>" . company-complete-selection))
 	(:map lsp-mode-map
