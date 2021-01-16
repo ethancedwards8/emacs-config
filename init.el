@@ -332,22 +332,6 @@ Very Similar to S-o from Vim"
 (use-package ox-twbs
   :defer t)
 
-;; (use-package mu4e
-;;   :ensure nil
-;;   ;; :if (and (eq system-type 'gnu/linux) (string-equal system-name "archpc"))
-;;   :config
-;;   ;; add mu4e to the load path on Arch
-;;   (add-to-list 'load-path "/usr/share/emacs/site-lisp/mu4e/")
-;;   (require 'mu4e))
-
-(when (string= (system-name) "archpc")
-  (add-to-list 'load-path "/usr/share/emacs/site-lisp/mu4e/")
-  (require 'mu4e))
-
-(use-package emms
-  :commands emms)
-  ;; :config
-
 (use-package vterm
   :custom
   (vterm-always-compile-module t)
@@ -554,7 +538,23 @@ Very Similar to S-o from Vim"
 (use-package snow
   :defer t)
 
-(setq-default c-basic-offset 8)
-(setq c-default-style '((java-mode . "java")
-			(awk-mode . "awk")
-			(other . "linux")))
+(my/leader-key
+  "a" '(:ignore t :wk "applications"))
+
+;; (use-package mu4e
+;;   :ensure nil
+;;   ;; :if (and (eq system-type 'gnu/linux) (string-equal system-name "archpc"))
+;;   :config
+;;   ;; add mu4e to the load path on Arch
+;;   (add-to-list 'load-path "/usr/share/emacs/site-lisp/mu4e/")
+;;   (require 'mu4e))
+
+(when (string= (system-name) "archpc")
+  (add-to-list 'load-path "/usr/share/emacs/site-lisp/mu4e/")
+  (require 'mu4e))
+
+(use-package emms
+  :commands emms
+  :config
+  (emms-standard)
+  (emms-default-players))
