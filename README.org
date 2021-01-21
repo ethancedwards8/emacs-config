@@ -318,7 +318,8 @@ Here I can define functions with my leader key.
 #+begin_src emacs-lisp
   (my/leader-key
 	"SPC"  '(counsel-find-file :wk "counsel find file")
-	"I" '(find-config :wk "edit README.org/init.el"))
+	"I" '(find-config :wk "edit README.org/init.el")
+	"." '(counsel-M-x :wk "M-x"))
 #+end_src
 
 *** Which-key
@@ -548,13 +549,17 @@ Also installing evil-magit for evil integration with magit, evil-collection shou
 
 #+begin_src emacs-lisp
   (use-package magit
-    :bind (("C-x g" . magit-status)))
+    :bind (("C-x g" . magit-status)
+	   ;; Pulled from David Wilson's config, probably won't use
+	   ("C-M-;" . magit-status))
+    :config
+    (my/leader-key
+      "g" '(:ignore t :wk "magit")
+      "g g" '(magit-status :wk "magit-status")
+      "g b" '(magit-blame :wk "magit-blame")))
 
   (use-package magit-todos
     :defer t)
-
-  ;; Pulled from David Wilson's config, probably won't use
-  (global-set-key (kbd "C-M-;") 'magit-status)
 #+end_src
 
 #+begin_src scheme :noweb-ref packages :noweb-sep ""
@@ -682,38 +687,6 @@ ox-twbs - Org mode export twitter bootstrap I think? Not sure how I got this pac
 
 "emacs-ox-twbs"
 
-#+end_src
-
-*** mu4e
-
-mu4e is an email client for Emacs. Currently I use neomutt and I'm very happy with it, but I'm willing to experiment.
-
-#+begin_src emacs-lisp
-  ;; (use-package mu4e
-  ;;   :ensure nil
-  ;;   ;; :if (and (eq system-type 'gnu/linux) (string-equal system-name "archpc"))
-  ;;   :config
-  ;;   ;; add mu4e to the load path on Arch
-  ;;   (add-to-list 'load-path "/usr/share/emacs/site-lisp/mu4e/")
-  ;;   (require 'mu4e))
-
-  (when (string= (system-name) "archpc")
-    (add-to-list 'load-path "/usr/share/emacs/site-lisp/mu4e/")
-    (require 'mu4e))
-#+end_src
-
-#+begin_src scheme :noweb-ref packages :noweb-sep ""
-#+end_src
-
-*** emms
-
-EMMS is a Music player/interface for Emacs. I've heard good things about it and I'm willing to try it out.
-
-#+begin_src emacs-lisp
-  (use-package emms
-    :commands emms)
-    ;; :config
-  
 #+end_src
 
 *** Terminal modes
@@ -1249,6 +1222,48 @@ These packages are kinda fun, don't really have much of a point
     :defer t)
 #+end_src
 
+* Applications
+  
+** Bind prefix 
+
+#+begin_src emacs-lisp
+  (my/leader-key
+    "a" '(:ignore t :wk "applications"))
+#+end_src
+
+** mu4e
+
+mu4e is an email client for Emacs. Currently I use neomutt and I'm very happy with it, but I'm willing to experiment.
+
+#+begin_src emacs-lisp
+  ;; (use-package mu4e
+  ;;   :ensure nil
+  ;;   ;; :if (and (eq system-type 'gnu/linux) (string-equal system-name "archpc"))
+  ;;   :config
+  ;;   ;; add mu4e to the load path on Arch
+  ;;   (add-to-list 'load-path "/usr/share/emacs/site-lisp/mu4e/")
+  ;;   (require 'mu4e))
+
+  (when (string= (system-name) "archpc")
+    (add-to-list 'load-path "/usr/share/emacs/site-lisp/mu4e/")
+    (require 'mu4e))
+#+end_src
+
+#+begin_src scheme :noweb-ref packages :noweb-sep ""
+#+end_src
+
+** emms
+
+EMMS is a Music player/interface for Emacs. I've heard good things about it and I'm willing to try it out.
+
+#+begin_src emacs-lisp
+  (use-package emms
+    :commands emms
+    :config
+    (emms-standard)
+    (emms-default-players))
+#+end_src
+
 * Emacs Guix Profiles
 
 *.config/guix/manifests/emacs.scm:*
@@ -1259,16 +1274,4 @@ These packages are kinda fun, don't really have much of a point
    '(
      <<packages>>
   ))
-#+end_src
-
-* TODO Sort out eventually
-
-Figure out what to do with =(custom-enabled-themes '(deeper-blue))=, I'll probably put all my themes in a Hydra.
-
-Have these too, need to sort out eventually...
-#+begin_src emacs-lisp
-  (setq-default c-basic-offset 8)
-  (setq c-default-style '((java-mode . "java")
-			  (awk-mode . "awk")
-			  (other . "linux")))
 #+end_src

@@ -150,7 +150,8 @@ Very Similar to S-o from Vim"
 
 (my/leader-key
       "SPC"  '(counsel-find-file :wk "counsel find file")
-      "I" '(find-config :wk "edit README.org/init.el"))
+      "I" '(find-config :wk "edit README.org/init.el")
+      "." '(counsel-M-x :wk "M-x"))
 
 (use-package which-key
   :init (which-key-mode)
@@ -264,13 +265,17 @@ Very Similar to S-o from Vim"
   (evil-org-agenda-set-keys))
 
 (use-package magit
-  :bind (("C-x g" . magit-status)))
+  :bind (("C-x g" . magit-status)
+	 ;; Pulled from David Wilson's config, probably won't use
+	 ("C-M-;" . magit-status))
+  :config
+  (my/leader-key
+    "g" '(:ignore t :wk "magit")
+    "g g" '(magit-status :wk "magit-status")
+    "g b" '(magit-blame :wk "magit-blame")))
 
 (use-package magit-todos
   :defer t)
-
-;; Pulled from David Wilson's config, probably won't use
-(global-set-key (kbd "C-M-;") 'magit-status)
 
 (use-package dired
   :ensure nil
@@ -337,22 +342,6 @@ Very Similar to S-o from Vim"
 
 (use-package ox-twbs
   :defer t)
-
-;; (use-package mu4e
-;;   :ensure nil
-;;   ;; :if (and (eq system-type 'gnu/linux) (string-equal system-name "archpc"))
-;;   :config
-;;   ;; add mu4e to the load path on Arch
-;;   (add-to-list 'load-path "/usr/share/emacs/site-lisp/mu4e/")
-;;   (require 'mu4e))
-
-(when (string= (system-name) "archpc")
-  (add-to-list 'load-path "/usr/share/emacs/site-lisp/mu4e/")
-  (require 'mu4e))
-
-(use-package emms
-  :commands emms)
-  ;; :config
 
 (use-package vterm
   :custom
@@ -560,7 +549,23 @@ Very Similar to S-o from Vim"
 (use-package snow
   :defer t)
 
-(setq-default c-basic-offset 8)
-(setq c-default-style '((java-mode . "java")
-			(awk-mode . "awk")
-			(other . "linux")))
+(my/leader-key
+  "a" '(:ignore t :wk "applications"))
+
+;; (use-package mu4e
+;;   :ensure nil
+;;   ;; :if (and (eq system-type 'gnu/linux) (string-equal system-name "archpc"))
+;;   :config
+;;   ;; add mu4e to the load path on Arch
+;;   (add-to-list 'load-path "/usr/share/emacs/site-lisp/mu4e/")
+;;   (require 'mu4e))
+
+(when (string= (system-name) "archpc")
+  (add-to-list 'load-path "/usr/share/emacs/site-lisp/mu4e/")
+  (require 'mu4e))
+
+(use-package emms
+  :commands emms
+  :config
+  (emms-standard)
+  (emms-default-players))
