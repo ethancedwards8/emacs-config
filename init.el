@@ -221,10 +221,16 @@ Very Similar to S-o from Vim"
 			(registers . 5)))
   (dashboard-setup-startup-hook))
 
+(global-set-key (kbd "<escape>") 'keyboard-escape-quit)
+
+(global-set-key (kbd "C-S-u") 'universal-argument)
+
 (use-package evil
   :init
   (setq evil-want-integration t)
   (setq evil-want-keybinding nil)
+  (setq evil-want-C-u-scroll t)
+  (setq evil-respect-visual-line-mode t)
   ;; :bind (:map evil-motion-state-map
   ;;       ("/" . counsel-grep-or-swiper))
   :config
