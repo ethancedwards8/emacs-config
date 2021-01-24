@@ -3,20 +3,37 @@
 (setq gc-cons-threshold (* 50 1000 1000))
 
 ;; initialize package sources
-(require 'package)
-(setq package-archives '(("gnu" . "https://elpa.gnu.org/packages/")
-			 ("melpa" . "https://melpa.org/packages/")
-			 ("ublt" . "https://elpa.ubolonton.org/packages/")
-			 ("org" . "https://orgmode.org/elpa/")))
+;; (require 'package)
+;; (setq package-archives '(("gnu" . "https://elpa.gnu.org/packages/")
+;; 			 ("melpa" . "https://melpa.org/packages/")
+;; 			 ("ublt" . "https://elpa.ubolonton.org/packages/")
+;; 			 ("org" . "https://orgmode.org/elpa/")))
 
-(package-initialize)
-(unless (package-installed-p 'use-package)
-  (package-refresh-contents)
-  (package-install 'use-package))
+;; (package-initialize)
+;; (unless (package-installed-p 'use-package)
+;;   (package-refresh-contents)
+;;   (package-install 'use-package))
 
-(require 'use-package)
-;; (setq use-package-compute-statistics t)
-(setq use-package-always-ensure t)
+;; (require 'use-package)
+;; ;; (setq use-package-compute-statistics t)
+;; (setq use-package-always-ensure t)
+
+;; install straight.el
+(defvar bootstrap-version)
+(let ((bootstrap-file
+       (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
+      (bootstrap-version 5))
+  (unless (file-exists-p bootstrap-file)
+    (with-current-buffer
+	(url-retrieve-synchronously
+	 "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
+	 'silent 'inhibit-cookies)
+      (goto-char (point-max))
+      (eval-print-last-sexp)))
+  (load bootstrap-file nil 'nomessage))
+
+(setq straight-use-package-by-default t)
+(straight-use-package 'use-package)
 
 (add-hook 'emacs-startup-hook
 	  (lambda ()
@@ -272,7 +289,8 @@ Very Similar to S-o from Vim"
   :defer t)
 
 (use-package dired
-  :ensure nil
+  ;; :ensure nil
+  :straight nil
   :config
   (when (string= system-type "darwin")
     (setq dired-use-ls-dired nil)))
@@ -349,7 +367,8 @@ Very Similar to S-o from Vim"
 (use-package eshell-git-prompt)
 
 (use-package eshell
-  :ensure nil
+  ;; :ensure nil
+  :straight nil
   :custom (eshell-aliases-file "~/.emacs.d/eshell/eshell-alias")
   :config
 
@@ -361,6 +380,13 @@ Very Similar to S-o from Vim"
     (setq eshell-visual-commands '("htop" "iotop")))
 
   (eshell-git-prompt-use-theme 'powerline))
+
+(use-package counsel
+  :bind (("C-x j" . 'counsel-switch-buffer)
+	 :map minibuffer-local-map
+	 ("C-r" . 'counsel-minibuffer-history))
+  :config
+  (counsel-mode 1))
 
 (use-package ivy
   :diminish
@@ -381,13 +407,6 @@ Very Similar to S-o from Vim"
 (use-package ivy-rich
   :init
   (ivy-rich-mode 1))
-
-(use-package counsel
-  :bind (("C-x j" . 'counsel-switch-buffer)
-	 :map minibuffer-local-map
-	 ("C-r" . 'counsel-minibuffer-history))
-  :config
-  (counsel-mode 1))
 
 ;; (use-package exwm)
 
@@ -444,6 +463,7 @@ Very Similar to S-o from Vim"
 (use-package debbugs)
 
 (use-package lsp-mode
+  :defer t
   :commands (lsp lsp-deferred)
   :init
   (setq lsp-keymap-prefix "C-c l")
