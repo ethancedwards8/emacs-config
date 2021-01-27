@@ -1000,6 +1000,9 @@ lsp-treemacs allows for IDE like function navigation and documentation viewing
   (use-package company
     :after lsp-mode
     :hook (after-init . global-company-mode)
+    :config
+    (company-tng-mode 0)
+    :custom (company-minimum-prefix-length 2)
     :bind (:map company-active-map
 		("<tab>" . company-complete-selection))
 	  (:map lsp-mode-map
@@ -1138,6 +1141,13 @@ GDScript, a high-level, dynamically typed programming language. Its used for pro
 
 "emacs-gdscript-mode"
 
+#+end_src
+
+*** vimscript
+
+#+begin_src emacs-lisp
+  (use-package vimrc-mode
+    :mode ("\\.vim\\(rc\\)?\\'" . vimrc-mode))
 #+end_src
 
 *** Yaml

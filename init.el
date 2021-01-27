@@ -487,6 +487,9 @@ Very Similar to S-o from Vim"
 (use-package company
   :after lsp-mode
   :hook (after-init . global-company-mode)
+  :config
+  (company-tng-mode 0)
+  :custom (company-minimum-prefix-length 2)
   :bind (:map company-active-map
 	      ("<tab>" . company-complete-selection))
 	(:map lsp-mode-map
@@ -535,6 +538,9 @@ Very Similar to S-o from Vim"
 (use-package haskell-mode)
 
 (use-package gdscript-mode)
+
+(use-package vimrc-mode
+  :mode ("\\.vim\\(rc\\)?\\'" . vimrc-mode))
 
 (use-package yaml-mode
   :mode ("\\.yml\\'" . yaml-mode)
