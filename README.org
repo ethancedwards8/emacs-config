@@ -70,8 +70,8 @@ Add repo's. ELPA, MELPA, org, and ublt.
 	(eval-print-last-sexp)))
     (load bootstrap-file nil 'nomessage))
 
-  (setq straight-use-package-by-default t)
   (straight-use-package 'use-package)
+  (setq straight-use-package-by-default t)
 #+end_src
 
 ** Benchmark startup
@@ -187,11 +187,10 @@ I have my custom/stolen elisp code in ~/.emacs.d/lisp/. This will add that to my
 ** Disable nativecomp logs, they're very annoying.
 
 #+begin_src emacs-lisp
-   ;; '(warning-suppress-log-types '((comp) (comp)))
-   ;; '(warning-suppress-types '((comp))))
-
-  (setq warning-supress-log-types '((comp)))
-  (setq warning-supress-types '((comp)))
+  ;; '(warning-suppress-log-types '((comp) (comp)))
+  ;; '(warning-suppress-types '((comp))))
+  (setq warning-suppress-log-types '((comp)))
+  (setq warning-suppress-types '((comp)))
 #+end_src
 
 * Misc. Keybinds
@@ -916,13 +915,15 @@ These are some general tools that I use, they don't really belong in any categor
 *** exec-path-from-shell - enable $PATH on MacOSX
 
 #+begin_src emacs-lisp
-  (use-package exec-path-from-shell
-    :config
-    (when (memq window-system '(mac ns))
-      (exec-path-from-shell-initialize))
-    (when (daemonp)
-      (exec-path-from-shell-initialize))
-    )
+  ;; only install when on macos
+  (when (string= system-type "darwin")
+    (use-package exec-path-from-shell
+      :config
+      (when (memq window-system '(mac ns))
+	(exec-path-from-shell-initialize))
+      (when (daemonp)
+	(exec-path-from-shell-initialize))
+      ))
 #+end_src
 
 *** spdx - insert spdx headers
@@ -1077,7 +1078,8 @@ Nix is a fully function programming language centered around the NixOS ecosystem
     (lsp-register-client
      (make-lsp-client :new-connection (lsp-stdio-connection '("rnix-lsp"))
 		      :major-modes '(nix-mode)
-		      :server-id 'nix)))
+		      :server-id 'nix))
+    :hook (nix-mode . lsp-deferred))
 #+end_src
 
 #+begin_src scheme :noweb-ref packages :noweb-sep ""
@@ -1257,8 +1259,8 @@ These packages are kinda fun, don't really have much of a point
 #+end_src
 
 * Applications
-  
-** Bind prefix 
+
+** Bind prefix
 
 #+begin_src emacs-lisp
   (my/leader-key
