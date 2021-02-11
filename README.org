@@ -47,12 +47,6 @@ Add repo's. ELPA, MELPA, org, and ublt.
   ;; (setq use-package-always-ensure t)
 #+end_src
 
-#+begin_src scheme :noweb-ref packages :noweb-sep ""
-
-"emacs-use-package"
-
-#+end_src
-
 ** Configure straight.el
 
 #+begin_src emacs-lisp
@@ -317,12 +311,6 @@ I use general.el to set my "leader" key, =SPC=, or =C-SPC=.
       :non-normal-prefix "C-SPC"))
 #+end_src
 
-#+begin_src scheme :noweb-ref packages :noweb-sep ""
-
-"emacs-general"
-
-#+end_src
-
 *** Hydra's
 
 Hydra's are a way you can make Emacs binds "stick around"
@@ -388,12 +376,6 @@ The doom themes are really nice, I might switch back to the `deeper-blue' theme 
     :init (load-theme 'doom-palenight t))
 #+end_src
 
-#+begin_src scheme :noweb-ref packages :noweb-sep ""
-
-"emacs-spacegray-theme"
-"emacs-doom-themes"
-
-#+end_src
 *** Modeline
 
 Powerline modeline, has everything I need, I might switch to doom-modeline
@@ -418,12 +400,6 @@ Trying out doom-line, lets see how this goes!
     (display-battery-mode))
 #+end_src
 
-#+begin_src scheme :noweb-ref packages :noweb-sep ""
-
-"emacs-doom-modeline"
-
-#+end_src
-
 *** Dashboard
 
 Dashboard is a package that runs at startup that has useful imformation and quick links to files.
@@ -441,12 +417,6 @@ Dashboard is a package that runs at startup that has useful imformation and quic
 			  (agenda . 5)
 			  (registers . 5)))
     (dashboard-setup-startup-hook))
-#+end_src
-
-#+begin_src scheme :noweb-ref packages :noweb-sep ""
-
-"emacs-dashboard"
-
 #+end_src
 
 ** Interface
@@ -510,12 +480,6 @@ Evil mode emulates Vi/Vim keybinds for Emacs
 	"w w" '(my/window-hydra/body :wk "window hydra")))
 #+end_src
 
-#+begin_src scheme :noweb-ref packages :noweb-sep ""
-
-"emacs-evil"
-
-#+end_src
-
 Evil-collection adds Evil binds to the rest of Emacs
 
 #+begin_src emacs-lisp
@@ -534,12 +498,6 @@ Evil-commentary adds better commenting functionality to evil, =gcc= comments out
     (evil-commentary-mode))
 #+end_src
 
-#+begin_src scheme :noweb-ref packages :noweb-sep ""
-
-"emacs-evil-commentary"
-
-#+end_src
-
 Evil-org adds evil functionality to org mode, very helpful
 
 #+begin_src emacs-lisp
@@ -553,12 +511,6 @@ Evil-org adds evil functionality to org mode, very helpful
 		(evil-org-set-key-theme)))
     (require 'evil-org-agenda)
     (evil-org-agenda-set-keys))
-#+end_src
-
-#+begin_src scheme :noweb-ref packages :noweb-sep ""
-
-"emacs-evil-org"
-
 #+end_src
 
 *** Magit
@@ -580,12 +532,6 @@ Also installing evil-magit for evil integration with magit, evil-collection shou
 
   (use-package magit-todos
     :defer t)
-#+end_src
-
-#+begin_src scheme :noweb-ref packages :noweb-sep ""
-
-"emacs-magit"
-
 #+end_src
 
 *** Dired
@@ -618,12 +564,6 @@ Dired is a file manager built into Emacs, its pretty great.
 
   ;; (use-package counsel-projectile
   ;;   :config (counsel-projectile-mode))
-#+end_src
-
-#+begin_src scheme :noweb-ref packages :noweb-sep ""
-
-"emacs-projectile"
-
 #+end_src
 
 *** Treemacs
@@ -671,12 +611,6 @@ Org mode is literally the best, I'm writing this config in org, what else do you
     (my/refresh-org-files))
 #+end_src
 
-#+begin_src scheme :noweb-ref packages :noweb-sep ""
-
-"emacs-org"
-
-#+end_src
-
 #+begin_src emacs-lisp
   (use-package org-roam
 	:hook
@@ -692,22 +626,10 @@ Org mode is literally the best, I'm writing this config in org, what else do you
 		(("C-c n I" . org-roam-insert-immediate))))
 #+end_src
 
-#+begin_src scheme :noweb-ref packages :noweb-sep ""
-
-"emacs-org-roam"
-
-#+end_src
-
 ox-twbs - Org mode export twitter bootstrap I think? Not sure how I got this packages installed.
 #+begin_src emacs-lisp
   (use-package ox-twbs
     :defer t)
-#+end_src
-
-#+begin_src scheme :noweb-ref packages :noweb-sep ""
-
-"emacs-ox-twbs"
-
 #+end_src
 
 *** Terminal modes
@@ -725,12 +647,6 @@ I use vterm for the cases when I need a terminal emulator, I try to use eshell a
 	   :map vterm-mode-map
 	   ("<C-backspace>" . (lambda () (interactive) (vterm-send-meta-backspace)))))
 	   ;; came up with this myself, fixes C-backspace, pretty proud of it not going to lie :)
-#+end_src
-
-#+begin_src scheme :noweb-ref packages :noweb-sep ""
-
-"emacs-vterm"
-
 #+end_src
 
 **** eshell
@@ -773,12 +689,6 @@ Counsel takes Ivy further.
     (counsel-mode 1))
 #+end_src
 
-#+begin_src scheme :noweb-ref packages :noweb-sep ""
-
-"emacs-counsel"
-
-#+end_src
-
 **** Ivy
 
 I use Ivy, it's a completion framework for Emacs, I'm in the process of learning how to configure mine.
@@ -802,12 +712,6 @@ This is the initial setup of Ivy, this is bound to change drastically over time.
     (ivy-mode 1))
 #+end_src
 
-#+begin_src scheme :noweb-ref packages :noweb-sep ""
-
-"emacs-ivy"
-
-#+end_src
-
 **** Ivy Rich
 
 Ivy Rich provides a nicer interface to Ivy in my opinion.
@@ -816,12 +720,6 @@ Ivy Rich provides a nicer interface to Ivy in my opinion.
   (use-package ivy-rich
     :init
     (ivy-rich-mode 1))
-#+end_src
-
-#+begin_src scheme :noweb-ref packages :noweb-sep ""
-
-"emacs-ivy-rich"
-
 #+end_src
 
 ** EXWM
@@ -844,22 +742,10 @@ These are some general tools that I use, they don't really belong in any categor
     (add-hook 'prog-mode-hook 'rainbow-mode))
 #+end_src
 
-#+begin_src scheme :noweb-ref packages :noweb-sep ""
-
-"emacs-rainbow-mode"
-
-#+end_src
-
 *** Rainbow-delimiters
 #+begin_src emacs-lisp
   (use-package rainbow-delimiters
     :hook (prog-mode . rainbow-delimiters-mode))
-#+end_src
-
-#+begin_src scheme :noweb-ref packages :noweb-sep ""
-
-"emacs-rainbow-delimiters"
-
 #+end_src
 
 *** Helpful - better help buffer
@@ -881,22 +767,10 @@ These are some general tools that I use, they don't really belong in any categor
       "h k" '(helpful-key :wk "describe keybind")))
 #+end_src
 
-#+begin_src scheme :noweb-ref packages :noweb-sep ""
-
-"emacs-helpful"
-
-#+end_src
-
 *** Rg - Ripgrep inside of Emacs
 #+begin_src emacs-lisp
   (use-package rg
     :defer t)
-#+end_src
-
-#+begin_src scheme :noweb-ref packages :noweb-sep ""
-
-"emacs-rg"
-
 #+end_src
 
 *** Hl-todo - highlight TODO keywords and the like
@@ -904,12 +778,6 @@ These are some general tools that I use, they don't really belong in any categor
     (use-package hl-todo
       :config
       (hl-todo-mode))
-#+end_src
-
-#+begin_src scheme :noweb-ref packages :noweb-sep ""
-
-"emacs-hl-todo"
-
 #+end_src
 
 *** exec-path-from-shell - enable $PATH on MacOSX
@@ -965,12 +833,6 @@ These are some general tools that I use, they don't really belong in any categor
     (lsp-enable-which-key-integration t))
 #+end_src
 
-#+begin_src scheme :noweb-ref packages :noweb-sep ""
-
-"emacs-lsp-mode"
-
-#+end_src
-
 *** lsp-treemacs
 
 lsp-treemacs allows for IDE like function navigation and documentation viewing
@@ -987,12 +849,6 @@ lsp-treemacs allows for IDE like function navigation and documentation viewing
     :hook (lsp-mode . lsp-ui-mode)
     :custom
     (lsp-ui-doc-position 'bottom))
-#+end_src
-
-#+begin_src scheme :noweb-ref packages :noweb-sep ""
-
-"emacs-lsp-ui"
-
 #+end_src
 
 *** company-mode
@@ -1060,12 +916,6 @@ I'll be using [[https://github.com/brotzeit/rustic][rustic]] for Rust developmen
     (setq typescript-indent-level 2))
 #+end_src
 
-#+begin_src scheme :noweb-ref packages :noweb-sep ""
-
-"emacs-typescript-mode"
-
-#+end_src
-
 *** Nix
 
 Nix is a fully function programming language centered around the NixOS ecosystem, I'm learning it currently and plan to switch soon :tm:
@@ -1082,22 +932,10 @@ Nix is a fully function programming language centered around the NixOS ecosystem
     :hook (nix-mode . lsp-deferred))
 #+end_src
 
-#+begin_src scheme :noweb-ref packages :noweb-sep ""
-
-"emacs-nix-mode"
-
-#+end_src
-
 *** Guix
 
 #+begin_src emacs-lisp
   (use-package guix)
-#+end_src
-
-#+begin_src scheme :noweb-ref packages :noweb-sep ""
-
-"emacs-guix"
-
 #+end_src
 
 *** Geiser
@@ -1107,12 +945,6 @@ Nix is a fully function programming language centered around the NixOS ecosystem
     :config
     (setq geiser-default-implementation 'guile)
     (setq geiser-active-implementations '(gambit guile)))
-#+end_src
-
-#+begin_src scheme :noweb-ref packages :noweb-sep ""
-
-"emacs-geiser"
-
 #+end_src
 
 *** Haskell
@@ -1125,24 +957,12 @@ I have a bit of a thing for functional programming, learning Haskell is on my li
   (use-package haskell-mode)
 #+end_src
 
-#+begin_src scheme :noweb-ref packages :noweb-sep ""
-
-"emacs-haskell-mode"
-
-#+end_src
-
 *** GDScript
 
 GDScript, a high-level, dynamically typed programming language. Its used for programming in the Godot Game engine language.
 
 #+begin_src emacs-lisp
   (use-package gdscript-mode)
-#+end_src
-
-#+begin_src scheme :noweb-ref packages :noweb-sep ""
-
-"emacs-gdscript-mode"
-
 #+end_src
 
 *** vimscript
@@ -1164,12 +984,6 @@ PS: adding this package also helps not break =docker-compose-mode= for some reas
 	  ("\\.yaml\\'" . yaml-mode))
 #+end_src
 
-#+begin_src scheme :noweb-ref packages :noweb-sep ""
-
-"emacs-yaml-mode"
-
-#+end_src
-
 *** Docker
 
 I use Docker everyday for work, home, testing out programs, etc. So consequently I edit a LOT of yaml files.
@@ -1182,20 +996,10 @@ This gives better syntax highlighting, code completion, etc in docker-compose.ym
 	  ("stack.yml\\'" . docker-compose-mode))
 #+end_src
 
-#+begin_src scheme :noweb-ref packages :noweb-sep ""
-
-"emacs-docker-compose-mode"
-
-#+end_src
-
 Same as above except for in Dockerfiles
 #+begin_src emacs-lisp
   (use-package dockerfile-mode)
 #+end_src
-
-#+begin_src scheme :noweb-ref packages :noweb-sep ""
-
-"emacs-dockerfile-mode"
 
 #+end_src
 
@@ -1226,22 +1030,10 @@ These packages are kinda fun, don't really have much of a point
     :defer t)
 #+end_src
 
-#+begin_src scheme :noweb-ref packages :noweb-sep ""
-
-"emacs-chess"
-
-#+end_src
-
 *** gnugo - Play GO inside of Emacs!
 #+begin_src emacs-lisp
   (use-package gnugo
     :defer t)
-#+end_src
-
-#+begin_src scheme :noweb-ref packages :noweb-sep ""
-
-"emacs-gnugo"
-
 #+end_src
 
 *** 2048-game - play 2048 inside of emacs!
@@ -1285,9 +1077,6 @@ mu4e is an email client for Emacs. Currently I use neomutt and I'm very happy wi
     (require 'mu4e))
 #+end_src
 
-#+begin_src scheme :noweb-ref packages :noweb-sep ""
-#+end_src
-
 ** emms
 
 EMMS is a Music player/interface for Emacs. I've heard good things about it and I'm willing to try it out.
@@ -1298,16 +1087,4 @@ EMMS is a Music player/interface for Emacs. I've heard good things about it and 
     :config
     (emms-standard)
     (emms-default-players))
-#+end_src
-
-* Emacs Guix Profiles
-
-*.config/guix/manifests/emacs.scm:*
-
-#+begin_src scheme :scheme guile :tangle ~/.config/guix/manifests/emacs.scm :noweb yes
-  (specifications->manifest
-   ;; '("emacs"
-   '(
-     <<packages>>
-  ))
 #+end_src
