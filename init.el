@@ -32,8 +32,8 @@
       (eval-print-last-sexp)))
   (load bootstrap-file nil 'nomessage))
 
-(setq straight-use-package-by-default t)
 (straight-use-package 'use-package)
+(setq straight-use-package-by-default t)
 
 (add-hook 'emacs-startup-hook
 	  (lambda ()
@@ -90,10 +90,9 @@
 (setq initial-buffer-choice (lambda () (get-buffer "*dashboard*")))
 
 ;; '(warning-suppress-log-types '((comp) (comp)))
- ;; '(warning-suppress-types '((comp))))
-
-(setq warning-supress-log-types '((comp)))
-(setq warning-supress-types '((comp)))
+;; '(warning-suppress-types '((comp))))
+(setq warning-suppress-log-types '((comp)))
+(setq warning-suppress-types '((comp)))
 
 (show-paren-mode)
 (electric-pair-mode)
@@ -450,13 +449,15 @@ Very Similar to S-o from Vim"
   :config
   (hl-todo-mode))
 
-(use-package exec-path-from-shell
-  :config
-  (when (memq window-system '(mac ns))
-    (exec-path-from-shell-initialize))
-  (when (daemonp)
-    (exec-path-from-shell-initialize))
-  )
+;; only install when on macos
+(when (string= system-type "darwin")
+  (use-package exec-path-from-shell
+    :config
+    (when (memq window-system '(mac ns))
+      (exec-path-from-shell-initialize))
+    (when (daemonp)
+      (exec-path-from-shell-initialize))
+    ))
 
 (use-package spdx
   :bind (:map prog-mode-map
@@ -529,7 +530,8 @@ Very Similar to S-o from Vim"
   (lsp-register-client
    (make-lsp-client :new-connection (lsp-stdio-connection '("rnix-lsp"))
 		    :major-modes '(nix-mode)
-		    :server-id 'nix)))
+		    :server-id 'nix))
+  :hook (nix-mode . lsp-deferred))
 
 (use-package guix)
 
