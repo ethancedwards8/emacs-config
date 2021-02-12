@@ -194,6 +194,16 @@ I have my custom/stolen elisp code in ~/.emacs.d/lisp/. This will add that to my
   (setq warning-supress-types '((comp)))
 #+end_src
 
+** Parenthesis tweaks
+
+=show-paren-mode= highlights the matching parenthesis
+=electric-pair-mode= pairs any quotes, parens, brackets, etc.
+
+#+begin_src emacs-lisp
+  (show-paren-mode)
+  (electric-pair-mode)
+#+end_src
+
 * Misc. Keybinds
 
 From the [[https://github.com/technomancy/better-defaults/blob/master/better-defaults.el][better defaults github page]]
@@ -1159,7 +1169,9 @@ PS: adding this package also helps not break =docker-compose-mode= for some reas
 #+begin_src emacs-lisp
   (use-package yaml-mode
     :mode ("\\.yml\\'" . yaml-mode)
-	  ("\\.yaml\\'" . yaml-mode))
+	  ("\\.yaml\\'" . yaml-mode)
+     :hook (yaml-mode . lsp-deferred))
+
 #+end_src
 
 #+begin_src scheme :noweb-ref packages :noweb-sep ""

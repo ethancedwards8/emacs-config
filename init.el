@@ -95,6 +95,9 @@
 (setq warning-supress-log-types '((comp)))
 (setq warning-supress-types '((comp)))
 
+(show-paren-mode)
+(electric-pair-mode)
+
 ;; (global-set-key (kbd "C-s") 'isearch-forward-regexp)
 ;; (global-set-key (kbd "C-r") 'isearch-backward-regexp)
 ;; (global-set-key (kbd "C-M-s") 'isearch-forward)
@@ -544,7 +547,8 @@ Very Similar to S-o from Vim"
 
 (use-package yaml-mode
   :mode ("\\.yml\\'" . yaml-mode)
-	("\\.yaml\\'" . yaml-mode))
+	("\\.yaml\\'" . yaml-mode)
+   :hook (yaml-mode . lsp-deferred))
 
 (use-package docker-compose-mode
   :mode ("docker-compose.yml\\'" . docker-compose-mode)
