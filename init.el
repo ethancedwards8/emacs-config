@@ -1,4 +1,4 @@
-;; NOTE: init.el is now generated from Emacs.org.  Please edit that file
+;; NOTE: init.el is now generated from README.org.  Please edit that file
 ;;       in Emacs and init.el will be generated automatically!
 (setq gc-cons-threshold (* 50 1000 1000))
 
@@ -447,7 +447,7 @@ Very Similar to S-o from Vim"
 
 (use-package hl-todo
   :config
-  (hl-todo-mode))
+  (global-hl-todo-mode))
 
 ;; only install when on macos
 (when (string= system-type "darwin")
@@ -552,12 +552,17 @@ Very Similar to S-o from Vim"
 	("\\.yaml\\'" . yaml-mode)
    :hook (yaml-mode . lsp-deferred))
 
+(use-package json-mode
+  :mode ("\\.json\\'" . json-mode)
+  :hook (json-mode . lsp-deferred))
+
 (use-package docker-compose-mode
   :mode ("docker-compose.yml\\'" . docker-compose-mode)
 	("docker-compose.yaml\\'" . docker-compose-mode)
 	("stack.yml\\'" . docker-compose-mode))
 
-(use-package dockerfile-mode)
+(use-package dockerfile-mode
+  :hook (dockerfile-mode . lsp-deferred))
 
 (use-package elcord
   :defer t
@@ -567,7 +572,13 @@ Very Similar to S-o from Vim"
   )
 
 (use-package spotify
-  :defer t)
+  :defer t
+  :config
+  (my/leader-key
+    "a" '(:ignore t :wk "applications")
+    "a s P" '(spotify-playpause :wk "play-pause")
+    "a s n" '(spotify-next :wk "spotify next")
+    "a s p" '(spotify-previous :wk "spotify previous")))
 
 (use-package chess
   :defer t)

@@ -26,7 +26,7 @@ I'll also probably put this somewhere on [[https://ethancedwards.com][my site]] 
 Add repo's. ELPA, MELPA, org, and ublt.
 
 #+begin_src emacs-lisp
-  ;; NOTE: init.el is now generated from Emacs.org.  Please edit that file
+  ;; NOTE: init.el is now generated from README.org.  Please edit that file
   ;;       in Emacs and init.el will be generated automatically!
   (setq gc-cons-threshold (* 50 1000 1000))
 
@@ -785,9 +785,9 @@ These are some general tools that I use, they don't really belong in any categor
 
 *** Hl-todo - highlight TODO keywords and the like
 #+begin_src emacs-lisp
-    (use-package hl-todo
-      :config
-      (hl-todo-mode))
+  (use-package hl-todo
+    :config
+    (global-hl-todo-mode))
 #+end_src
 
 *** exec-path-from-shell - enable $PATH on MacOSX
@@ -996,6 +996,16 @@ PS: adding this package also helps not break =docker-compose-mode= for some reas
 
 #+end_src
 
+*** json
+
+yaml but worse
+
+#+begin_src emacs-lisp
+  (use-package json-mode
+    :mode ("\\.json\\'" . json-mode)
+    :hook (json-mode . lsp-deferred))
+#+end_src
+
 *** Docker
 
 I use Docker everyday for work, home, testing out programs, etc. So consequently I edit a LOT of yaml files.
@@ -1010,7 +1020,8 @@ This gives better syntax highlighting, code completion, etc in docker-compose.ym
 
 Same as above except for in Dockerfiles
 #+begin_src emacs-lisp
-  (use-package dockerfile-mode)
+  (use-package dockerfile-mode
+    :hook (dockerfile-mode . lsp-deferred))
 #+end_src
 
 #+end_src
@@ -1033,7 +1044,13 @@ These packages are kinda fun, don't really have much of a point
 
 #+begin_src emacs-lisp
   (use-package spotify
-    :defer t)
+    :defer t
+    :config
+    (my/leader-key
+      "a" '(:ignore t :wk "applications")
+      "a s P" '(spotify-playpause :wk "play-pause")
+      "a s n" '(spotify-next :wk "spotify next")
+      "a s p" '(spotify-previous :wk "spotify previous")))
 #+end_src
 
 *** Chess - play chess inside of Emacs!
