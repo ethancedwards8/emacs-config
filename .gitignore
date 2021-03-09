@@ -1,5 +1,6 @@
 /url/
-straight
+!straight/versions/
+/straight/
 tramp
 /auto-save-list/
 bookmarks

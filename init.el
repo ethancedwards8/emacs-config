@@ -51,10 +51,11 @@
 (global-set-key (kbd "C-c I") 'find-config)
 
 (defun find-main ()
-  "Find Main.org, Main Org file"
+  "Find index org file"
   (interactive)
-  (find-file "~/Nextcloud/Org/Main.org"))
+  (org-roam-jump-to-index))
 
+;; (global-set-key (kbd "C-c O") '(lambda () "Find index org file" (interactive) (org-roam-jump-to-index)))
 (global-set-key (kbd "C-c O") 'find-main)
 
 ;; (setq custom-file (make-temp-file "emacs-custom"))
@@ -170,6 +171,7 @@ Very Similar to S-o from Vim"
 (my/leader-key
       "SPC"  '(counsel-find-file :wk "counsel find file")
       "I" '(find-config :wk "edit README.org/init.el")
+      "O" '(find-main :wk "edit index/main org file")
       "." '(counsel-M-x :wk "M-x"))
 
 (use-package which-key
@@ -177,9 +179,6 @@ Very Similar to S-o from Vim"
   :diminish which-key-mode
   :config
   (setq which-key-idle-delay 5))
-
-;; (setq default ((t (:inherit nil :stipple nil :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 98 :width normal :foundry "JB  " :family "JetBrains Mono"))))
-
 
 (set-face-attribute 'default nil :inherit nil :stipple nil :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant 'normal :weight 'normal :height 98 :width 'normal :foundry "JB  " :family "JetBrains Mono")
 
@@ -236,31 +235,31 @@ Very Similar to S-o from Vim"
   ;; :bind (:map evil-motion-state-map
   ;;       ("/" . counsel-grep-or-swiper))
   :config
-  (evil-mode 1)
+  (evil-mode 1))
 
-  (defhydra my/window-hydra ()
-    ("h" evil-window-left)
-    ("j" evil-window-down)
-    ("k" evil-window-up)
-    ("l" evil-window-right)
-    ("c" evil-window-delete)
-    ("v" evil-window-vsplit)
-    ("s" evil-window-split)
-    ("o" delete-other-windows)
-    ("q" nil "quit"))
+(defhydra my/window-hydra ()
+  ("h" evil-window-left)
+  ("j" evil-window-down)
+  ("k" evil-window-up)
+  ("l" evil-window-right)
+  ("c" evil-window-delete)
+  ("v" evil-window-vsplit)
+  ("s" evil-window-split)
+  ("o" delete-other-windows)
+  ("q" nil "quit"))
 
-  (my/leader-key
+(my/leader-key
       "w"   '(:ignore t :wk "window")
       "w h" '(evil-window-left :wk "move to left window")
       "w j" '(evil-window-down :wk "move to down window")
       "w k" '(evil-window-up :wk "move to up window")
       "w l" '(evil-window-right :wk "move to right window")
-      "w c" '(evil-window-delete :wk "move to right window")
-      "w v" '(evil-window-vsplit :wk "move to right window")
-      "w s" '(evil-window-split :wk "move to right window")
-      "w o" '(delete-other-windows :wk "move to right window")
+      "w c" '(evil-window-delete :wk "close window")
+      "w v" '(evil-window-vsplit :wk "split window vertically")
+      "w s" '(evil-window-split :wk "split window horizontally")
+      "w o" '(delete-other-windows :wk "delete other windows")
       "TAB" '(evil-switch-to-windows-last-buffer :wk "switch to previous buffer")
-      "w w" '(my/window-hydra/body :wk "window hydra")))
+      "w w" '(my/window-hydra/body :wk "window hydra"))
 
 (use-package evil-collection
   :after evil
@@ -269,6 +268,7 @@ Very Similar to S-o from Vim"
 
 (use-package evil-commentary
   :diminish
+  :after evil
   :config
   (evil-commentary-mode))
 
@@ -286,12 +286,13 @@ Very Similar to S-o from Vim"
 (use-package magit
   :bind (("C-x g" . magit-status)
 	 ;; Pulled from David Wilson's config, probably won't use
-	 ("C-M-;" . magit-status))
-  :config
-  (my/leader-key
+	 ("C-M-;" . magit-status)))
+
+(my/leader-key
     "g" '(:ignore t :wk "magit")
     "g g" '(magit-status :wk "magit-status")
-    "g b" '(magit-blame :wk "magit-blame")))
+    "g b" '(magit-blame :wk "magit-blame")
+    "g e" '(magit-dired-jump :wk "dired in dir"))
 
 (use-package magit-todos
   :defer t)
@@ -302,6 +303,9 @@ Very Similar to S-o from Vim"
   :config
   (when (string= system-type "darwin")
     (setq dired-use-ls-dired nil)))
+
+  (my/leader-key
+      "e" '(dired-jump :wk "dired"))
 
 (use-package projectile
   :bind (:map projectile-mode-map
@@ -327,6 +331,7 @@ Very Similar to S-o from Vim"
   :custom
   (org-directory "~/Nextcloud/org")
   (diary-file "~/Nextcloud/Org/emacs-diary")
+  (org-default-notes-file "~/Nextcloud/Org/Notes.org")
   (org-log-done t)
   (org-agenda-include-diary t)
   :bind (("C-c L" . org-stored-link)
@@ -341,17 +346,19 @@ Very Similar to S-o from Vim"
   (add-to-list 'org-structure-template-alist '("el" . "src emacs-lisp"))
   (add-to-list 'org-structure-template-alist '("py" . "src python"))
 
-  (my/leader-key
-      "o r" '(my/refresh-org-files :wk "refresh my org files")
-      "o a" '(org-agenda :wk "org agenda"))
-
   (my/refresh-org-files))
+
+  (my/leader-key
+      "n r" '(my/refresh-org-files :wk "refresh my org files")
+      "n a" '(org-agenda :wk "org agenda"))
 
 (use-package org-roam
       :hook
       (after-init . org-roam-mode)
       :custom
       (org-roam-directory "~/Nextcloud/Org")
+      (org-roam-tag-sources '(last-directory prop))
+      (org-roam-rename-file-on-title-change nil)
       :bind (:map org-roam-mode-map
 	      (("C-c n l" . org-roam)
 	       ("C-c n f" . org-roam-find-file)
@@ -360,8 +367,30 @@ Very Similar to S-o from Vim"
 	      (("C-c n i" . org-roam-insert))
 	      (("C-c n I" . org-roam-insert-immediate))))
 
-(use-package ox-twbs
-  :defer t)
+(my/leader-key
+  "n l" '(org-roam :wk "org roam")
+  "n f" '(org-roam-find-file :wk "find roam file")
+  "n g" '(org-roam-graph :wk "roam graph")
+  "n i" '(org-roam-insert :wk "roam insert")
+  "n I" '(org-roam-insert-immediate :wk "roam insert immediate")
+  "n t" '(org-roam-tag-add :wk "roam insert tag"))
+
+(use-package org-roam-server
+  :config
+  (setq org-roam-server-host "127.0.0.1"
+	org-roam-server-port 8080
+	org-roam-server-authenticate nil
+	org-roam-server-export-inline-images t
+	org-roam-server-serve-files nil
+	org-roam-server-served-file-extensions '("pdf" "mp4" "ogv")
+	org-roam-server-network-poll t
+	org-roam-server-network-arrows nil
+	org-roam-server-network-label-truncate t
+	org-roam-server-network-label-truncate-length 60
+	org-roam-server-network-label-wrap-length 20))
+
+;; (use-package ox-twbs
+;;   :defer t)
 
 (use-package vterm
   :custom
@@ -371,6 +400,8 @@ Very Similar to S-o from Vim"
 	 :map vterm-mode-map
 	 ("<C-backspace>" . (lambda () (interactive) (vterm-send-meta-backspace)))))
 	 ;; came up with this myself, fixes C-backspace, pretty proud of it not going to lie :)
+(my/leader-key
+      "v v" '(vterm :wk "vterm"))
 
 (use-package eshell-git-prompt)
 
@@ -379,15 +410,14 @@ Very Similar to S-o from Vim"
   :straight nil
   :custom (eshell-aliases-file "~/.emacs.d/eshell/eshell-alias")
   :config
-
-  (my/leader-key
-      "e" '(eshell :wk "eshell"))
-
   (with-eval-after-load 'esh-opt
     (setq eshell-destory-buffer-when-process-dies t)
     (setq eshell-visual-commands '("htop" "iotop")))
 
   (eshell-git-prompt-use-theme 'powerline))
+
+  (my/leader-key
+      "v e" '(eshell :wk "eshell"))
 
 (use-package counsel
   :bind (("C-x j" . 'counsel-switch-buffer)
@@ -434,13 +464,13 @@ Very Similar to S-o from Vim"
   ([remap describe-function] . counsel-describe-function)
   ([remap describe-command] . helpful-command)
   ([remap describe-variable] . counsel-describe-variable)
-  ([remap describe-key] . helpful-key)
-  :config
-  (my/leader-key
+  ([remap describe-key] . helpful-key))
+
+(my/leader-key
     "h" '(:ignore t :wk "helpful")
     "h f" '(counsel-describe-function :wk "describe function")
     "h v" '(counsel-describe-variable :wk "describe variable")
-    "h k" '(helpful-key :wk "describe keybind")))
+    "h k" '(helpful-key :wk "describe keybind"))
 
 (use-package rg
   :defer t)
@@ -458,13 +488,6 @@ Very Similar to S-o from Vim"
     (when (daemonp)
       (exec-path-from-shell-initialize))
     ))
-
-(use-package spdx
-  :bind (:map prog-mode-map
-	 ("C-c i l" . spdx-insert-spdx))
-  :custom
-  (spdx-copyright-holder 'auto)
-  (spdx-project-detection 'auto))
 
 (use-package direnv
  :config
@@ -488,9 +511,10 @@ Very Similar to S-o from Vim"
   :custom
   (lsp-ui-doc-position 'bottom))
 
+(add-hook 'after-init-hook 'global-company-mode)
 (use-package company
   :after lsp-mode
-  :hook (after-init . global-company-mode)
+  ;; :hook (after-init-hook . global-company-mode)
   :config
   (company-tng-mode 0)
   :custom (company-minimum-prefix-length 2)
@@ -506,6 +530,20 @@ Very Similar to S-o from Vim"
   :mode ("\\.rs\\'" . rustic-mode)
   :hook (rustic-mode . lsp-deferred))
 
+;; (use-package python-mode
+;;   ;; :ensure t
+;;   :straight t
+;;   :defer t
+;;   :hook (python-mode . lsp-deferred)
+;;   :custom
+;;   (python-shell-interpreter "python3"))
+
+(use-package solidity-mode
+  :mode ("\\.sol\\'" . solidity-mode)
+  :config
+  (setq solidity-comment-style 'slash)
+  )
+
 (use-package web-mode
   :mode ("\\.html\\'" . web-mode)
   :mode ("\\.xhtml\\'" . web-mode)
@@ -515,11 +553,12 @@ Very Similar to S-o from Vim"
 (use-package rjsx-mode
   :config
   :mode ("\\.js\\'" . rjsx-mode)
-  :mode ("\\.jsx\\'" . rjsx-mode))
+  :mode ("\\.jsx\\'" . rjsx-mode)
+  :hook (rjsx-mode . lsp-deferred))
 
 (use-package typescript-mode
   :mode "\\.ts\\'"
-  :hook (typescript-mode lsp-deferred)
+  :hook (typescript-mode . lsp-deferred)
   :config
   (setq typescript-indent-level 2))
 
@@ -542,7 +581,7 @@ Very Similar to S-o from Vim"
 
 (use-package haskell-mode)
 
-(use-package gdscript-mode)
+;; (use-package gdscript-mode)
 
 (use-package vimrc-mode
   :mode ("\\.vim\\(rc\\)?\\'" . vimrc-mode))
@@ -572,13 +611,14 @@ Very Similar to S-o from Vim"
   )
 
 (use-package spotify
-  :defer t
-  :config
-  (my/leader-key
+  :defer t)
+
+(my/leader-key
     "a" '(:ignore t :wk "applications")
-    "a s P" '(spotify-playpause :wk "play-pause")
+    "a s SPC" '(spotify-playpause :wk "play-pause")
     "a s n" '(spotify-next :wk "spotify next")
-    "a s p" '(spotify-previous :wk "spotify previous")))
+    "a s p" '(spotify-previous :wk "spotify previous")
+    "a s c" '(spotify-current :wk "spotify current song"))
 
 (use-package chess
   :defer t)
@@ -591,9 +631,6 @@ Very Similar to S-o from Vim"
 
 (use-package snow
   :defer t)
-
-(my/leader-key
-  "a" '(:ignore t :wk "applications"))
 
 ;; (use-package mu4e
 ;;   :ensure nil
