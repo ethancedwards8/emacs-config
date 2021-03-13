@@ -558,7 +558,8 @@ Dired is a file manager built into Emacs, its pretty great.
       (setq dired-use-ls-dired nil)))
 
     (my/leader-key
-	"e" '(dired-jump :wk "dired"))
+      "e" '(dired-jump :wk "dired")
+      "E" '(dired :wk "dired"))
 #+end_src
 
 *** Projectile
@@ -678,6 +679,10 @@ A Web Application to Visualize the Org-Roam Database
     ;; (use-package ox-twbs
     ;;   :defer t)
 #+end_src
+
+**** Org caldav
+
+Org caldav just to play with
 
 *** Terminal modes
 

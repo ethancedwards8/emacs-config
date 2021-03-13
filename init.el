@@ -305,7 +305,8 @@ Very Similar to S-o from Vim"
     (setq dired-use-ls-dired nil)))
 
   (my/leader-key
-      "e" '(dired-jump :wk "dired"))
+    "e" '(dired-jump :wk "dired")
+    "E" '(dired :wk "dired"))
 
 (use-package projectile
   :bind (:map projectile-mode-map
