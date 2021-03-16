@@ -217,7 +217,7 @@ Very Similar to S-o from Vim"
   (setq dashboard-startup-banner "~/.emacs.d/images/floating-meditate.png")
   (setq dashboard-items '((recents  . 5)
 			(bookmarks . 5)
-			(projects . 5)
+			;; (projects . 5)
 			(agenda . 5)
 			(registers . 5)))
   (dashboard-setup-startup-hook))
@@ -308,17 +308,22 @@ Very Similar to S-o from Vim"
     "e" '(dired-jump :wk "dired")
     "E" '(dired :wk "dired"))
 
-(use-package projectile
-  :bind (:map projectile-mode-map
-	      (("C-c p" . projectile-command-map)))
-  :custom ((projectile-completion-system 'ivy))
-  :init
-  (when (file-directory-p "~/git")
-    (setq projectile-project-search-path '("~/git")))
-  (setq projectile-switch-project-action #'projectile-dired)
-  :config
-  ;; I don't really want this running all the time, so I `toggle' it from time to time
-  (defalias 'toggle-projectile 'projectile-mode))
+(use-package dired-subtree
+	:bind (:map dired-mode-map
+		    ("<tab>" . dired-subtree-toggle)
+		    ("<backtab>" . dired-subtree-cycle)))
+
+;; (use-package projectile
+;;   :bind (:map projectile-mode-map
+;; 	      (("C-c p" . projectile-command-map)))
+;;   :custom ((projectile-completion-system 'ivy))
+;;   :init
+;;   (when (file-directory-p "~/git")
+;;     (setq projectile-project-search-path '("~/git")))
+;;   (setq projectile-switch-project-action #'projectile-dired)
+;;   :config
+;;   ;; I don't really want this running all the time, so I `toggle' it from time to time
+;;   (defalias 'toggle-projectile 'projectile-mode))
 
 ;; (use-package counsel-projectile
 ;;   :config (counsel-projectile-mode))

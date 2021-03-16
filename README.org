@@ -422,7 +422,7 @@ Dashboard is a package that runs at startup that has useful imformation and quic
     (setq dashboard-startup-banner "~/.emacs.d/images/floating-meditate.png")
     (setq dashboard-items '((recents  . 5)
 			  (bookmarks . 5)
-			  (projects . 5)
+			  ;; (projects . 5)
 			  (agenda . 5)
 			  (registers . 5)))
     (dashboard-setup-startup-hook))
@@ -562,20 +562,31 @@ Dired is a file manager built into Emacs, its pretty great.
       "E" '(dired :wk "dired"))
 #+end_src
 
+**** dired-subtree
+
+This allows me to have subtree views in dired
+
+#+begin_src emacs-lisp
+  (use-package dired-subtree
+	  :bind (:map dired-mode-map
+		      ("<tab>" . dired-subtree-toggle)
+		      ("<backtab>" . dired-subtree-cycle)))
+#+end_src
+
 *** Projectile
 
 #+begin_src emacs-lisp
-  (use-package projectile
-    :bind (:map projectile-mode-map
-		(("C-c p" . projectile-command-map)))
-    :custom ((projectile-completion-system 'ivy))
-    :init
-    (when (file-directory-p "~/git")
-      (setq projectile-project-search-path '("~/git")))
-    (setq projectile-switch-project-action #'projectile-dired)
-    :config
-    ;; I don't really want this running all the time, so I `toggle' it from time to time
-    (defalias 'toggle-projectile 'projectile-mode))
+  ;; (use-package projectile
+  ;;   :bind (:map projectile-mode-map
+  ;; 	      (("C-c p" . projectile-command-map)))
+  ;;   :custom ((projectile-completion-system 'ivy))
+  ;;   :init
+  ;;   (when (file-directory-p "~/git")
+  ;;     (setq projectile-project-search-path '("~/git")))
+  ;;   (setq projectile-switch-project-action #'projectile-dired)
+  ;;   :config
+  ;;   ;; I don't really want this running all the time, so I `toggle' it from time to time
+  ;;   (defalias 'toggle-projectile 'projectile-mode))
 
   ;; (use-package counsel-projectile
   ;;   :config (counsel-projectile-mode))
