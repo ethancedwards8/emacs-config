@@ -544,6 +544,8 @@ Very Similar to S-o from Vim"
 ;;   :custom
 ;;   (python-shell-interpreter "python3"))
 
+(setq python-shell-interpreter "python3")
+
 (use-package solidity-mode
   :mode ("\\.sol\\'" . solidity-mode)
   :config

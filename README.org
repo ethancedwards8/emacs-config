@@ -962,6 +962,8 @@ It's python, meh, no one cares, but everyone uses it.
   ;;   :hook (python-mode . lsp-deferred)
   ;;   :custom
   ;;   (python-shell-interpreter "python3"))
+
+  (setq python-shell-interpreter "python3")
 #+end_src
 
 *** Solidity
