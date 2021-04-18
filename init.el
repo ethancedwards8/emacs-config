@@ -398,6 +398,12 @@ Very Similar to S-o from Vim"
 ;; (use-package ox-twbs
 ;;   :defer t)
 
+(use-package org-ol-tree
+  :straight (org-ol-tree :type git :host github :repo "Townk/org-ol-tree")
+  :commands (org-ol-tree/display-sections)
+  ;; :init
+  )
+
 (use-package vterm
   :custom
   (vterm-always-compile-module t)
@@ -495,9 +501,9 @@ Very Similar to S-o from Vim"
       (exec-path-from-shell-initialize))
     ))
 
-(use-package direnv
- :config
- (direnv-mode))
+;; (use-package direnv
+;;  :config
+;;  (direnv-mode))
 
 (use-package debbugs)
 
@@ -587,7 +593,7 @@ Very Similar to S-o from Vim"
 
 (use-package haskell-mode)
 
-;; (use-package gdscript-mode)
+(use-package gdscript-mode)
 
 (use-package vimrc-mode
   :mode ("\\.vim\\(rc\\)?\\'" . vimrc-mode))
@@ -601,10 +607,10 @@ Very Similar to S-o from Vim"
   :mode ("\\.json\\'" . json-mode)
   :hook (json-mode . lsp-deferred))
 
-(use-package docker-compose-mode
-  :mode ("docker-compose.yml\\'" . docker-compose-mode)
-	("docker-compose.yaml\\'" . docker-compose-mode)
-	("stack.yml\\'" . docker-compose-mode))
+;; (use-package docker-compose-mode
+;;   :mode ("docker-compose.yml\\'" . docker-compose-mode)
+;; 	("docker-compose.yaml\\'" . docker-compose-mode)
+;; 	("stack.yml\\'" . docker-compose-mode))
 
 (use-package dockerfile-mode
   :hook (dockerfile-mode . lsp-deferred))
@@ -638,13 +644,12 @@ Very Similar to S-o from Vim"
 (use-package snow
   :defer t)
 
-;; (use-package mu4e
-;;   :ensure nil
-;;   ;; :if (and (eq system-type 'gnu/linux) (string-equal system-name "archpc"))
-;;   :config
-;;   ;; add mu4e to the load path on Arch
-;;   (add-to-list 'load-path "/usr/share/emacs/site-lisp/mu4e/")
-;;   (require 'mu4e))
+(use-package mu4e
+  :ensure nil
+  ;; :if (and (eq system-type 'gnu/linux) (string-equal system-name "archpc"))
+  :config
+  ;; add mu4e to the load path on Arch
+  (require 'mu4e))
 
 (when (string= (system-name) "archpc")
   (add-to-list 'load-path "/usr/share/emacs/site-lisp/mu4e/")
@@ -655,3 +660,5 @@ Very Similar to S-o from Vim"
   :config
   (emms-standard)
   (emms-default-players))
+
+(use-package elpher)

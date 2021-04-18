@@ -691,9 +691,17 @@ A Web Application to Visualize the Org-Roam Database
     ;;   :defer t)
 #+end_src
 
-**** Org caldav
+**** org-outline-tree
 
-Org caldav just to play with
+An org roam similar buffer for org mode outlines
+
+#+begin_src emacs-lisp
+  (use-package org-ol-tree
+    :straight (org-ol-tree :type git :host github :repo "Townk/org-ol-tree")
+    :commands (org-ol-tree/display-sections)
+    ;; :init
+    )
+#+end_src
 
 *** Terminal modes
 
@@ -872,9 +880,9 @@ These are some general tools that I use, they don't really belong in any categor
 *** direnv - emacs direnv integration
 
 #+begin_src emacs-lisp
-  (use-package direnv
-   :config
-   (direnv-mode))
+  ;; (use-package direnv
+  ;;  :config
+  ;;  (direnv-mode))
 #+end_src
 
 *** debbugs - access the gnu bug tracker form inside emacs
@@ -1054,7 +1062,7 @@ I have a bit of a thing for functional programming, learning Haskell is on my li
 GDScript, a high-level, dynamically typed programming language. Its used for programming in the Godot Game engine language.
 
 #+begin_src emacs-lisp
-  ;; (use-package gdscript-mode)
+  (use-package gdscript-mode)
 #+end_src
 
 *** vimscript
@@ -1066,7 +1074,7 @@ GDScript, a high-level, dynamically typed programming language. Its used for pro
 
 *** Yaml
 
-Its yaml, what more is their to say? Better than json but still *sucks*
+Its yaml, what more is there to say? Better than json but still *sucks*
 
 PS: adding this package also helps not break =docker-compose-mode= for some reason
 
@@ -1093,10 +1101,10 @@ I use Docker everyday for work, home, testing out programs, etc. So consequently
 
 This gives better syntax highlighting, code completion, etc in docker-compose.yml files
 #+begin_src emacs-lisp
-  (use-package docker-compose-mode
-    :mode ("docker-compose.yml\\'" . docker-compose-mode)
-	  ("docker-compose.yaml\\'" . docker-compose-mode)
-	  ("stack.yml\\'" . docker-compose-mode))
+  ;; (use-package docker-compose-mode
+  ;;   :mode ("docker-compose.yml\\'" . docker-compose-mode)
+  ;; 	("docker-compose.yaml\\'" . docker-compose-mode)
+  ;; 	("stack.yml\\'" . docker-compose-mode))
 #+end_src
 
 Same as above except for in Dockerfiles
@@ -1168,13 +1176,12 @@ These packages are kinda fun, don't really have much of a point
 mu4e is an email client for Emacs. Currently I use neomutt and I'm very happy with it, but I'm willing to experiment.
 
 #+begin_src emacs-lisp
-  ;; (use-package mu4e
-  ;;   :ensure nil
-  ;;   ;; :if (and (eq system-type 'gnu/linux) (string-equal system-name "archpc"))
-  ;;   :config
-  ;;   ;; add mu4e to the load path on Arch
-  ;;   (add-to-list 'load-path "/usr/share/emacs/site-lisp/mu4e/")
-  ;;   (require 'mu4e))
+  (use-package mu4e
+    :ensure nil
+    ;; :if (and (eq system-type 'gnu/linux) (string-equal system-name "archpc"))
+    :config
+    ;; add mu4e to the load path on Arch
+    (require 'mu4e))
 
   (when (string= (system-name) "archpc")
     (add-to-list 'load-path "/usr/share/emacs/site-lisp/mu4e/")
@@ -1191,4 +1198,12 @@ EMMS is a Music player/interface for Emacs. I've heard good things about it and 
     :config
     (emms-standard)
     (emms-default-players))
+#+end_src
+
+** elpher
+
+elpher is a gemini and gopher client for emacs.
+
+#+begin_src emacs-lisp
+  (use-package elpher)
 #+end_src
