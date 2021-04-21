@@ -556,6 +556,8 @@ Dired is a file manager built into Emacs, its pretty great.
   (use-package dired
     ;; :ensure nil
     :straight nil
+    ;; :bind (:map dired-mode-map
+    ;; 	      ("SPC" . nil))
     :config
     (when (string= system-type "darwin")
       (setq dired-use-ls-dired nil)))
@@ -685,7 +687,7 @@ A Web Application to Visualize the Org-Roam Database
 	  org-roam-server-network-arrows nil
 	  org-roam-server-network-label-truncate t
 	  org-roam-server-network-label-truncate-length 60
-	  org-roam-server-network-label-wrap-length 20)) 
+	  org-roam-server-network-label-wrap-length 20))
 #+end_src
 
   ox-twbs - Org mode export twitter bootstrap I think? Not sure how I got this package installed.
@@ -951,6 +953,22 @@ Syntax checking for GNU Emacs
     :hook (lsp-deferred . flycheck-mode))
 #+end_src
 
+*** yasnippet
+
+Enable =yasnippet=
+
+#+begin_src emacs-lisp
+  (use-package yasnippet
+     :config
+     (yas-global-mode))
+#+end_src
+
+Add some snippets :)
+
+#+begin_src emacs-lisp
+  (use-package yasnippet-snippets)
+#+end_src
+
 *** Rust
 
 I'll be using [[https://github.com/brotzeit/rustic][rustic]] for Rust development inside of Emacs
@@ -1181,16 +1199,16 @@ These packages are kinda fun, don't really have much of a point
 mu4e is an email client for Emacs. Currently I use neomutt and I'm very happy with it, but I'm willing to experiment.
 
 #+begin_src emacs-lisp
-  (use-package mu4e
-    :ensure nil
-    ;; :if (and (eq system-type 'gnu/linux) (string-equal system-name "archpc"))
-    :config
-    ;; add mu4e to the load path on Arch
-    (require 'mu4e))
+  ;; (use-package mu4e
+  ;;   :ensure nil
+  ;;   ;; :if (and (eq system-type 'gnu/linux) (string-equal system-name "archpc"))
+  ;;   :config
+  ;;   ;; add mu4e to the load path on Arch
+  ;;   (require 'mu4e))
 
-  (when (string= (system-name) "archpc")
-    (add-to-list 'load-path "/usr/share/emacs/site-lisp/mu4e/")
-    (require 'mu4e))
+  ;; (when (string= (system-name) "archpc")
+  ;;   (add-to-list 'load-path "/usr/share/emacs/site-lisp/mu4e/")
+  ;;   (require 'mu4e))
 #+end_src
 
 ** emms
