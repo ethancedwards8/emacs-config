@@ -213,10 +213,6 @@ From the [[https://github.com/technomancy/better-defaults/blob/master/better-def
 (I'm pretty sure these get overwriteen by Swiper but its okay :) )
 
 #+begin_src emacs-lisp
-  ;; (global-set-key (kbd "C-s") 'isearch-forward-regexp)
-  ;; (global-set-key (kbd "C-r") 'isearch-backward-regexp)
-  ;; (global-set-key (kbd "C-M-s") 'isearch-forward)
-  ;; (global-set-key (kbd "C-M-r") 'isearch-backward)
   (global-set-key (kbd "C-M-s") 'isearch-forward-regexp)
   (global-set-key (kbd "C-M-r") 'isearch-backward-regexp)
 #+end_src
