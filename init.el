@@ -301,6 +301,8 @@ Very Similar to S-o from Vim"
 (use-package dired
   ;; :ensure nil
   :straight nil
+  ;; :bind (:map dired-mode-map
+  ;; 	      ("SPC" . nil))
   :config
   (when (string= system-type "darwin")
     (setq dired-use-ls-dired nil)))
@@ -539,6 +541,12 @@ Very Similar to S-o from Vim"
 (use-package flycheck
   :hook (lsp-deferred . flycheck-mode))
 
+(use-package yasnippet
+   :config
+   (yas-global-mode))
+
+(use-package yasnippet-snippets)
+
 (use-package rustic
   :mode ("\\.rs\\'" . rustic-mode)
   :hook (rustic-mode . lsp-deferred))
@@ -647,16 +655,16 @@ Very Similar to S-o from Vim"
 (use-package snow
   :defer t)
 
-(use-package mu4e
-  :ensure nil
-  ;; :if (and (eq system-type 'gnu/linux) (string-equal system-name "archpc"))
-  :config
-  ;; add mu4e to the load path on Arch
-  (require 'mu4e))
+;; (use-package mu4e
+;;   :ensure nil
+;;   ;; :if (and (eq system-type 'gnu/linux) (string-equal system-name "archpc"))
+;;   :config
+;;   ;; add mu4e to the load path on Arch
+;;   (require 'mu4e))
 
-(when (string= (system-name) "archpc")
-  (add-to-list 'load-path "/usr/share/emacs/site-lisp/mu4e/")
-  (require 'mu4e))
+;; (when (string= (system-name) "archpc")
+;;   (add-to-list 'load-path "/usr/share/emacs/site-lisp/mu4e/")
+;;   (require 'mu4e))
 
 (use-package emms
   :commands emms
