@@ -101,6 +101,8 @@
 (show-paren-mode)
 (electric-pair-mode)
 
+(add-hook 'before-save-hook '(lambda () (delete-trailing-whitespace)))
+
 ;; (global-set-key (kbd "C-s") 'isearch-forward-regexp)
 ;; (global-set-key (kbd "C-r") 'isearch-backward-regexp)
 ;; (global-set-key (kbd "C-M-s") 'isearch-forward)

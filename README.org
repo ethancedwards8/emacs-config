@@ -201,6 +201,12 @@ I have my custom/stolen elisp code in ~/.emacs.d/lisp/. This will add that to my
   (electric-pair-mode)
 #+end_src
 
+** Delete trailing whitespace on save
+
+#+begin_src emacs-lisp
+  (add-hook 'before-save-hook '(lambda () (delete-trailing-whitespace)))
+#+end_src
+
 * Misc. Keybinds
 
 From the [[https://github.com/technomancy/better-defaults/blob/master/better-defaults.el][better defaults github page]]
@@ -685,7 +691,7 @@ A Web Application to Visualize the Org-Roam Database
 	  org-roam-server-network-arrows nil
 	  org-roam-server-network-label-truncate t
 	  org-roam-server-network-label-truncate-length 60
-	  org-roam-server-network-label-wrap-length 20)) 
+	  org-roam-server-network-label-wrap-length 20))
 #+end_src
 
   ox-twbs - Org mode export twitter bootstrap I think? Not sure how I got this package installed.
