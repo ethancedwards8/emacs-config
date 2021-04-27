@@ -609,6 +609,12 @@ Very Similar to S-o from Vim"
 (use-package vimrc-mode
   :mode ("\\.vim\\(rc\\)?\\'" . vimrc-mode))
 
+(use-package lua-mode
+  :mode ("\\.lua$" . lua-mode)
+  :hook (lua-mode . lsp-deferred)
+  :config
+  (add-to-list 'interpreter-mode-alist '("lua" . lua-mode)))
+
 (use-package yaml-mode
   :mode ("\\.yml\\'" . yaml-mode)
 	("\\.yaml\\'" . yaml-mode)

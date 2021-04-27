@@ -1097,6 +1097,18 @@ GDScript, a high-level, dynamically typed programming language. Its used for pro
     :mode ("\\.vim\\(rc\\)?\\'" . vimrc-mode))
 #+end_src
 
+*** lua
+
+Lua language, seems to grow more popular by the day.
+
+#+begin_src emacs-lisp
+  (use-package lua-mode
+    :mode ("\\.lua$" . lua-mode)
+    :hook (lua-mode . lsp-deferred)
+    :config
+    (add-to-list 'interpreter-mode-alist '("lua" . lua-mode)))
+#+end_src
+
 *** Yaml
 
 Its yaml, what more is there to say? Better than json but still *sucks*
