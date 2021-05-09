@@ -1081,7 +1081,13 @@ Haskell is a general purpose, statically typed, purely function programming lang
 I have a bit of a thing for functional programming, learning Haskell is on my list of TODO's
 
 #+begin_src emacs-lisp
-  (use-package haskell-mode)
+  (use-package haskell-mode
+    :hook (haskell-mode . #'lsp-deferred)
+    :hook (haskell-literate-mode . #'lsp-deferred))
+  (use-package lsp-haskell)
+  ;; loading and unloading is slow, so just disabling
+  (with-eval-after-load "flycheck"
+    (add-to-list 'flycheck-disabled-checkers 'haskell-stack-ghc))
 #+end_src
 
 *** GDScript
@@ -1177,11 +1183,7 @@ These packages are kinda fun, don't really have much of a point
 *** Elcord - Discord rich presence
 #+begin_src emacs-lisp
   (use-package elcord
-    :defer t
-    ;; :config
-    ;; (when (string= (system-name) "archpc")
-    ;;   (elcord-mode))
-    )
+    :defer t)
 #+end_src
 
 *** Spotify - Control the Spotify app in emacs
