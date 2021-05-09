@@ -66,6 +66,9 @@ Add repo's. ELPA, MELPA, org, and ublt.
 	(eval-print-last-sexp)))
     (load bootstrap-file nil 'nomessage))
 
+  ;; https://www.reddit.com/r/emacs/comments/mtb05k/emacs_init_time_decreased_65_after_i_realized_the/
+  (setq straight-check-for-modifications '(check-on-save find-when-checking))
+
   (straight-use-package 'use-package)
   (setq straight-use-package-by-default t)
 #+end_src
@@ -200,16 +203,18 @@ I have my custom/stolen elisp code in ~/.emacs.d/lisp/. This will add that to my
   (electric-pair-mode)
 #+end_src
 
+** Delete trailing whitespace on save
+
+#+begin_src emacs-lisp
+  (add-hook 'before-save-hook '(lambda () (delete-trailing-whitespace)))
+#+end_src
+
 * Misc. Keybinds
 
 From the [[https://github.com/technomancy/better-defaults/blob/master/better-defaults.el][better defaults github page]]
 (I'm pretty sure these get overwriteen by Swiper but its okay :) )
 
 #+begin_src emacs-lisp
-  ;; (global-set-key (kbd "C-s") 'isearch-forward-regexp)
-  ;; (global-set-key (kbd "C-r") 'isearch-backward-regexp)
-  ;; (global-set-key (kbd "C-M-s") 'isearch-forward)
-  ;; (global-set-key (kbd "C-M-r") 'isearch-backward)
   (global-set-key (kbd "C-M-s") 'isearch-forward-regexp)
   (global-set-key (kbd "C-M-r") 'isearch-backward-regexp)
 #+end_src
@@ -555,6 +560,8 @@ Dired is a file manager built into Emacs, its pretty great.
   (use-package dired
     ;; :ensure nil
     :straight nil
+    ;; :bind (:map dired-mode-map
+    ;; 	      ("SPC" . nil))
     :config
     (when (string= system-type "darwin")
       (setq dired-use-ls-dired nil)))
@@ -684,7 +691,7 @@ A Web Application to Visualize the Org-Roam Database
 	  org-roam-server-network-arrows nil
 	  org-roam-server-network-label-truncate t
 	  org-roam-server-network-label-truncate-length 60
-	  org-roam-server-network-label-wrap-length 20)) 
+	  org-roam-server-network-label-wrap-length 20))
 #+end_src
 
   ox-twbs - Org mode export twitter bootstrap I think? Not sure how I got this package installed.
@@ -693,9 +700,17 @@ A Web Application to Visualize the Org-Roam Database
     ;;   :defer t)
 #+end_src
 
-**** Org caldav
+**** org-outline-tree
 
-Org caldav just to play with
+An org roam similar buffer for org mode outlines
+
+#+begin_src emacs-lisp
+  (use-package org-ol-tree
+    :straight (org-ol-tree :type git :host github :repo "Townk/org-ol-tree")
+    :commands (org-ol-tree/display-sections)
+    ;; :init
+    )
+#+end_src
 
 *** Terminal modes
 
@@ -874,9 +889,9 @@ These are some general tools that I use, they don't really belong in any categor
 *** direnv - emacs direnv integration
 
 #+begin_src emacs-lisp
-  (use-package direnv
-   :config
-   (direnv-mode))
+  ;; (use-package direnv
+  ;;  :config
+  ;;  (direnv-mode))
 #+end_src
 
 *** debbugs - access the gnu bug tracker form inside emacs
@@ -942,6 +957,22 @@ Syntax checking for GNU Emacs
     :hook (lsp-deferred . flycheck-mode))
 #+end_src
 
+*** yasnippet
+
+Enable =yasnippet=
+
+#+begin_src emacs-lisp
+  (use-package yasnippet
+     :config
+     (yas-global-mode))
+#+end_src
+
+Add some snippets :)
+
+#+begin_src emacs-lisp
+  (use-package yasnippet-snippets)
+#+end_src
+
 *** Rust
 
 I'll be using [[https://github.com/brotzeit/rustic][rustic]] for Rust development inside of Emacs
@@ -964,6 +995,8 @@ It's python, meh, no one cares, but everyone uses it.
   ;;   :hook (python-mode . lsp-deferred)
   ;;   :custom
   ;;   (python-shell-interpreter "python3"))
+
+  (setq python-shell-interpreter "python3")
 #+end_src
 
 *** Solidity
@@ -1056,7 +1089,7 @@ I have a bit of a thing for functional programming, learning Haskell is on my li
 GDScript, a high-level, dynamically typed programming language. Its used for programming in the Godot Game engine language.
 
 #+begin_src emacs-lisp
-  ;; (use-package gdscript-mode)
+  (use-package gdscript-mode)
 #+end_src
 
 *** vimscript
@@ -1066,9 +1099,21 @@ GDScript, a high-level, dynamically typed programming language. Its used for pro
     :mode ("\\.vim\\(rc\\)?\\'" . vimrc-mode))
 #+end_src
 
+*** lua
+
+Lua language, seems to grow more popular by the day.
+
+#+begin_src emacs-lisp
+  (use-package lua-mode
+    :mode ("\\.lua$" . lua-mode)
+    :hook (lua-mode . lsp-deferred)
+    :config
+    (add-to-list 'interpreter-mode-alist '("lua" . lua-mode)))
+#+end_src
+
 *** Yaml
 
-Its yaml, what more is their to say? Better than json but still *sucks*
+Its yaml, what more is there to say? Better than json but still *sucks*
 
 PS: adding this package also helps not break =docker-compose-mode= for some reason
 
@@ -1095,10 +1140,10 @@ I use Docker everyday for work, home, testing out programs, etc. So consequently
 
 This gives better syntax highlighting, code completion, etc in docker-compose.yml files
 #+begin_src emacs-lisp
-  (use-package docker-compose-mode
-    :mode ("docker-compose.yml\\'" . docker-compose-mode)
-	  ("docker-compose.yaml\\'" . docker-compose-mode)
-	  ("stack.yml\\'" . docker-compose-mode))
+  ;; (use-package docker-compose-mode
+  ;;   :mode ("docker-compose.yml\\'" . docker-compose-mode)
+  ;; 	("docker-compose.yaml\\'" . docker-compose-mode)
+  ;; 	("stack.yml\\'" . docker-compose-mode))
 #+end_src
 
 Same as above except for in Dockerfiles
@@ -1175,12 +1220,11 @@ mu4e is an email client for Emacs. Currently I use neomutt and I'm very happy wi
   ;;   ;; :if (and (eq system-type 'gnu/linux) (string-equal system-name "archpc"))
   ;;   :config
   ;;   ;; add mu4e to the load path on Arch
-  ;;   (add-to-list 'load-path "/usr/share/emacs/site-lisp/mu4e/")
   ;;   (require 'mu4e))
 
-  (when (string= (system-name) "archpc")
-    (add-to-list 'load-path "/usr/share/emacs/site-lisp/mu4e/")
-    (require 'mu4e))
+  ;; (when (string= (system-name) "archpc")
+  ;;   (add-to-list 'load-path "/usr/share/emacs/site-lisp/mu4e/")
+  ;;   (require 'mu4e))
 #+end_src
 
 ** emms
@@ -1193,4 +1237,12 @@ EMMS is a Music player/interface for Emacs. I've heard good things about it and 
     :config
     (emms-standard)
     (emms-default-players))
+#+end_src
+
+** elpher
+
+elpher is a gemini and gopher client for emacs.
+
+#+begin_src emacs-lisp
+  (use-package elpher)
 #+end_src

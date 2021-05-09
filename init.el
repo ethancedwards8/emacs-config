@@ -32,6 +32,9 @@
       (eval-print-last-sexp)))
   (load bootstrap-file nil 'nomessage))
 
+;; https://www.reddit.com/r/emacs/comments/mtb05k/emacs_init_time_decreased_65_after_i_realized_the/
+(setq straight-check-for-modifications '(check-on-save find-when-checking))
+
 (straight-use-package 'use-package)
 (setq straight-use-package-by-default t)
 
@@ -98,10 +101,8 @@
 (show-paren-mode)
 (electric-pair-mode)
 
-;; (global-set-key (kbd "C-s") 'isearch-forward-regexp)
-;; (global-set-key (kbd "C-r") 'isearch-backward-regexp)
-;; (global-set-key (kbd "C-M-s") 'isearch-forward)
-;; (global-set-key (kbd "C-M-r") 'isearch-backward)
+(add-hook 'before-save-hook '(lambda () (delete-trailing-whitespace)))
+
 (global-set-key (kbd "C-M-s") 'isearch-forward-regexp)
 (global-set-key (kbd "C-M-r") 'isearch-backward-regexp)
 
@@ -300,6 +301,8 @@ Very Similar to S-o from Vim"
 (use-package dired
   ;; :ensure nil
   :straight nil
+  ;; :bind (:map dired-mode-map
+  ;; 	      ("SPC" . nil))
   :config
   (when (string= system-type "darwin")
     (setq dired-use-ls-dired nil)))
@@ -398,6 +401,12 @@ Very Similar to S-o from Vim"
 ;; (use-package ox-twbs
 ;;   :defer t)
 
+(use-package org-ol-tree
+  :straight (org-ol-tree :type git :host github :repo "Townk/org-ol-tree")
+  :commands (org-ol-tree/display-sections)
+  ;; :init
+  )
+
 (use-package vterm
   :custom
   (vterm-always-compile-module t)
@@ -495,9 +504,9 @@ Very Similar to S-o from Vim"
       (exec-path-from-shell-initialize))
     ))
 
-(use-package direnv
- :config
- (direnv-mode))
+;; (use-package direnv
+;;  :config
+;;  (direnv-mode))
 
 (use-package debbugs)
 
@@ -532,6 +541,12 @@ Very Similar to S-o from Vim"
 (use-package flycheck
   :hook (lsp-deferred . flycheck-mode))
 
+(use-package yasnippet
+   :config
+   (yas-global-mode))
+
+(use-package yasnippet-snippets)
+
 (use-package rustic
   :mode ("\\.rs\\'" . rustic-mode)
   :hook (rustic-mode . lsp-deferred))
@@ -543,6 +558,8 @@ Very Similar to S-o from Vim"
 ;;   :hook (python-mode . lsp-deferred)
 ;;   :custom
 ;;   (python-shell-interpreter "python3"))
+
+(setq python-shell-interpreter "python3")
 
 (use-package solidity-mode
   :mode ("\\.sol\\'" . solidity-mode)
@@ -587,10 +604,16 @@ Very Similar to S-o from Vim"
 
 (use-package haskell-mode)
 
-;; (use-package gdscript-mode)
+(use-package gdscript-mode)
 
 (use-package vimrc-mode
   :mode ("\\.vim\\(rc\\)?\\'" . vimrc-mode))
+
+(use-package lua-mode
+  :mode ("\\.lua$" . lua-mode)
+  :hook (lua-mode . lsp-deferred)
+  :config
+  (add-to-list 'interpreter-mode-alist '("lua" . lua-mode)))
 
 (use-package yaml-mode
   :mode ("\\.yml\\'" . yaml-mode)
@@ -601,10 +624,10 @@ Very Similar to S-o from Vim"
   :mode ("\\.json\\'" . json-mode)
   :hook (json-mode . lsp-deferred))
 
-(use-package docker-compose-mode
-  :mode ("docker-compose.yml\\'" . docker-compose-mode)
-	("docker-compose.yaml\\'" . docker-compose-mode)
-	("stack.yml\\'" . docker-compose-mode))
+;; (use-package docker-compose-mode
+;;   :mode ("docker-compose.yml\\'" . docker-compose-mode)
+;; 	("docker-compose.yaml\\'" . docker-compose-mode)
+;; 	("stack.yml\\'" . docker-compose-mode))
 
 (use-package dockerfile-mode
   :hook (dockerfile-mode . lsp-deferred))
@@ -643,15 +666,16 @@ Very Similar to S-o from Vim"
 ;;   ;; :if (and (eq system-type 'gnu/linux) (string-equal system-name "archpc"))
 ;;   :config
 ;;   ;; add mu4e to the load path on Arch
-;;   (add-to-list 'load-path "/usr/share/emacs/site-lisp/mu4e/")
 ;;   (require 'mu4e))
 
-(when (string= (system-name) "archpc")
-  (add-to-list 'load-path "/usr/share/emacs/site-lisp/mu4e/")
-  (require 'mu4e))
+;; (when (string= (system-name) "archpc")
+;;   (add-to-list 'load-path "/usr/share/emacs/site-lisp/mu4e/")
+;;   (require 'mu4e))
 
 (use-package emms
   :commands emms
   :config
   (emms-standard)
   (emms-default-players))
+
+(use-package elpher)
