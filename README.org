@@ -1111,6 +1111,22 @@ Lua language, seems to grow more popular by the day.
     (add-to-list 'interpreter-mode-alist '("lua" . lua-mode)))
 #+end_src
 
+*** hcl-mode - hashicorp configuration language
+
+As I learn more about HashiCorp's products I will program in it's language more.
+
+#+begin_src emacs-lisp
+  (use-package hcl-mode)
+#+end_src
+
+*** terraform-mode - terraform configuration language
+
+Terraform is super cool, this package allows me to edit the configuration language.
+
+#+begin_src emacs-lisp
+  (use-package terraform-mode)
+#+end_src
+
 *** Yaml
 
 Its yaml, what more is there to say? Better than json but still *sucks*

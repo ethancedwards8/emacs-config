@@ -615,6 +615,10 @@ Very Similar to S-o from Vim"
   :config
   (add-to-list 'interpreter-mode-alist '("lua" . lua-mode)))
 
+(use-package hcl-mode)
+
+(use-package terraform-mode)
+
 (use-package yaml-mode
   :mode ("\\.yml\\'" . yaml-mode)
 	("\\.yaml\\'" . yaml-mode)
