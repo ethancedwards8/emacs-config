@@ -14,6 +14,8 @@ I'm documenting it for fun, and I like notes so I'm linking to where I found eac
 
 I'll also probably put this somewhere on [[https://ethancedwards.com][my site]] and update it from time to time, but the "live" version is on my [[https://gitlab.com/ethancedwards/emacs-config][gitlab]].
 
+TODO toggle-truncate-lines
+
 #+BEGIN_QUOTE
 "The Grind is not Glamorous."
 - Casey Neistat
