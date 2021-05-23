@@ -14,6 +14,8 @@ I'm documenting it for fun, and I like notes so I'm linking to where I found eac
 
 I'll also probably put this somewhere on [[https://ethancedwards.com][my site]] and update it from time to time, but the "live" version is on my [[https://gitlab.com/ethancedwards/emacs-config][gitlab]].
 
+TODO toggle-truncate-lines
+
 #+BEGIN_QUOTE
 "The Grind is not Glamorous."
 - Casey Neistat
@@ -1104,7 +1106,13 @@ Haskell is a general purpose, statically typed, purely function programming lang
 I have a bit of a thing for functional programming, learning Haskell is on my list of TODO's
 
 #+begin_src emacs-lisp
-  (use-package haskell-mode)
+  (use-package haskell-mode
+    :hook (haskell-mode . #'lsp-deferred)
+    :hook (haskell-literate-mode . #'lsp-deferred))
+  (use-package lsp-haskell)
+  ;; loading and unloading is slow, so just disabling
+  (with-eval-after-load "flycheck"
+    (add-to-list 'flycheck-disabled-checkers 'haskell-stack-ghc))
 #+end_src
 
 *** GDScript
@@ -1120,6 +1128,34 @@ GDScript, a high-level, dynamically typed programming language. Its used for pro
 #+begin_src emacs-lisp
   (use-package vimrc-mode
     :mode ("\\.vim\\(rc\\)?\\'" . vimrc-mode))
+#+end_src
+
+*** lua
+
+Lua language, seems to grow more popular by the day.
+
+#+begin_src emacs-lisp
+  (use-package lua-mode
+    :mode ("\\.lua$" . lua-mode)
+    :hook (lua-mode . lsp-deferred)
+    :config
+    (add-to-list 'interpreter-mode-alist '("lua" . lua-mode)))
+#+end_src
+
+*** hcl-mode - hashicorp configuration language
+
+As I learn more about HashiCorp's products I will program in it's language more.
+
+#+begin_src emacs-lisp
+  (use-package hcl-mode)
+#+end_src
+
+*** terraform-mode - terraform configuration language
+
+Terraform is super cool, this package allows me to edit the configuration language.
+
+#+begin_src emacs-lisp
+  (use-package terraform-mode)
 #+end_src
 
 *** Yaml
@@ -1172,11 +1208,7 @@ These packages are kinda fun, don't really have much of a point
 *** Elcord - Discord rich presence
 #+begin_src emacs-lisp
   (use-package elcord
-    :defer t
-    ;; :config
-    ;; (when (string= (system-name) "archpc")
-    ;;   (elcord-mode))
-    )
+    :defer t)
 #+end_src
 
 *** Spotify - Control the Spotify app in emacs

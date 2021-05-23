@@ -615,12 +615,28 @@ Very Similar to S-o from Vim"
   (setq geiser-default-implementation 'guile)
   (setq geiser-active-implementations '(gambit guile)))
 
-(use-package haskell-mode)
+(use-package haskell-mode
+  :hook (haskell-mode . #'lsp-deferred)
+  :hook (haskell-literate-mode . #'lsp-deferred))
+(use-package lsp-haskell)
+;; loading and unloading is slow, so just disabling
+(with-eval-after-load "flycheck"
+  (add-to-list 'flycheck-disabled-checkers 'haskell-stack-ghc))
 
 (use-package gdscript-mode)
 
 (use-package vimrc-mode
   :mode ("\\.vim\\(rc\\)?\\'" . vimrc-mode))
+
+(use-package lua-mode
+  :mode ("\\.lua$" . lua-mode)
+  :hook (lua-mode . lsp-deferred)
+  :config
+  (add-to-list 'interpreter-mode-alist '("lua" . lua-mode)))
+
+(use-package hcl-mode)
+
+(use-package terraform-mode)
 
 (use-package yaml-mode
   :mode ("\\.yml\\'" . yaml-mode)
@@ -640,11 +656,7 @@ Very Similar to S-o from Vim"
   :hook (dockerfile-mode . lsp-deferred))
 
 (use-package elcord
-  :defer t
-  ;; :config
-  ;; (when (string= (system-name) "archpc")
-  ;;   (elcord-mode))
-  )
+  :defer t)
 
 (use-package spotify
   :defer t)
