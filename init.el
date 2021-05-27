@@ -577,9 +577,22 @@ Very Similar to S-o from Vim"
 
 (use-package yasnippet-snippets)
 
+(use-package markdown-mode
+  :straight (markdown-mode :type git :host github :repo "jrblevin/markdown-mode")
+  :mode ("README\\.md\\'" . gfm-mode)
+  :init (setq markdown-command "multimarkdown"))
+
 (use-package rustic
   :mode ("\\.rs\\'" . rustic-mode)
   :hook (rustic-mode . lsp-deferred))
+
+(use-package c-mode
+  :straight nil
+  :hook (c-mode . lsp-deferred))
+
+(use-package c++-mode
+  :straight nil
+  :hook (c++-mode . lsp-deferred))
 
 ;; (use-package python-mode
 ;;   ;; :ensure t

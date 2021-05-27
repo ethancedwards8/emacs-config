@@ -1003,6 +1003,17 @@ Add some snippets :)
   (use-package yasnippet-snippets)
 #+end_src
 
+*** markdown-mode
+
+For some reason rustic-mode is dependent on markdown-mode, whatever.
+
+#+begin_src emacs-lisp
+  (use-package markdown-mode
+    :straight (markdown-mode :type git :host github :repo "jrblevin/markdown-mode")
+    :mode ("README\\.md\\'" . gfm-mode)
+    :init (setq markdown-command "multimarkdown"))
+#+end_src
+
 *** Rust
 
 I'll be using [[https://github.com/brotzeit/rustic][rustic]] for Rust development inside of Emacs
@@ -1011,6 +1022,20 @@ I'll be using [[https://github.com/brotzeit/rustic][rustic]] for Rust developmen
   (use-package rustic
     :mode ("\\.rs\\'" . rustic-mode)
     :hook (rustic-mode . lsp-deferred))
+#+end_src
+
+*** C/Cpp
+
+I'll be using emacs' buit in c and c++ modes with lsp.
+
+#+begin_src emacs-lisp
+  (use-package c-mode
+    :straight nil
+    :hook (c-mode . lsp-deferred))
+
+  (use-package c++-mode
+    :straight nil
+    :hook (c++-mode . lsp-deferred))
 #+end_src
 
 *** Python
