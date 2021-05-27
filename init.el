@@ -408,15 +408,17 @@ Very Similar to S-o from Vim"
   )
 
 (use-package vterm
+  :straight nil
   :custom
   (vterm-always-compile-module t)
-  :bind (("C-x v" . vterm)
+  ;; https://github.com/akermu/emacs-libvterm/issues/525
+  :bind (("C-x v" . (lambda () (interactive) (vterm t)))
 	 ("C-x 4 v" . vterm-other-window)
 	 :map vterm-mode-map
 	 ("<C-backspace>" . (lambda () (interactive) (vterm-send-meta-backspace)))))
 	 ;; came up with this myself, fixes C-backspace, pretty proud of it not going to lie :)
 (my/leader-key
-      "v v" '(vterm :wk "vterm"))
+      "v v" '((lambda () (interactive) (vterm t)) :wk "vterm"))
 
 (use-package eshell-git-prompt)
 
@@ -461,7 +463,35 @@ Very Similar to S-o from Vim"
   :init
   (ivy-rich-mode 1))
 
-;; (use-package exwm)
+;; (use-package exwm
+;;   :straight nil
+;;   :init
+;;   (setq mouse-autoselect-window nil
+;; 	focus-follows-mouse nil
+;; 	exwm-workspace-number 10)
+;;   :config
+;;   (exwm-enable)
+;;   )
+
+;; (use-package exwm-randr
+;;   :straight nil
+;;   :after (exwm)
+;;   :config
+;;   ;; (require 'exwm-randr)
+;;   (setq exwm-randr-workspace-output-plist '(0 "DP-1" 1 "HDMI-1" 2 "DVI-D-1"))
+;;   (add-hook 'exwm-randr-screen-change-hook
+;; 	    (lambda ()
+;; 	      (start-process-shell-command
+;; 	       "xrandr" nil "xrandr --output DP-1 --primary --mode 1920x1080 --pos 0x0 --rotate normal --output HDMI-1 --mode 1920x1080 --pos 1920x0 --rotate normal --output DVI-D-1 --mode 1920x1080 --pos 3840x0 --rotate normal")))
+;;   (exwm-randr-enable)
+;;   )
+
+;; (use-package exwm-systemtray
+;;   :straight nil
+;;   :after (exwm-randr)
+;;   :config
+;;   (exwm-systemtray-enable)
+;;   )
 
 (use-package rainbow-mode
   :config
