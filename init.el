@@ -534,9 +534,9 @@ Very Similar to S-o from Vim"
       (exec-path-from-shell-initialize))
     ))
 
-;; (use-package direnv
-;;  :config
-;;  (direnv-mode))
+(use-package envrc
+ :init
+ (envrc-global-mode))
 
 (use-package debbugs)
 
