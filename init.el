@@ -101,6 +101,19 @@
 (show-paren-mode)
 (electric-pair-mode)
 
+;; Enable flyspell in these modes
+(dolist (hook '(text-mode-hook))
+  (add-hook hook (lambda () (flyspell-mode 1))))
+;; disable them in these modes
+(dolist (hook '(change-log-mode-hook log-edit-mode-hook))
+ (add-hook hook (lambda () (flyspell-mode -1))))
+
+;; Enable mouse for MacOS
+(eval-after-load "flyspell"
+  '(progn
+     (define-key flyspell-mouse-map [down-mouse-3] #'flyspell-correct-word)
+     (define-key flyspell-mouse-map [mouse-3] #'undefined)))
+
 (add-hook 'before-save-hook '(lambda () (delete-trailing-whitespace)))
 
 (global-set-key (kbd "C-M-s") 'isearch-forward-regexp)
@@ -343,6 +356,7 @@ Very Similar to S-o from Vim"
   (org-default-notes-file "~/Nextcloud/Org/Notes.org")
   (org-log-done t)
   (org-agenda-include-diary t)
+  (org-image-actual-width nil)
   :bind (("C-c L" . org-stored-link)
 	 ("C-c a" . org-agenda)
 	 ("C-c c" . org-capture))
