@@ -937,12 +937,12 @@ These are some general tools that I use, they don't really belong in any categor
 #     (spdx-project-detection 'auto))
 # #+end_src
 
-*** direnv - emacs direnv integration
+*** envrc - emacs direnv integration
 
 #+begin_src emacs-lisp
-  ;; (use-package direnv
-  ;;  :config
-  ;;  (direnv-mode))
+  (use-package envrc
+   :init
+   (envrc-global-mode))
 #+end_src
 
 *** debbugs - access the gnu bug tracker form inside emacs
