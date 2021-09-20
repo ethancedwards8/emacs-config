@@ -408,7 +408,7 @@ Very Similar to S-o from Vim"
   )
 
 (use-package vterm
-  :straight nil
+  :straight t
   :custom
   (vterm-always-compile-module t)
   ;; https://github.com/akermu/emacs-libvterm/issues/525

@@ -720,7 +720,7 @@ I use vterm for the cases when I need a terminal emulator, I try to use eshell a
 
 #+begin_src emacs-lisp
   (use-package vterm
-    :straight nil
+    :straight t
     :custom
     (vterm-always-compile-module t)
     ;; https://github.com/akermu/emacs-libvterm/issues/525
