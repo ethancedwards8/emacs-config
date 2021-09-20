@@ -14,7 +14,8 @@ I'm documenting it for fun, and I like notes so I'm linking to where I found eac
 
 I'll also probably put this somewhere on [[https://ethancedwards.com][my site]] and update it from time to time, but the "live" version is on my [[https://gitlab.com/ethancedwards/emacs-config][gitlab]].
 
-TODO toggle-truncate-lines
+TODO: =toggle-truncate-lines=
+TODO: Have org mode auto detect if theres a "technical" roam tag and enable =display-fill-column-indicator-mode=
 
 #+BEGIN_QUOTE
 "The Grind is not Glamorous."
@@ -201,6 +202,25 @@ I have my custom/stolen elisp code in ~/.emacs.d/lisp/. This will add that to my
 #+begin_src emacs-lisp
   (show-paren-mode)
   (electric-pair-mode)
+#+end_src
+
+** Spell checking with FlySpell
+
+[[https://www.tenderisthebyte.com/blog/2019/06/09/spell-checking-emacs/][Pretty good guide on this]]. Plus the [[https://www.emacswiki.org/emacs/FlySpell][emacswiki page]].
+
+#+begin_src emacs-lisp
+  ;; Enable flyspell in these modes
+  (dolist (hook '(text-mode-hook))
+    (add-hook hook (lambda () (flyspell-mode 1))))
+  ;; disable them in these modes
+  (dolist (hook '(change-log-mode-hook log-edit-mode-hook))
+   (add-hook hook (lambda () (flyspell-mode -1))))
+
+  ;; Enable mouse for MacOS
+  (eval-after-load "flyspell"
+    '(progn
+       (define-key flyspell-mouse-map [down-mouse-3] #'flyspell-correct-word)
+       (define-key flyspell-mouse-map [mouse-3] #'undefined)))
 #+end_src
 
 ** Delete trailing whitespace on save
@@ -628,6 +648,7 @@ Org mode is literally the best, I'm writing this config in org, what else do you
     (org-default-notes-file "~/Nextcloud/Org/Notes.org")
     (org-log-done t)
     (org-agenda-include-diary t)
+    (org-image-actual-width nil)
     :bind (("C-c L" . org-stored-link)
 	   ("C-c a" . org-agenda)
 	   ("C-c c" . org-capture))
