@@ -286,6 +286,8 @@ Very Similar to S-o from Vim"
   :config
   (evil-commentary-mode))
 
+(fset 'evil-redirect-digit-argument 'ignore) ;; before evil-org loaded
+
 (use-package evil-org
   ;; :diminish evil-org
   :after org
@@ -296,6 +298,10 @@ Very Similar to S-o from Vim"
 	      (evil-org-set-key-theme)))
   (require 'evil-org-agenda)
   (evil-org-agenda-set-keys))
+
+(add-to-list 'evil-digit-bound-motions 'evil-org-beginning-of-line)
+(evil-define-key 'motion 'evil-org-mode
+    (kbd "0") 'evil-org-beginning-of-line)
 
 (use-package magit
   :bind (("C-x g" . magit-status)
@@ -377,40 +383,41 @@ Very Similar to S-o from Vim"
 
 (use-package org-roam
       :hook
-      (after-init . org-roam-mode)
+      (after-init . org-roam-setup)
+      :init
+      (setq org-roam-v2-ack t)
       :custom
       (org-roam-directory "~/Nextcloud/Org")
-      (org-roam-tag-sources '(last-directory prop))
-      (org-roam-rename-file-on-title-change nil)
       :bind (:map org-roam-mode-map
-	      (("C-c n l" . org-roam)
-	       ("C-c n f" . org-roam-find-file)
-	       ("C-c n g" . org-roam-graph))
-	      :map org-mode-map
-	      (("C-c n i" . org-roam-insert))
-	      (("C-c n I" . org-roam-insert-immediate))))
+	      (
+	       ([mouse-1] . #'org-roam-visit-thing)
+	       ;; ("C-c n g" . org-roam-graph)
+	       )
+	      )
+      )
 
 (my/leader-key
-  "n l" '(org-roam :wk "org roam")
-  "n f" '(org-roam-find-file :wk "find roam file")
+  ;; "n l" '(org-roam :wk "org roam")
+  "n f" '(org-roam-node-find :wk "find roam node")
   "n g" '(org-roam-graph :wk "roam graph")
-  "n i" '(org-roam-insert :wk "roam insert")
-  "n I" '(org-roam-insert-immediate :wk "roam insert immediate")
-  "n t" '(org-roam-tag-add :wk "roam insert tag"))
+  "n i" '(org-roam-node-insert :wk "roam insert")
+  ;; "n t" '(org-roam-tag-add :wk "roam insert tag")
+  )
 
-(use-package org-roam-server
-  :config
-  (setq org-roam-server-host "127.0.0.1"
-	org-roam-server-port 8080
-	org-roam-server-authenticate nil
-	org-roam-server-export-inline-images t
-	org-roam-server-serve-files nil
-	org-roam-server-served-file-extensions '("pdf" "mp4" "ogv")
-	org-roam-server-network-poll t
-	org-roam-server-network-arrows nil
-	org-roam-server-network-label-truncate t
-	org-roam-server-network-label-truncate-length 60
-	org-roam-server-network-label-wrap-length 20))
+;; (use-package org-roam-server
+;;   :straight nil
+;;   :config
+;;   (setq org-roam-server-host "127.0.0.1"
+;; 	org-roam-server-port 8080
+;; 	org-roam-server-authenticate nil
+;; 	org-roam-server-export-inline-images t
+;; 	org-roam-server-serve-files nil
+;; 	org-roam-server-served-file-extensions '("pdf" "mp4" "ogv")
+;; 	org-roam-server-network-poll t
+;; 	org-roam-server-network-arrows nil
+;; 	org-roam-server-network-label-truncate t
+;; 	org-roam-server-network-label-truncate-length 60
+;; 	org-roam-server-network-label-wrap-length 20))
 
 ;; (use-package ox-twbs
 ;;   :defer t)
