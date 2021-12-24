@@ -551,9 +551,10 @@ Evil-org adds evil functionality to org mode, very helpful
     (require 'evil-org-agenda)
     (evil-org-agenda-set-keys))
 
-  (add-to-list 'evil-digit-bound-motions 'evil-org-beginning-of-line)
-  (evil-define-key 'motion 'evil-org-mode
-      (kbd "0") 'evil-org-beginning-of-line)
+  ;; https://github.com/Somelauw/evil-org-mode/issues/93
+  ;; (add-to-list 'evil-digit-bound-motions 'evil-org-beginning-of-line)
+  ;; (evil-define-key 'motion 'evil-org-mode
+  ;;     (kbd "0") 'evil-org-beginning-of-line)
 #+end_src
 
 *** Magit

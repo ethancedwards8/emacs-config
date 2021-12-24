@@ -299,9 +299,10 @@ Very Similar to S-o from Vim"
   (require 'evil-org-agenda)
   (evil-org-agenda-set-keys))
 
-(add-to-list 'evil-digit-bound-motions 'evil-org-beginning-of-line)
-(evil-define-key 'motion 'evil-org-mode
-    (kbd "0") 'evil-org-beginning-of-line)
+;; https://github.com/Somelauw/evil-org-mode/issues/93
+;; (add-to-list 'evil-digit-bound-motions 'evil-org-beginning-of-line)
+;; (evil-define-key 'motion 'evil-org-mode
+;;     (kbd "0") 'evil-org-beginning-of-line)
 
 (use-package magit
   :bind (("C-x g" . magit-status)
