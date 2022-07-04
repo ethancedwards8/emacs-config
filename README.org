@@ -129,6 +129,12 @@ I have my custom/stolen elisp code in ~/.emacs.d/lisp/. This will add that to my
   (add-to-list 'load-path "~/.emacs.d/lisp/")
 #+end_src
 
+** Fix exec-path
+
+#+begin_src emacs-lisp
+  (add-to-list 'exec-path "~/.cargo/bin")
+#+end_src
+
 * Preferences
 
 ** Turn off ugly window deocration.
@@ -389,6 +395,9 @@ JetBrains Mono Font, my favorite, I see no reason to use anything else.
   (set-face-attribute 'default nil :inherit nil :stipple nil :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant 'normal :weight 'normal :height 98 :width 'normal :foundry "JB  " :family "JetBrains Mono")
 
   (when (string= system-type "darwin")
+    (set-face-attribute 'default nil :inherit nil :stipple nil :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant 'normal :weight 'normal :height 130 :width 'normal :foundry "JB  " :family "JetBrains Mono"))
+
+  (when (string= system-name "navidad")
     (set-face-attribute 'default nil :inherit nil :stipple nil :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant 'normal :weight 'normal :height 130 :width 'normal :foundry "JB  " :family "JetBrains Mono"))
 #+end_src
 

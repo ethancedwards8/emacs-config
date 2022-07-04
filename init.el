@@ -67,6 +67,8 @@
 
 (add-to-list 'load-path "~/.emacs.d/lisp/")
 
+(add-to-list 'exec-path "~/.cargo/bin")
+
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
 (menu-bar-mode -1)
@@ -197,6 +199,9 @@ Very Similar to S-o from Vim"
 (set-face-attribute 'default nil :inherit nil :stipple nil :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant 'normal :weight 'normal :height 98 :width 'normal :foundry "JB  " :family "JetBrains Mono")
 
 (when (string= system-type "darwin")
+  (set-face-attribute 'default nil :inherit nil :stipple nil :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant 'normal :weight 'normal :height 130 :width 'normal :foundry "JB  " :family "JetBrains Mono"))
+
+(when (string= system-name "navidad")
   (set-face-attribute 'default nil :inherit nil :stipple nil :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant 'normal :weight 'normal :height 130 :width 'normal :foundry "JB  " :family "JetBrains Mono"))
 
 (setq ansi-color-faces-vector
