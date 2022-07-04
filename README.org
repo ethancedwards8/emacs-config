@@ -1,4 +1,4 @@
-#+TITLE: Ethan Edward's Emacs Configuration
+#+TITLE: Ethan Edwards Emacs Configuration
 #+AUTHOR: Ethan Carter Edwards
 #+OPTIONS: toc:t
 #+PROPERTY: header-args:emacs-lisp :tangle ./init.el :mkdirp yes
@@ -232,7 +232,7 @@ I have my custom/stolen elisp code in ~/.emacs.d/lisp/. This will add that to my
 ** Delete trailing whitespace on save
 
 #+begin_src emacs-lisp
-  (add-hook 'before-save-hook '(lambda () (delete-trailing-whitespace)))
+  (add-hook 'before-save-hook #'(lambda () (delete-trailing-whitespace)))
 #+end_src
 
 * Misc. Keybinds

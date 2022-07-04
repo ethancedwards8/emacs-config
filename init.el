@@ -116,7 +116,7 @@
      (define-key flyspell-mouse-map [down-mouse-3] #'flyspell-correct-word)
      (define-key flyspell-mouse-map [mouse-3] #'undefined)))
 
-(add-hook 'before-save-hook '(lambda () (delete-trailing-whitespace)))
+(add-hook 'before-save-hook #'(lambda () (delete-trailing-whitespace)))
 
 (global-set-key (kbd "C-M-s") 'isearch-forward-regexp)
 (global-set-key (kbd "C-M-r") 'isearch-backward-regexp)
