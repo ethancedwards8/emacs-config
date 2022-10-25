@@ -641,7 +641,12 @@ Very Similar to S-o from Vim"
   :mode ("\\.html\\'" . web-mode)
   :mode ("\\.xhtml\\'" . web-mode)
   :mode ("\\.css\\'" . css-mode)
-  :mode ("\\.scss\\'" . scss-mode))
+  :mode ("\\.scss\\'" . scss-mode)
+  :mode ("\\.tsx\\'" . web-mode)
+  :hook (web-mode . (lambda () (when (string-equal "tsx" (file-name-extension buffer-file-name)) (setup-tide-mode))))
+  :after flycheck
+  :config
+  (flycheck-add-mode 'typescript-tslint 'web-mode))
 
 (use-package rjsx-mode
   :config
@@ -654,6 +659,12 @@ Very Similar to S-o from Vim"
   :hook (typescript-mode . lsp-deferred)
   :config
   (setq typescript-indent-level 2))
+
+(use-package tide
+  :after (typescript-mode company flycheck)
+  :hook ((typescript-mode . tide-setup)
+	 (typescript-mode . tide-hl-identifier-mode)
+	 (before-save . tide-format-before-save)))
 
 (use-package nix-mode
   :config
