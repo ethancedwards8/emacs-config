@@ -607,6 +607,8 @@ Very Similar to S-o from Vim"
 (use-package markdown-mode
   :straight (markdown-mode :type git :host github :repo "jrblevin/markdown-mode")
   :mode ("README\\.md\\'" . gfm-mode)
+  :mode ("\\.md\\'" . markdown-mode)
+  :mode ("\\.mdx\\'" . markdown-mode)
   :init (setq markdown-command "multimarkdown"))
 
 (use-package rustic
@@ -640,6 +642,7 @@ Very Similar to S-o from Vim"
 (use-package web-mode
   :mode ("\\.html\\'" . web-mode)
   :mode ("\\.xhtml\\'" . web-mode)
+  :mode ("\\.php\\'" . web-mode)
   :mode ("\\.css\\'" . css-mode)
   :mode ("\\.scss\\'" . scss-mode)
   :mode ("\\.tsx\\'" . web-mode)
