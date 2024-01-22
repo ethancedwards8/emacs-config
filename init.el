@@ -1,6 +1,6 @@
 ;; NOTE: init.el is now generated from README.org.  Please edit that file
 ;;       in Emacs and init.el will be generated automatically!
-(setq gc-cons-threshold (* 50 1000 1000))
+;; (setq gc-cons-threshold (* 50 1000 1000))
 
 ;; initialize package sources
 ;; (require 'package)
@@ -19,32 +19,59 @@
 ;; (setq use-package-always-ensure t)
 
 ;; install straight.el
-(defvar bootstrap-version)
-(let ((bootstrap-file
-       (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
-      (bootstrap-version 5))
-  (unless (file-exists-p bootstrap-file)
-    (with-current-buffer
-	(url-retrieve-synchronously
-	 "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
-	 'silent 'inhibit-cookies)
-      (goto-char (point-max))
-      (eval-print-last-sexp)))
-  (load bootstrap-file nil 'nomessage))
+(defvar elpaca-installer-version 0.6)
+(defvar elpaca-directory (expand-file-name "elpaca/" user-emacs-directory))
+(defvar elpaca-builds-directory (expand-file-name "builds/" elpaca-directory))
+(defvar elpaca-repos-directory (expand-file-name "repos/" elpaca-directory))
+(defvar elpaca-order '(elpaca :repo "https://github.com/progfolio/elpaca.git"
+                              :ref nil
+                              :files (:defaults "elpaca-test.el" (:exclude "extensions"))
+                              :build (:not elpaca--activate-package)))
+(let* ((repo  (expand-file-name "elpaca/" elpaca-repos-directory))
+       (build (expand-file-name "elpaca/" elpaca-builds-directory))
+       (order (cdr elpaca-order))
+       (default-directory repo))
+  (add-to-list 'load-path (if (file-exists-p build) build repo))
+  (unless (file-exists-p repo)
+    (make-directory repo t)
+    (when (< emacs-major-version 28) (require 'subr-x))
+    (condition-case-unless-debug err
+        (if-let ((buffer (pop-to-buffer-same-window "*elpaca-bootstrap*"))
+                 ((zerop (call-process "git" nil buffer t "clone"
+                                       (plist-get order :repo) repo)))
+                 ((zerop (call-process "git" nil buffer t "checkout"
+                                       (or (plist-get order :ref) "--"))))
+                 (emacs (concat invocation-directory invocation-name))
+                 ((zerop (call-process emacs nil buffer nil "-Q" "-L" "." "--batch"
+                                       "--eval" "(byte-recompile-directory \".\" 0 'force)")))
+                 ((require 'elpaca))
+                 ((elpaca-generate-autoloads "elpaca" repo)))
+            (progn (message "%s" (buffer-string)) (kill-buffer buffer))
+          (error "%s" (with-current-buffer buffer (buffer-string))))
+      ((error) (warn "%s" err) (delete-directory repo 'recursive))))
+  (unless (require 'elpaca-autoloads nil t)
+    (require 'elpaca)
+    (elpaca-generate-autoloads "elpaca" repo)
+    (load "./elpaca-autoloads")))
+(add-hook 'after-init-hook #'elpaca-process-queues)
+(elpaca `(,@elpaca-order))
 
-;; https://www.reddit.com/r/emacs/comments/mtb05k/emacs_init_time_decreased_65_after_i_realized_the/
-(setq straight-check-for-modifications '(check-on-save find-when-checking))
+(elpaca elpaca-use-package
+ ;; Enable :elpaca use-package keyword.
+ (elpaca-use-package-mode)
+ ;; Assume :elpaca t unless otherwise specified.
+ (setq elpaca-use-package-by-default t))
 
-(straight-use-package 'use-package)
-(setq straight-use-package-by-default t)
+;; Necessary to use the `:elpaca' use-package keyword at the top-level.
+(elpaca-wait)
 
 (add-hook 'emacs-startup-hook
-	  (lambda ()
-	    (message "Emacs ready in %s with %d garbage collections."
-		     (format "%.2f seconds"
-			     (float-time
-			      (time-subtract after-init-time before-init-time)))
-		     gcs-done)))
+	    (lambda ()
+	      (message "Emacs ready in %s with %d garbage collections."
+		       (format "%.2f seconds"
+			       (float-time
+				(time-subtract after-init-time before-init-time)))
+		       gcs-done)))
 
 (defun find-config ()
   "Edit README.org/init.el"
@@ -84,21 +111,16 @@
 ;; (add-hook 'prog-mode-hook 'display-line-numbers-mode)
 
 (dolist (mode '(text-mode-hook
-		prog-mode-hook
-		conf-mode-hook))
+		  prog-mode-hook
+		  conf-mode-hook))
   (add-hook mode (lambda () (display-line-numbers-mode 1))))
 
 (setq confirm-kill-emacs 'y-or-n-p)
 
 (setq user-full-name "Ethan Carter Edwards"
-      user-mail-address "ethan@ethancedwards.com")
+	user-mail-address "ethan@ethancedwards.com")
 
-(setq initial-buffer-choice (lambda () (get-buffer "*dashboard*")))
-
-;; '(warning-suppress-log-types '((comp) (comp)))
-;; '(warning-suppress-types '((comp))))
-(setq warning-suppress-log-types '((comp)))
-(setq warning-suppress-types '((comp)))
+(setq inhibit-startup-screen t) ;; disables startup screen, which means the default buffer is the scratch buffer!
 
 (show-paren-mode)
 (electric-pair-mode)
@@ -139,7 +161,7 @@ Very Similar to S-o from Vim"
     (newline times)))
 
 (global-set-key (kbd "C-S-o")
-		'my/custom-S-o-from-vim)
+		  'my/custom-S-o-from-vim)
 
 (defun stop ()
 "Proves I'm sane, not losing my sanity whatsoever"
@@ -153,25 +175,27 @@ Very Similar to S-o from Vim"
 ;; Automatically tangle our Emacs.org config file when we save it
 (defun my/org-babel-tangle-config ()
   (when (string-equal (buffer-file-name)
-		      (expand-file-name "~/.emacs.d/README.org"))
+			(expand-file-name "~/.emacs.d/README.org"))
     ;; Dynamic scoping to the rescue
     (let ((org-confirm-babel-evaluate nil))
-      (org-babel-tangle))))
+	(org-babel-tangle))))
 
 (add-hook 'org-mode-hook (lambda () (add-hook 'after-save-hook #'my/org-babel-tangle-config)))
 
 ;; Have org-agenda files list recursively
 (defun my/refresh-org-files ()
-      (interactive)
-      (setq org-agenda-files (apply 'append
-				    (mapcar
-				     (lambda (directory)
-				       (directory-files-recursively
-					directory org-agenda-file-regexp))
-				     '("~/Nextcloud/Org/")))))
+	(interactive)
+	(setq org-agenda-files (apply 'append
+				      (mapcar
+				       (lambda (directory)
+					 (directory-files-recursively
+					  directory org-agenda-file-regexp))
+				       '("~/Nextcloud/Org/")))))
 
 (use-package general
+  :demand t
   :config
+  (general-evil-setup)
   (general-auto-unbind-keys)
   (general-override-mode +1)
 
@@ -181,14 +205,17 @@ Very Similar to S-o from Vim"
     :prefix "SPC"
     :global-prefix "C-SPC"
     :non-normal-prefix "C-SPC"))
-
-(use-package hydra)
+(elpaca-wait)
 
 (my/leader-key
-      "SPC"  '(counsel-find-file :wk "counsel find file")
-      "I" '(find-config :wk "edit README.org/init.el")
-      "O" '(find-main :wk "edit index/main org file")
-      "." '(counsel-M-x :wk "M-x"))
+	"SPC"  '(counsel-find-file :wk "counsel find file")
+	"I" '(find-config :wk "edit README.org/init.el")
+	"O" '(find-main :wk "edit index/main org file")
+	"." '(counsel-M-x :wk "M-x")
+	"b" '(:ignore t :wk "buffer")
+	"b k" '(kill-buffer :wk "kill buffer")
+	"b b" '(switch-to-buffer :wk "switch buffer")
+	"b B" '(ibuffer :wk "all buffers"))
 
 (use-package which-key
   :init (which-key-mode)
@@ -214,32 +241,9 @@ Very Similar to S-o from Vim"
   :defer t
   :init (load-theme 'doom-palenight t))
 
-;; (use-package powerline
-;;   :config
-;;   (powerline-default-theme))
-
-(use-package doom-modeline
-  :init (doom-modeline-mode 1)
-  :custom ((doom-modeline-height 30))
+(use-package powerline
   :config
-  (display-time-mode)
-  (setq display-time-load-average nil)
-  ;; https://emacs.stackexchange.com/questions/20783/remove-load-average-from-time-string-displayed-in-mode-line
-  (setq display-time-default-load-average nil)
-  (display-battery-mode))
-
-(use-package dashboard
-  :config
-  ;;(setq dashboard-banner-logo-title "The Grind is not Glamorous - Casey Neistat")
-  ;;(setq dashboard-banner-logo-title "Ad Victoriam - Paladin Danse")
-  (setq dashboard-banner-logo-title "I'm just a simple man, trying to make my way in the universe. - Jango Fett")
-  (setq dashboard-startup-banner "~/.emacs.d/images/floating-meditate.png")
-  (setq dashboard-items '((recents  . 5)
-			(bookmarks . 5)
-			;; (projects . 5)
-			(agenda . 5)
-			(registers . 5)))
-  (dashboard-setup-startup-hook))
+  (powerline-default-theme))
 
 (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
 
@@ -251,34 +255,20 @@ Very Similar to S-o from Vim"
   (setq evil-want-keybinding nil)
   (setq evil-want-C-u-scroll t)
   (setq evil-respect-visual-line-mode t)
-  ;; :bind (:map evil-motion-state-map
-  ;;       ("/" . counsel-grep-or-swiper))
   :config
   (evil-mode 1))
 
-(defhydra my/window-hydra ()
-  ("h" evil-window-left)
-  ("j" evil-window-down)
-  ("k" evil-window-up)
-  ("l" evil-window-right)
-  ("c" evil-window-delete)
-  ("v" evil-window-vsplit)
-  ("s" evil-window-split)
-  ("o" delete-other-windows)
-  ("q" nil "quit"))
-
 (my/leader-key
-      "w"   '(:ignore t :wk "window")
-      "w h" '(evil-window-left :wk "move to left window")
-      "w j" '(evil-window-down :wk "move to down window")
-      "w k" '(evil-window-up :wk "move to up window")
-      "w l" '(evil-window-right :wk "move to right window")
-      "w c" '(evil-window-delete :wk "close window")
-      "w v" '(evil-window-vsplit :wk "split window vertically")
-      "w s" '(evil-window-split :wk "split window horizontally")
-      "w o" '(delete-other-windows :wk "delete other windows")
-      "TAB" '(evil-switch-to-windows-last-buffer :wk "switch to previous buffer")
-      "w w" '(my/window-hydra/body :wk "window hydra"))
+	"w"   '(:ignore t :wk "window")
+	"w h" '(evil-window-left :wk "move to left window")
+	"w j" '(evil-window-down :wk "move to down window")
+	"w k" '(evil-window-up :wk "move to up window")
+	"w l" '(evil-window-right :wk "move to right window")
+	"w c" '(evil-window-delete :wk "close window")
+	"w v" '(evil-window-vsplit :wk "split window vertically")
+	"w s" '(evil-window-split :wk "split window horizontally")
+	"w o" '(delete-other-windows :wk "delete other windows")
+	"TAB" '(evil-switch-to-windows-last-buffer :wk "switch to previous buffer"))
 
 (use-package evil-collection
   :after evil
@@ -299,8 +289,8 @@ Very Similar to S-o from Vim"
   :config
   (add-hook 'org-mode-hook 'evil-org-mode)
   (add-hook 'evil-org-mode-hook
-	    (lambda ()
-	      (evil-org-set-key-theme)))
+	      (lambda ()
+		(evil-org-set-key-theme)))
   (require 'evil-org-agenda)
   (evil-org-agenda-set-keys))
 
@@ -309,25 +299,8 @@ Very Similar to S-o from Vim"
 ;; (evil-define-key 'motion 'evil-org-mode
 ;;     (kbd "0") 'evil-org-beginning-of-line)
 
-(use-package magit
-  :bind (("C-x g" . magit-status)
-	 ;; Pulled from David Wilson's config, probably won't use
-	 ("C-M-;" . magit-status)))
-
-(my/leader-key
-    "g" '(:ignore t :wk "magit")
-    "g g" '(magit-status :wk "magit-status")
-    "g b" '(magit-blame :wk "magit-blame")
-    "g e" '(magit-dired-jump :wk "dired in dir"))
-
-(use-package magit-todos
-  :defer t)
-
 (use-package dired
-  ;; :ensure nil
-  :straight nil
-  ;; :bind (:map dired-mode-map
-  ;; 	      ("SPC" . nil))
+  :elpaca nil
   :config
   (when (string= system-type "darwin")
     (setq dired-use-ls-dired nil)))
@@ -337,29 +310,9 @@ Very Similar to S-o from Vim"
     "E" '(dired :wk "dired"))
 
 (use-package dired-subtree
-	:bind (:map dired-mode-map
-		    ("<tab>" . dired-subtree-toggle)
-		    ("<backtab>" . dired-subtree-cycle)))
-
-;; (use-package projectile
-;;   :bind (:map projectile-mode-map
-;; 	      (("C-c p" . projectile-command-map)))
-;;   :custom ((projectile-completion-system 'ivy))
-;;   :init
-;;   (when (file-directory-p "~/git")
-;;     (setq projectile-project-search-path '("~/git")))
-;;   (setq projectile-switch-project-action #'projectile-dired)
-;;   :config
-;;   ;; I don't really want this running all the time, so I `toggle' it from time to time
-;;   (defalias 'toggle-projectile 'projectile-mode))
-
-;; (use-package counsel-projectile
-;;   :config (counsel-projectile-mode))
-
-(use-package treemacs)
-
-(use-package treemacs-evil
-  :after (treemacs evil))
+	  :bind (:map dired-mode-map
+		      ("<tab>" . dired-subtree-toggle)
+		      ("<backtab>" . dired-subtree-cycle)))
 
 (use-package org
   :custom
@@ -370,8 +323,8 @@ Very Similar to S-o from Vim"
   (org-agenda-include-diary t)
   (org-image-actual-width nil)
   :bind (("C-c L" . org-stored-link)
-	 ("C-c a" . org-agenda)
-	 ("C-c c" . org-capture))
+	   ("C-c a" . org-agenda)
+	   ("C-c c" . org-capture))
   :config
   (eval-after-load "org"
     '(require 'ox-md nil t))
@@ -384,74 +337,31 @@ Very Similar to S-o from Vim"
   (my/refresh-org-files))
 
   (my/leader-key
-      "n r" '(my/refresh-org-files :wk "refresh my org files")
-      "n a" '(org-agenda :wk "org agenda"))
+	"n r" '(my/refresh-org-files :wk "refresh my org files")
+	"n a" '(org-agenda :wk "org agenda"))
 
-(use-package org-roam
-      :hook
-      (after-init . org-roam-setup)
-      :init
-      (setq org-roam-v2-ack t)
-      :custom
-      (org-roam-directory "~/Nextcloud/Org")
-      :bind (:map org-roam-mode-map
-	      (
-	       ([mouse-1] . #'org-roam-visit-thing)
-	       ;; ("C-c n g" . org-roam-graph)
-	       )
-	      )
-      )
-
-(my/leader-key
-  ;; "n l" '(org-roam :wk "org roam")
-  "n f" '(org-roam-node-find :wk "find roam node")
-  "n g" '(org-roam-graph :wk "roam graph")
-  "n i" '(org-roam-node-insert :wk "roam insert")
-  ;; "n t" '(org-roam-tag-add :wk "roam insert tag")
-  )
-
-;; (use-package org-roam-server
-;;   :straight nil
-;;   :config
-;;   (setq org-roam-server-host "127.0.0.1"
-;; 	org-roam-server-port 8080
-;; 	org-roam-server-authenticate nil
-;; 	org-roam-server-export-inline-images t
-;; 	org-roam-server-serve-files nil
-;; 	org-roam-server-served-file-extensions '("pdf" "mp4" "ogv")
-;; 	org-roam-server-network-poll t
-;; 	org-roam-server-network-arrows nil
-;; 	org-roam-server-network-label-truncate t
-;; 	org-roam-server-network-label-truncate-length 60
-;; 	org-roam-server-network-label-wrap-length 20))
-
-;; (use-package ox-twbs
-;;   :defer t)
-
-(use-package org-ol-tree
-  :straight (org-ol-tree :type git :host github :repo "Townk/org-ol-tree")
-  :commands (org-ol-tree/display-sections)
-  ;; :init
-  )
+(use-package toc-org
+  :commands toc-org-enable
+  :init (add-hook 'org-mode-hook 'toc-org-enable))
 
 (use-package vterm
-  :straight t
   :custom
   (vterm-always-compile-module t)
   ;; https://github.com/akermu/emacs-libvterm/issues/525
   :bind (("C-x v" . (lambda () (interactive) (vterm t)))
-	 ("C-x 4 v" . vterm-other-window)
-	 :map vterm-mode-map
-	 ("<C-backspace>" . (lambda () (interactive) (vterm-send-meta-backspace)))))
-	 ;; came up with this myself, fixes C-backspace, pretty proud of it not going to lie :)
+	   ("C-x 4 v" . vterm-other-window)
+	   :map vterm-mode-map
+	   ("<C-backspace>" . (lambda () (interactive) (vterm-send-meta-backspace)))))
+	   ;; came up with this myself, fixes C-backspace, pretty proud of it not going to lie :)
 (my/leader-key
-      "v v" '((lambda () (interactive) (vterm t)) :wk "vterm"))
+	"v v" '((lambda () (interactive) (vterm t)) :wk "vterm"))
 
 (use-package eshell-git-prompt)
+(elpaca-wait)
 
 (use-package eshell
   ;; :ensure nil
-  :straight nil
+  :elpaca nil
   :custom (eshell-aliases-file "~/.emacs.d/eshell/eshell-alias")
   :config
   (with-eval-after-load 'esh-opt
@@ -461,12 +371,12 @@ Very Similar to S-o from Vim"
   (eshell-git-prompt-use-theme 'powerline))
 
   (my/leader-key
-      "v e" '(eshell :wk "eshell"))
+	"v e" '(eshell :wk "eshell"))
 
 (use-package counsel
   :bind (("C-x j" . 'counsel-switch-buffer)
-	 :map minibuffer-local-map
-	 ("C-r" . 'counsel-minibuffer-history))
+	   :map minibuffer-local-map
+	   ("C-r" . 'counsel-minibuffer-history))
   :config
   (counsel-mode 1))
 
@@ -475,50 +385,20 @@ Very Similar to S-o from Vim"
   :custom (ivy-initial-inputs-alist nil)
   :bind (("C-s" . counsel-grep-or-swiper)
          ("C-S-s" . swiper)
-	 :map ivy-minibuffer-map
-	 ("TAB" . ivy-alt-done)
-	 ("C-j" . ivy-next-line)
-	 ("C-k" . ivy-previous-line)
-	 :map ivy-switch-buffer-map
-	 ("C-k" . ivy-previous-line)
-	 ("C-j" . ivy-next-line)
-	 ("C-d" . ivy-switch-buffer-kill))
+	   :map ivy-minibuffer-map
+	   ("TAB" . ivy-alt-done)
+	   ("C-j" . ivy-next-line)
+	   ("C-k" . ivy-previous-line)
+	   :map ivy-switch-buffer-map
+	   ("C-k" . ivy-previous-line)
+	   ("C-j" . ivy-next-line)
+	   ("C-d" . ivy-switch-buffer-kill))
   :config
   (ivy-mode 1))
 
 (use-package ivy-rich
   :init
   (ivy-rich-mode 1))
-
-;; (use-package exwm
-;;   :straight nil
-;;   :init
-;;   (setq mouse-autoselect-window nil
-;; 	focus-follows-mouse nil
-;; 	exwm-workspace-number 10)
-;;   :config
-;;   (exwm-enable)
-;;   )
-
-;; (use-package exwm-randr
-;;   :straight nil
-;;   :after (exwm)
-;;   :config
-;;   ;; (require 'exwm-randr)
-;;   (setq exwm-randr-workspace-output-plist '(0 "DP-1" 1 "HDMI-1" 2 "DVI-D-1"))
-;;   (add-hook 'exwm-randr-screen-change-hook
-;; 	    (lambda ()
-;; 	      (start-process-shell-command
-;; 	       "xrandr" nil "xrandr --output DP-1 --primary --mode 1920x1080 --pos 0x0 --rotate normal --output HDMI-1 --mode 1920x1080 --pos 1920x0 --rotate normal --output DVI-D-1 --mode 1920x1080 --pos 3840x0 --rotate normal")))
-;;   (exwm-randr-enable)
-;;   )
-
-;; (use-package exwm-systemtray
-;;   :straight nil
-;;   :after (exwm-randr)
-;;   :config
-;;   (exwm-systemtray-enable)
-;;   )
 
 (use-package rainbow-mode
   :config
@@ -556,9 +436,9 @@ Very Similar to S-o from Vim"
   (use-package exec-path-from-shell
     :config
     (when (memq window-system '(mac ns))
-      (exec-path-from-shell-initialize))
+	(exec-path-from-shell-initialize))
     (when (daemonp)
-      (exec-path-from-shell-initialize))
+	(exec-path-from-shell-initialize))
     ))
 
 (use-package envrc
@@ -567,164 +447,14 @@ Very Similar to S-o from Vim"
 
 (use-package debbugs)
 
-(use-package lsp-mode
-  :defer t
-  :commands (lsp lsp-deferred)
-  :init
-  (setq lsp-keymap-prefix "C-c l")
-  :config
-  (lsp-enable-which-key-integration t))
-
-(use-package lsp-treemacs
-  :after lsp)
-
-(use-package lsp-ui
-  :hook (lsp-mode . lsp-ui-mode)
-  :custom
-  (lsp-ui-doc-position 'bottom))
-
-(add-hook 'after-init-hook 'global-company-mode)
 (use-package company
-  :after lsp-mode
-  ;; :hook (after-init-hook . global-company-mode)
   :config
   (company-tng-mode 0)
   :custom (company-minimum-prefix-length 2)
   :bind (:map company-active-map
-	      ("<tab>" . company-complete-selection))
-	(:map lsp-mode-map
-	      ("<tab>" . company-indent-or-complete-common)))
-
-(use-package flycheck
-  :hook (lsp-deferred . flycheck-mode))
-
-(use-package yasnippet
-   :config
-   (yas-global-mode))
-
-(use-package yasnippet-snippets)
-
-(use-package markdown-mode
-  :straight (markdown-mode :type git :host github :repo "jrblevin/markdown-mode")
-  :mode ("README\\.md\\'" . gfm-mode)
-  :mode ("\\.md\\'" . markdown-mode)
-  :mode ("\\.mdx\\'" . markdown-mode)
-  :init (setq markdown-command "multimarkdown"))
-
-(use-package rustic
-  :mode ("\\.rs\\'" . rustic-mode)
-  :hook (rustic-mode . lsp-deferred))
-
-(use-package c-mode
-  :straight nil
-  :hook (c-mode . lsp-deferred))
-
-(use-package c++-mode
-  :straight nil
-  :hook (c++-mode . lsp-deferred))
-
-;; (use-package python-mode
-;;   ;; :ensure t
-;;   :straight t
-;;   :defer t
-;;   :hook (python-mode . lsp-deferred)
-;;   :custom
-;;   (python-shell-interpreter "python3"))
-
-(setq python-shell-interpreter "python3")
-
-(use-package solidity-mode
-  :mode ("\\.sol\\'" . solidity-mode)
-  :config
-  (setq solidity-comment-style 'slash)
-  )
-
-(use-package web-mode
-  :mode ("\\.html\\'" . web-mode)
-  :mode ("\\.xhtml\\'" . web-mode)
-  :mode ("\\.php\\'" . web-mode)
-  :mode ("\\.css\\'" . css-mode)
-  :mode ("\\.scss\\'" . scss-mode)
-  :mode ("\\.tsx\\'" . web-mode)
-  :hook (web-mode . (lambda () (when (string-equal "tsx" (file-name-extension buffer-file-name)) (setup-tide-mode))))
-  :after flycheck
-  :config
-  (flycheck-add-mode 'typescript-tslint 'web-mode))
-
-(use-package rjsx-mode
-  :config
-  :mode ("\\.js\\'" . rjsx-mode)
-  :mode ("\\.jsx\\'" . rjsx-mode)
-  :hook (rjsx-mode . lsp-deferred))
-
-(use-package typescript-mode
-  :mode "\\.ts\\'"
-  :hook (typescript-mode . lsp-deferred)
-  :config
-  (setq typescript-indent-level 2))
-
-(use-package tide
-  :after (typescript-mode company flycheck)
-  :hook ((typescript-mode . tide-setup)
-	 (typescript-mode . tide-hl-identifier-mode)
-	 (before-save . tide-format-before-save)))
-
-(use-package nix-mode
-  :config
-  (require 'lsp)
-  (add-to-list 'lsp-language-id-configuration '(nix-mode . "nix"))
-  (lsp-register-client
-   (make-lsp-client :new-connection (lsp-stdio-connection '("rnix-lsp"))
-		    :major-modes '(nix-mode)
-		    :server-id 'nix))
-  :hook (nix-mode . lsp-deferred))
-
-(use-package guix)
-
-(use-package geiser
-  :config
-  (setq geiser-default-implementation 'guile)
-  (setq geiser-active-implementations '(gambit guile)))
-
-(use-package haskell-mode
-  :hook (haskell-mode . #'lsp-deferred)
-  :hook (haskell-literate-mode . #'lsp-deferred))
-(use-package lsp-haskell)
-;; loading and unloading is slow, so just disabling
-(with-eval-after-load "flycheck"
-  (add-to-list 'flycheck-disabled-checkers 'haskell-stack-ghc))
-
-(use-package gdscript-mode)
-
-(use-package vimrc-mode
-  :mode ("\\.vim\\(rc\\)?\\'" . vimrc-mode))
-
-(use-package lua-mode
-  :mode ("\\.lua$" . lua-mode)
-  :hook (lua-mode . lsp-deferred)
-  :config
-  (add-to-list 'interpreter-mode-alist '("lua" . lua-mode)))
-
-(use-package hcl-mode)
-
-(use-package terraform-mode)
-
-(use-package yaml-mode
-  :mode ("\\.yml\\'" . yaml-mode)
-	("\\.yaml\\'" . yaml-mode)
-   :hook (yaml-mode . lsp-deferred))
-
-(use-package json-mode
-  :mode ("\\.json\\'" . json-mode)
-  :hook (json-mode . lsp-deferred))
-
-;; (use-package docker-compose-mode
-;;   :mode ("docker-compose.yml\\'" . docker-compose-mode)
-;; 	("docker-compose.yaml\\'" . docker-compose-mode)
-;; 	("stack.yml\\'" . docker-compose-mode))
-
-(use-package dockerfile-mode
-  :hook (dockerfile-mode . lsp-deferred))
+		("<tab>" . company-complete-selection))
+	  (:map lsp-mode-map
+		("<tab>" . company-indent-or-complete-common)))
 
 (use-package elcord
   :defer t)
@@ -745,22 +475,8 @@ Very Similar to S-o from Vim"
 (use-package gnugo
   :defer t)
 
-(use-package 2048-game
-  :defer t)
-
 (use-package snow
   :defer t)
-
-;; (use-package mu4e
-;;   :ensure nil
-;;   ;; :if (and (eq system-type 'gnu/linux) (string-equal system-name "archpc"))
-;;   :config
-;;   ;; add mu4e to the load path on Arch
-;;   (require 'mu4e))
-
-;; (when (string= (system-name) "archpc")
-;;   (add-to-list 'load-path "/usr/share/emacs/site-lisp/mu4e/")
-;;   (require 'mu4e))
 
 (use-package emms
   :commands emms

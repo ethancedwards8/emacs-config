@@ -22,6 +22,44 @@ TODO: Have org mode auto detect if theres a "technical" roam tag and enable =dis
 - Casey Neistat
 #+END_QUOTE
 
+* Table of Contents :toc:
+- [[#setup][Setup]]
+  - [[#configure-package-sources-and-use-package--garbage-collection][Configure package sources and =use-package= + Garbage Collection]]
+  - [[#configure-elpaca][Configure elpaca]]
+  - [[#benchmark-startup][Benchmark startup]]
+  - [[#find-config-function][Find config function]]
+  - [[#find-main-org-file-function][Find Main org file function]]
+  - [[#set-custom-settings-to-load-in-own-file][Set custom settings to load in own file]]
+  - [[#add-elisp-directory-to-load-path][Add elisp directory to load-path]]
+  - [[#fix-exec-path][Fix exec-path]]
+- [[#preferences][Preferences]]
+  - [[#turn-off-ugly-window-decoration][Turn off ugly window decoration.]]
+  - [[#shorten-the-yes-or-no-prompts][Shorten the =yes or no= prompts]]
+  - [[#move-all-of-the-extra-save-files-to-saves][Move all of the extra save files to ~/.saves]]
+  - [[#display-line-numbers-might-change-only-to-prog-text-and-conf-mode-later][Display line numbers, might change only to prog, text, and conf mode later]]
+  - [[#confirm-to-kill-emacs-whenever-not-running-in-daemon-mode][Confirm to kill Emacs whenever not running in Daemon mode]]
+  - [[#just-some-user-information][Just some user information]]
+  - [[#set-initial-buffer][Set initial buffer]]
+  - [[#parenthesis-tweaks][Parenthesis tweaks]]
+  - [[#spell-checking-with-flyspell][Spell checking with FlySpell]]
+  - [[#delete-trailing-whitespace-on-save][Delete trailing whitespace on save]]
+- [[#misc-keybinds][Misc. Keybinds]]
+- [[#custom-elisp][Custom Elisp]]
+  - [[#howard-abrams-tutorial-lisp][Howard Abram's tutorial lisp]]
+  - [[#m-x-stop][=M-x stop=]]
+  - [[#auto-bablel-readmeorg-after-saving][Auto bablel README.org after saving]]
+  - [[#refresh-org-files][Refresh org files]]
+- [[#packages][Packages]]
+  - [[#keybinds][Keybinds]]
+  - [[#theming-and-fontsfaces][Theming and Fonts/Faces]]
+  - [[#interface][Interface]]
+  - [[#general-tools][General tools]]
+  - [[#programming][Programming]]
+  - [[#fun-packages][Fun packages]]
+- [[#applications][Applications]]
+  - [[#emms][emms]]
+  - [[#elpher][elpher]]
+
 * Setup
 
 ** Configure package sources and =use-package= + Garbage Collection
@@ -31,7 +69,7 @@ Add repo's. ELPA, MELPA, org, and ublt.
 #+begin_src emacs-lisp
   ;; NOTE: init.el is now generated from README.org.  Please edit that file
   ;;       in Emacs and init.el will be generated automatically!
-  (setq gc-cons-threshold (* 50 1000 1000))
+  ;; (setq gc-cons-threshold (* 50 1000 1000))
 
   ;; initialize package sources
   ;; (require 'package)
@@ -50,28 +88,55 @@ Add repo's. ELPA, MELPA, org, and ublt.
   ;; (setq use-package-always-ensure t)
 #+end_src
 
-** Configure straight.el
+** Configure elpaca
 
 #+begin_src emacs-lisp
   ;; install straight.el
-  (defvar bootstrap-version)
-  (let ((bootstrap-file
-	 (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
-	(bootstrap-version 5))
-    (unless (file-exists-p bootstrap-file)
-      (with-current-buffer
-	  (url-retrieve-synchronously
-	   "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
-	   'silent 'inhibit-cookies)
-	(goto-char (point-max))
-	(eval-print-last-sexp)))
-    (load bootstrap-file nil 'nomessage))
+  (defvar elpaca-installer-version 0.6)
+  (defvar elpaca-directory (expand-file-name "elpaca/" user-emacs-directory))
+  (defvar elpaca-builds-directory (expand-file-name "builds/" elpaca-directory))
+  (defvar elpaca-repos-directory (expand-file-name "repos/" elpaca-directory))
+  (defvar elpaca-order '(elpaca :repo "https://github.com/progfolio/elpaca.git"
+                                :ref nil
+                                :files (:defaults "elpaca-test.el" (:exclude "extensions"))
+                                :build (:not elpaca--activate-package)))
+  (let* ((repo  (expand-file-name "elpaca/" elpaca-repos-directory))
+         (build (expand-file-name "elpaca/" elpaca-builds-directory))
+         (order (cdr elpaca-order))
+         (default-directory repo))
+    (add-to-list 'load-path (if (file-exists-p build) build repo))
+    (unless (file-exists-p repo)
+      (make-directory repo t)
+      (when (< emacs-major-version 28) (require 'subr-x))
+      (condition-case-unless-debug err
+          (if-let ((buffer (pop-to-buffer-same-window "*elpaca-bootstrap*"))
+                   ((zerop (call-process "git" nil buffer t "clone"
+                                         (plist-get order :repo) repo)))
+                   ((zerop (call-process "git" nil buffer t "checkout"
+                                         (or (plist-get order :ref) "--"))))
+                   (emacs (concat invocation-directory invocation-name))
+                   ((zerop (call-process emacs nil buffer nil "-Q" "-L" "." "--batch"
+                                         "--eval" "(byte-recompile-directory \".\" 0 'force)")))
+                   ((require 'elpaca))
+                   ((elpaca-generate-autoloads "elpaca" repo)))
+              (progn (message "%s" (buffer-string)) (kill-buffer buffer))
+            (error "%s" (with-current-buffer buffer (buffer-string))))
+        ((error) (warn "%s" err) (delete-directory repo 'recursive))))
+    (unless (require 'elpaca-autoloads nil t)
+      (require 'elpaca)
+      (elpaca-generate-autoloads "elpaca" repo)
+      (load "./elpaca-autoloads")))
+  (add-hook 'after-init-hook #'elpaca-process-queues)
+  (elpaca `(,@elpaca-order))
 
-  ;; https://www.reddit.com/r/emacs/comments/mtb05k/emacs_init_time_decreased_65_after_i_realized_the/
-  (setq straight-check-for-modifications '(check-on-save find-when-checking))
+  (elpaca elpaca-use-package
+   ;; Enable :elpaca use-package keyword.
+   (elpaca-use-package-mode)
+   ;; Assume :elpaca t unless otherwise specified.
+   (setq elpaca-use-package-by-default t))
 
-  (straight-use-package 'use-package)
-  (setq straight-use-package-by-default t)
+  ;; Necessary to use the `:elpaca' use-package keyword at the top-level.
+  (elpaca-wait)
 #+end_src
 
 ** Benchmark startup
@@ -137,7 +202,7 @@ I have my custom/stolen elisp code in ~/.emacs.d/lisp/. This will add that to my
 
 * Preferences
 
-** Turn off ugly window deocration.
+** Turn off ugly window decoration.
 
 #+begin_src emacs-lisp
   (tool-bar-mode -1)
@@ -185,19 +250,10 @@ I have my custom/stolen elisp code in ~/.emacs.d/lisp/. This will add that to my
 	user-mail-address "ethan@ethancedwards.com")
 #+end_src
 
-** Set Dashboard as my initial buffer
+** Set initial buffer
 
 #+begin_src emacs-lisp
-  (setq initial-buffer-choice (lambda () (get-buffer "*dashboard*")))
-#+end_src
-
-** Disable nativecomp logs, they're very annoying.
-
-#+begin_src emacs-lisp
-  ;; '(warning-suppress-log-types '((comp) (comp)))
-  ;; '(warning-suppress-types '((comp))))
-  (setq warning-suppress-log-types '((comp)))
-  (setq warning-suppress-types '((comp)))
+  (setq inhibit-startup-screen t) ;; disables startup screen, which means the default buffer is the scratch buffer!
 #+end_src
 
 ** Parenthesis tweaks
@@ -324,13 +380,13 @@ The recursive agenda bit can be [[https://www.reddit.com/r/orgmode/comments/6q6c
 #+begin_src emacs-lisp
   ;; Have org-agenda files list recursively
   (defun my/refresh-org-files ()
-	(interactive)
-	(setq org-agenda-files (apply 'append
-				      (mapcar
-				       (lambda (directory)
-					 (directory-files-recursively
-					  directory org-agenda-file-regexp))
-				       '("~/Nextcloud/Org/")))))
+  	(interactive)
+  	(setq org-agenda-files (apply 'append
+  				      (mapcar
+  				       (lambda (directory)
+  					 (directory-files-recursively
+  					  directory org-agenda-file-regexp))
+  				       '("~/Nextcloud/Org/")))))
 #+end_src
 
 * Packages
@@ -343,7 +399,9 @@ I use general.el to set my "leader" key, =SPC=, or =C-SPC=.
 
 #+begin_src emacs-lisp
   (use-package general
+    :demand t
     :config
+    (general-evil-setup)
     (general-auto-unbind-keys)
     (general-override-mode +1)
 
@@ -353,14 +411,7 @@ I use general.el to set my "leader" key, =SPC=, or =C-SPC=.
       :prefix "SPC"
       :global-prefix "C-SPC"
       :non-normal-prefix "C-SPC"))
-#+end_src
-
-*** Hydra's
-
-Hydra's are a way you can make Emacs binds "stick around"
-
-#+begin_src emacs-lisp
-  (use-package hydra)
+  (elpaca-wait)
 #+end_src
 
 *** Leader functions
@@ -369,10 +420,14 @@ Here I can define functions with my leader key.
 
 #+begin_src emacs-lisp
   (my/leader-key
-	"SPC"  '(counsel-find-file :wk "counsel find file")
-	"I" '(find-config :wk "edit README.org/init.el")
-	"O" '(find-main :wk "edit index/main org file")
-	"." '(counsel-M-x :wk "M-x"))
+  	"SPC"  '(counsel-find-file :wk "counsel find file")
+  	"I" '(find-config :wk "edit README.org/init.el")
+  	"O" '(find-main :wk "edit index/main org file")
+  	"." '(counsel-M-x :wk "M-x")
+  	"b" '(:ignore t :wk "buffer")
+  	"b k" '(kill-buffer :wk "kill buffer")
+  	"b b" '(switch-to-buffer :wk "switch buffer")
+  	"b B" '(ibuffer :wk "all buffers"))
 #+end_src
 
 *** Which-key
@@ -412,7 +467,7 @@ Not super sure what these are, I'm going to comment them out for now...
 
 *** Themes
 
-The doom themes are really nice, I might switch back to the `deeper-blue' theme .
+The doom themes are really nice, I might switch back to the =deeper-blue= theme .
 
 #+Begin_src emacs-lisp
   (use-package spacegray-theme :defer t)
@@ -426,42 +481,9 @@ The doom themes are really nice, I might switch back to the `deeper-blue' theme 
 Powerline modeline, has everything I need, I might switch to doom-modeline
 
 #+begin_src emacs-lisp
-  ;; (use-package powerline
-  ;;   :config
-  ;;   (powerline-default-theme))
-#+end_src
-
-Trying out doom-line, lets see how this goes!
-
-#+begin_src emacs-lisp
-  (use-package doom-modeline
-    :init (doom-modeline-mode 1)
-    :custom ((doom-modeline-height 30))
+  (use-package powerline
     :config
-    (display-time-mode)
-    (setq display-time-load-average nil)
-    ;; https://emacs.stackexchange.com/questions/20783/remove-load-average-from-time-string-displayed-in-mode-line
-    (setq display-time-default-load-average nil)
-    (display-battery-mode))
-#+end_src
-
-*** Dashboard
-
-Dashboard is a package that runs at startup that has useful imformation and quick links to files.
-
-#+begin_src emacs-lisp
-  (use-package dashboard
-    :config
-    ;;(setq dashboard-banner-logo-title "The Grind is not Glamorous - Casey Neistat")
-    ;;(setq dashboard-banner-logo-title "Ad Victoriam - Paladin Danse")
-    (setq dashboard-banner-logo-title "I'm just a simple man, trying to make my way in the universe. - Jango Fett")
-    (setq dashboard-startup-banner "~/.emacs.d/images/floating-meditate.png")
-    (setq dashboard-items '((recents  . 5)
-			  (bookmarks . 5)
-			  ;; (projects . 5)
-			  (agenda . 5)
-			  (registers . 5)))
-    (dashboard-setup-startup-hook))
+    (powerline-default-theme))
 #+end_src
 
 ** Interface
@@ -495,34 +517,20 @@ Evil mode emulates Vi/Vim keybinds for Emacs
     (setq evil-want-keybinding nil)
     (setq evil-want-C-u-scroll t)
     (setq evil-respect-visual-line-mode t)
-    ;; :bind (:map evil-motion-state-map
-    ;;       ("/" . counsel-grep-or-swiper))
     :config
     (evil-mode 1))
 
-  (defhydra my/window-hydra ()
-    ("h" evil-window-left)
-    ("j" evil-window-down)
-    ("k" evil-window-up)
-    ("l" evil-window-right)
-    ("c" evil-window-delete)
-    ("v" evil-window-vsplit)
-    ("s" evil-window-split)
-    ("o" delete-other-windows)
-    ("q" nil "quit"))
-
   (my/leader-key
-	"w"   '(:ignore t :wk "window")
-	"w h" '(evil-window-left :wk "move to left window")
-	"w j" '(evil-window-down :wk "move to down window")
-	"w k" '(evil-window-up :wk "move to up window")
-	"w l" '(evil-window-right :wk "move to right window")
-	"w c" '(evil-window-delete :wk "close window")
-	"w v" '(evil-window-vsplit :wk "split window vertically")
-	"w s" '(evil-window-split :wk "split window horizontally")
-	"w o" '(delete-other-windows :wk "delete other windows")
-	"TAB" '(evil-switch-to-windows-last-buffer :wk "switch to previous buffer")
-	"w w" '(my/window-hydra/body :wk "window hydra"))
+  	"w"   '(:ignore t :wk "window")
+  	"w h" '(evil-window-left :wk "move to left window")
+  	"w j" '(evil-window-down :wk "move to down window")
+  	"w k" '(evil-window-up :wk "move to up window")
+  	"w l" '(evil-window-right :wk "move to right window")
+  	"w c" '(evil-window-delete :wk "close window")
+  	"w v" '(evil-window-vsplit :wk "split window vertically")
+  	"w s" '(evil-window-split :wk "split window horizontally")
+  	"w o" '(delete-other-windows :wk "delete other windows")
+  	"TAB" '(evil-switch-to-windows-last-buffer :wk "switch to previous buffer"))
 #+end_src
 
 Evil-collection adds Evil binds to the rest of Emacs
@@ -566,38 +574,13 @@ Evil-org adds evil functionality to org mode, very helpful
   ;;     (kbd "0") 'evil-org-beginning-of-line)
 #+end_src
 
-*** Magit
-
-Magit, the Git client for Emacs, I love it, you love it, everyone loves it.
-
-Also installing evil-magit for evil integration with magit, evil-collection should replace it soon :tm:
-
-#+begin_src emacs-lisp
-  (use-package magit
-    :bind (("C-x g" . magit-status)
-	   ;; Pulled from David Wilson's config, probably won't use
-	   ("C-M-;" . magit-status)))
-
-  (my/leader-key
-      "g" '(:ignore t :wk "magit")
-      "g g" '(magit-status :wk "magit-status")
-      "g b" '(magit-blame :wk "magit-blame")
-      "g e" '(magit-dired-jump :wk "dired in dir"))
-
-  (use-package magit-todos
-    :defer t)
-#+end_src
-
 *** Dired
 
 Dired is a file manager built into Emacs, its pretty great.
 
 #+begin_src emacs-lisp
   (use-package dired
-    ;; :ensure nil
-    :straight nil
-    ;; :bind (:map dired-mode-map
-    ;; 	      ("SPC" . nil))
+    :elpaca nil
     :config
     (when (string= system-type "darwin")
       (setq dired-use-ls-dired nil)))
@@ -618,43 +601,9 @@ This allows me to have subtree views in dired
 		      ("<backtab>" . dired-subtree-cycle)))
 #+end_src
 
-*** Projectile
-
-#+begin_src emacs-lisp
-  ;; (use-package projectile
-  ;;   :bind (:map projectile-mode-map
-  ;; 	      (("C-c p" . projectile-command-map)))
-  ;;   :custom ((projectile-completion-system 'ivy))
-  ;;   :init
-  ;;   (when (file-directory-p "~/git")
-  ;;     (setq projectile-project-search-path '("~/git")))
-  ;;   (setq projectile-switch-project-action #'projectile-dired)
-  ;;   :config
-  ;;   ;; I don't really want this running all the time, so I `toggle' it from time to time
-  ;;   (defalias 'toggle-projectile 'projectile-mode))
-
-  ;; (use-package counsel-projectile
-  ;;   :config (counsel-projectile-mode))
-#+end_src
-
-*** Treemacs
-
-Treemacs is similar to nerdtree in Vim, I don't use it much but am interested in treemacs-lsp
-
-#+begin_src emacs-lisp
-  (use-package treemacs)
-#+end_src
-
-This is for evil support in treemacs
-
-#+begin_src emacs-lisp
-  (use-package treemacs-evil
-    :after (treemacs evil))
-#+end_src
-
 *** Org mode
 
-Org mode is literally the best, I'm writing this config in org, what else do you need?
+Org mode is literally the best, I'm writing this config in org, what else do you need? EDIT. No longer using org mode.
 
 #+begin_src emacs-lisp
   (use-package org
@@ -684,70 +633,12 @@ Org mode is literally the best, I'm writing this config in org, what else do you
 	"n a" '(org-agenda :wk "org agenda"))
 #+end_src
 
-**** Org roam
+toc-org allows me to generate a toc at the top of my lifes.
 
 #+begin_src emacs-lisp
-  (use-package org-roam
-	:hook
-	(after-init . org-roam-setup)
-	:init
-	(setq org-roam-v2-ack t)
-	:custom
-	(org-roam-directory "~/Nextcloud/Org")
-	:bind (:map org-roam-mode-map
-		(
-		 ([mouse-1] . #'org-roam-visit-thing)
-		 ;; ("C-c n g" . org-roam-graph)
-		 )
-		)
-	)
-
-  (my/leader-key
-    ;; "n l" '(org-roam :wk "org roam")
-    "n f" '(org-roam-node-find :wk "find roam node")
-    "n g" '(org-roam-graph :wk "roam graph")
-    "n i" '(org-roam-node-insert :wk "roam insert")
-    ;; "n t" '(org-roam-tag-add :wk "roam insert tag")
-    )
-#+end_src
-
-**** Org roam server
-
-A Web Application to Visualize the Org-Roam Database
-
-#+begin_src emacs-lisp
-  ;; (use-package org-roam-server
-  ;;   :straight nil
-  ;;   :config
-  ;;   (setq org-roam-server-host "127.0.0.1"
-  ;; 	org-roam-server-port 8080
-  ;; 	org-roam-server-authenticate nil
-  ;; 	org-roam-server-export-inline-images t
-  ;; 	org-roam-server-serve-files nil
-  ;; 	org-roam-server-served-file-extensions '("pdf" "mp4" "ogv")
-  ;; 	org-roam-server-network-poll t
-  ;; 	org-roam-server-network-arrows nil
-  ;; 	org-roam-server-network-label-truncate t
-  ;; 	org-roam-server-network-label-truncate-length 60
-  ;; 	org-roam-server-network-label-wrap-length 20))
-#+end_src
-
-  ox-twbs - Org mode export twitter bootstrap I think? Not sure how I got this package installed.
-#+begin_src emacs-lisp
-    ;; (use-package ox-twbs
-    ;;   :defer t)
-#+end_src
-
-**** org-outline-tree
-
-An org roam similar buffer for org mode outlines
-
-#+begin_src emacs-lisp
-  (use-package org-ol-tree
-    :straight (org-ol-tree :type git :host github :repo "Townk/org-ol-tree")
-    :commands (org-ol-tree/display-sections)
-    ;; :init
-    )
+  (use-package toc-org
+    :commands toc-org-enable
+    :init (add-hook 'org-mode-hook 'toc-org-enable))
 #+end_src
 
 *** Terminal modes
@@ -758,7 +649,6 @@ I use vterm for the cases when I need a terminal emulator, I try to use eshell a
 
 #+begin_src emacs-lisp
   (use-package vterm
-    :straight t
     :custom
     (vterm-always-compile-module t)
     ;; https://github.com/akermu/emacs-libvterm/issues/525
@@ -779,10 +669,11 @@ eshell-git-prompt gives me a git prompt for eshell, kinda in the name xD
 
 #+begin_src emacs-lisp
   (use-package eshell-git-prompt)
+  (elpaca-wait)
 
   (use-package eshell
     ;; :ensure nil
-    :straight nil
+    :elpaca nil
     :custom (eshell-aliases-file "~/.emacs.d/eshell/eshell-alias")
     :config
     (with-eval-after-load 'esh-opt
@@ -792,7 +683,7 @@ eshell-git-prompt gives me a git prompt for eshell, kinda in the name xD
     (eshell-git-prompt-use-theme 'powerline))
 
     (my/leader-key
-	"v e" '(eshell :wk "eshell"))
+  	"v e" '(eshell :wk "eshell"))
 #+end_src
 
 *** Completion framework(s)
@@ -841,42 +732,6 @@ Ivy Rich provides a nicer interface to Ivy in my opinion.
   (use-package ivy-rich
     :init
     (ivy-rich-mode 1))
-#+end_src
-
-** EXWM
-
-EXWM is an X window manager for Emacs. Currently I use bspwm but I'm open to trying EXWM out.
-
-#+begin_src emacs-lisp
-  ;; (use-package exwm
-  ;;   :straight nil
-  ;;   :init
-  ;;   (setq mouse-autoselect-window nil
-  ;; 	focus-follows-mouse nil
-  ;; 	exwm-workspace-number 10)
-  ;;   :config
-  ;;   (exwm-enable)
-  ;;   )
-
-  ;; (use-package exwm-randr
-  ;;   :straight nil
-  ;;   :after (exwm)
-  ;;   :config
-  ;;   ;; (require 'exwm-randr)
-  ;;   (setq exwm-randr-workspace-output-plist '(0 "DP-1" 1 "HDMI-1" 2 "DVI-D-1"))
-  ;;   (add-hook 'exwm-randr-screen-change-hook
-  ;; 	    (lambda ()
-  ;; 	      (start-process-shell-command
-  ;; 	       "xrandr" nil "xrandr --output DP-1 --primary --mode 1920x1080 --pos 0x0 --rotate normal --output HDMI-1 --mode 1920x1080 --pos 1920x0 --rotate normal --output DVI-D-1 --mode 1920x1080 --pos 3840x0 --rotate normal")))
-  ;;   (exwm-randr-enable)
-  ;;   )
-
-  ;; (use-package exwm-systemtray
-  ;;   :straight nil
-  ;;   :after (exwm-randr)
-  ;;   :config
-  ;;   (exwm-systemtray-enable)
-  ;;   )
 #+end_src
 
 ** General tools
@@ -943,17 +798,6 @@ These are some general tools that I use, they don't really belong in any categor
       ))
 #+end_src
 
-# *** spdx - insert spdx headers
-
-# #+begin_src emacs-lisp
-#   (use-package spdx
-#     :bind (:map prog-mode-map
-# 	   ("C-c i l" . spdx-insert-spdx))
-#     :custom
-#     (spdx-copyright-holder 'auto)
-#     (spdx-project-detection 'auto))
-# #+end_src
-
 *** envrc - emacs direnv integration
 
 #+begin_src emacs-lisp
@@ -970,321 +814,17 @@ These are some general tools that I use, they don't really belong in any categor
 
 ** Programming
 
-*** lsp-mode
-
-#+begin_src emacs-lisp
-  (use-package lsp-mode
-    :defer t
-    :commands (lsp lsp-deferred)
-    :init
-    (setq lsp-keymap-prefix "C-c l")
-    :config
-    (lsp-enable-which-key-integration t))
-#+end_src
-
-*** lsp-treemacs
-
-lsp-treemacs allows for IDE like function navigation and documentation viewing
-
-#+begin_src emacs-lisp
-  (use-package lsp-treemacs
-    :after lsp)
-#+end_src
-
-*** lsp-ui
-
-#+begin_src emacs-lisp
-  (use-package lsp-ui
-    :hook (lsp-mode . lsp-ui-mode)
-    :custom
-    (lsp-ui-doc-position 'bottom))
-#+end_src
-
 *** company-mode
 
 #+begin_src emacs-lisp
-  (add-hook 'after-init-hook 'global-company-mode)
   (use-package company
-    :after lsp-mode
-    ;; :hook (after-init-hook . global-company-mode)
     :config
     (company-tng-mode 0)
     :custom (company-minimum-prefix-length 2)
     :bind (:map company-active-map
-		("<tab>" . company-complete-selection))
-	  (:map lsp-mode-map
-		("<tab>" . company-indent-or-complete-common)))
-#+end_src
-
-*** flycheck
-
-Syntax checking for GNU Emacs
-
-#+begin_src emacs-lisp
-  (use-package flycheck
-    :hook (lsp-deferred . flycheck-mode))
-#+end_src
-
-*** yasnippet
-
-Enable =yasnippet=
-
-#+begin_src emacs-lisp
-  (use-package yasnippet
-     :config
-     (yas-global-mode))
-#+end_src
-
-Add some snippets :)
-
-#+begin_src emacs-lisp
-  (use-package yasnippet-snippets)
-#+end_src
-
-*** markdown-mode
-
-For some reason rustic-mode is dependent on markdown-mode, whatever.
-
-#+begin_src emacs-lisp
-  (use-package markdown-mode
-    :straight (markdown-mode :type git :host github :repo "jrblevin/markdown-mode")
-    :mode ("README\\.md\\'" . gfm-mode)
-    :mode ("\\.md\\'" . markdown-mode)
-    :mode ("\\.mdx\\'" . markdown-mode)
-    :init (setq markdown-command "multimarkdown"))
-#+end_src
-
-*** Rust
-
-I'll be using [[https://github.com/brotzeit/rustic][rustic]] for Rust development inside of Emacs
-
-#+begin_src emacs-lisp
-  (use-package rustic
-    :mode ("\\.rs\\'" . rustic-mode)
-    :hook (rustic-mode . lsp-deferred))
-#+end_src
-
-*** C/Cpp
-
-I'll be using emacs' buit in c and c++ modes with lsp.
-
-#+begin_src emacs-lisp
-  (use-package c-mode
-    :straight nil
-    :hook (c-mode . lsp-deferred))
-
-  (use-package c++-mode
-    :straight nil
-    :hook (c++-mode . lsp-deferred))
-#+end_src
-
-*** Python
-
-It's python, meh, no one cares, but everyone uses it.
-
-#+begin_src emacs-lisp
-  ;; (use-package python-mode
-  ;;   ;; :ensure t
-  ;;   :straight t
-  ;;   :defer t
-  ;;   :hook (python-mode . lsp-deferred)
-  ;;   :custom
-  ;;   (python-shell-interpreter "python3"))
-
-  (setq python-shell-interpreter "python3")
-#+end_src
-
-*** Solidity
-
-Solidity Programming language, used for crypto stuffz
-
-#+begin_src emacs-lisp
-  (use-package solidity-mode
-    :mode ("\\.sol\\'" . solidity-mode)
-    :config
-    (setq solidity-comment-style 'slash)
-    )
-#+end_src
-
-*** Web dev
-
-**** web-mode - HTML + CSS
-
-#+begin_src emacs-lisp
-  (use-package web-mode
-    :mode ("\\.html\\'" . web-mode)
-    :mode ("\\.xhtml\\'" . web-mode)
-    :mode ("\\.php\\'" . web-mode)
-    :mode ("\\.css\\'" . css-mode)
-    :mode ("\\.scss\\'" . scss-mode)
-    :mode ("\\.tsx\\'" . web-mode)
-    :hook (web-mode . (lambda () (when (string-equal "tsx" (file-name-extension buffer-file-name)) (setup-tide-mode))))
-    :after flycheck
-    :config
-    (flycheck-add-mode 'typescript-tslint 'web-mode))
-#+end_src
-
-**** JavaScript
-
-#+begin_src emacs-lisp
-  (use-package rjsx-mode
-    :config
-    :mode ("\\.js\\'" . rjsx-mode)
-    :mode ("\\.jsx\\'" . rjsx-mode)
-    :hook (rjsx-mode . lsp-deferred))
-#+end_src
-
-**** Typescript
-
-#+begin_src emacs-lisp
-  (use-package typescript-mode
-    :mode "\\.ts\\'"
-    :hook (typescript-mode . lsp-deferred)
-    :config
-    (setq typescript-indent-level 2))
-#+end_src
-
-Tide
-
-#+begin_src emacs-lisp
-  (use-package tide
-    :after (typescript-mode company flycheck)
-    :hook ((typescript-mode . tide-setup)
-	   (typescript-mode . tide-hl-identifier-mode)
-	   (before-save . tide-format-before-save)))
-#+end_src
-
-*** Nix
-
-Nix is a fully function programming language centered around the NixOS ecosystem, I'm learning it currently and plan to switch soon :tm:
-
-#+begin_src emacs-lisp
-  (use-package nix-mode
-    :config
-    (require 'lsp)
-    (add-to-list 'lsp-language-id-configuration '(nix-mode . "nix"))
-    (lsp-register-client
-     (make-lsp-client :new-connection (lsp-stdio-connection '("rnix-lsp"))
-		      :major-modes '(nix-mode)
-		      :server-id 'nix))
-    :hook (nix-mode . lsp-deferred))
-#+end_src
-
-*** Guix
-
-#+begin_src emacs-lisp
-  (use-package guix)
-#+end_src
-
-*** Geiser
-
-#+begin_src emacs-lisp
-  (use-package geiser
-    :config
-    (setq geiser-default-implementation 'guile)
-    (setq geiser-active-implementations '(gambit guile)))
-#+end_src
-
-*** Haskell
-
-Haskell is a general purpose, statically typed, purely function programming language with type inference and lazy evaluation.
-
-I have a bit of a thing for functional programming, learning Haskell is on my list of TODO's
-
-#+begin_src emacs-lisp
-  (use-package haskell-mode
-    :hook (haskell-mode . #'lsp-deferred)
-    :hook (haskell-literate-mode . #'lsp-deferred))
-  (use-package lsp-haskell)
-  ;; loading and unloading is slow, so just disabling
-  (with-eval-after-load "flycheck"
-    (add-to-list 'flycheck-disabled-checkers 'haskell-stack-ghc))
-#+end_src
-
-*** GDScript
-
-GDScript, a high-level, dynamically typed programming language. Its used for programming in the Godot Game engine language.
-
-#+begin_src emacs-lisp
-  (use-package gdscript-mode)
-#+end_src
-
-*** vimscript
-
-#+begin_src emacs-lisp
-  (use-package vimrc-mode
-    :mode ("\\.vim\\(rc\\)?\\'" . vimrc-mode))
-#+end_src
-
-*** lua
-
-Lua language, seems to grow more popular by the day.
-
-#+begin_src emacs-lisp
-  (use-package lua-mode
-    :mode ("\\.lua$" . lua-mode)
-    :hook (lua-mode . lsp-deferred)
-    :config
-    (add-to-list 'interpreter-mode-alist '("lua" . lua-mode)))
-#+end_src
-
-*** hcl-mode - hashicorp configuration language
-
-As I learn more about HashiCorp's products I will program in it's language more.
-
-#+begin_src emacs-lisp
-  (use-package hcl-mode)
-#+end_src
-
-*** terraform-mode - terraform configuration language
-
-Terraform is super cool, this package allows me to edit the configuration language.
-
-#+begin_src emacs-lisp
-  (use-package terraform-mode)
-#+end_src
-
-*** Yaml
-
-Its yaml, what more is there to say? Better than json but still *sucks*
-
-PS: adding this package also helps not break =docker-compose-mode= for some reason
-
-#+begin_src emacs-lisp
-  (use-package yaml-mode
-    :mode ("\\.yml\\'" . yaml-mode)
-	  ("\\.yaml\\'" . yaml-mode)
-     :hook (yaml-mode . lsp-deferred))
-#+end_src
-
-*** json
-
-yaml but worse
-
-#+begin_src emacs-lisp
-  (use-package json-mode
-    :mode ("\\.json\\'" . json-mode)
-    :hook (json-mode . lsp-deferred))
-#+end_src
-
-*** Docker
-
-I use Docker everyday for work, home, testing out programs, etc. So consequently I edit a LOT of yaml files.
-
-This gives better syntax highlighting, code completion, etc in docker-compose.yml files
-#+begin_src emacs-lisp
-  ;; (use-package docker-compose-mode
-  ;;   :mode ("docker-compose.yml\\'" . docker-compose-mode)
-  ;; 	("docker-compose.yaml\\'" . docker-compose-mode)
-  ;; 	("stack.yml\\'" . docker-compose-mode))
-#+end_src
-
-Same as above except for in Dockerfiles
-#+begin_src emacs-lisp
-  (use-package dockerfile-mode
-    :hook (dockerfile-mode . lsp-deferred))
-#+end_src
-
+  		("<tab>" . company-complete-selection))
+  	  (:map lsp-mode-map
+  		("<tab>" . company-indent-or-complete-common)))
 #+end_src
 
 ** Fun packages
@@ -1323,13 +863,6 @@ These packages are kinda fun, don't really have much of a point
     :defer t)
 #+end_src
 
-*** 2048-game - play 2048 inside of emacs!
-
-#+begin_src emacs-lisp
-  (use-package 2048-game
-    :defer t)
-#+end_src
-
 *** snow.el - Let it snow in Emacs!
 
 #+begin_src emacs-lisp
@@ -1338,23 +871,6 @@ These packages are kinda fun, don't really have much of a point
 #+end_src
 
 * Applications
-
-** mu4e
-
-mu4e is an email client for Emacs. Currently I use neomutt and I'm very happy with it, but I'm willing to experiment.
-
-#+begin_src emacs-lisp
-  ;; (use-package mu4e
-  ;;   :ensure nil
-  ;;   ;; :if (and (eq system-type 'gnu/linux) (string-equal system-name "archpc"))
-  ;;   :config
-  ;;   ;; add mu4e to the load path on Arch
-  ;;   (require 'mu4e))
-
-  ;; (when (string= (system-name) "archpc")
-  ;;   (add-to-list 'load-path "/usr/share/emacs/site-lisp/mu4e/")
-  ;;   (require 'mu4e))
-#+end_src
 
 ** emms
 
