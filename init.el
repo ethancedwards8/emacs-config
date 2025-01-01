@@ -219,7 +219,6 @@ Very Similar to S-o from Vim"
 
 (use-package which-key
   :init (which-key-mode)
-  :diminish which-key-mode
   :config
   (setq which-key-idle-delay 5))
 
@@ -276,7 +275,6 @@ Very Similar to S-o from Vim"
   (evil-collection-init))
 
 (use-package evil-commentary
-  :diminish
   :after evil
   :config
   (evil-commentary-mode))
@@ -284,7 +282,6 @@ Very Similar to S-o from Vim"
 (fset 'evil-redirect-digit-argument 'ignore) ;; before evil-org loaded
 
 (use-package evil-org
-  ;; :diminish evil-org
   :after org
   :config
   (add-hook 'org-mode-hook 'evil-org-mode)
@@ -373,15 +370,7 @@ Very Similar to S-o from Vim"
   (my/leader-key
 	"v e" '(eshell :wk "eshell"))
 
-(use-package counsel
-  :bind (("C-x j" . 'counsel-switch-buffer)
-	   :map minibuffer-local-map
-	   ("C-r" . 'counsel-minibuffer-history))
-  :config
-  (counsel-mode 1))
-
 (use-package ivy
-  :diminish
   :custom (ivy-initial-inputs-alist nil)
   :bind (("C-s" . counsel-grep-or-swiper)
          ("C-S-s" . swiper)
@@ -400,10 +389,16 @@ Very Similar to S-o from Vim"
   :init
   (ivy-rich-mode 1))
 
-(use-package rainbow-mode
+(use-package counsel
+  :bind (("C-x j" . 'counsel-switch-buffer)
+	   :map minibuffer-local-map
+	   ("C-r" . 'counsel-minibuffer-history))
   :config
-  ;; (setq rainbow-x-colors nil)
-  (add-hook 'prog-mode-hook 'rainbow-mode))
+  (counsel-mode 1))
+
+(use-package rainbow-mode
+  :hook
+  ((org-mode prog-mode) . rainbow-mode))
 
 (use-package rainbow-delimiters
   :hook (prog-mode . rainbow-delimiters-mode))
@@ -423,9 +418,6 @@ Very Similar to S-o from Vim"
     "h f" '(counsel-describe-function :wk "describe function")
     "h v" '(counsel-describe-variable :wk "describe variable")
     "h k" '(helpful-key :wk "describe keybind"))
-
-(use-package rg
-  :defer t)
 
 (use-package hl-todo
   :config
@@ -455,6 +447,13 @@ Very Similar to S-o from Vim"
 		("<tab>" . company-complete-selection))
 	  (:map lsp-mode-map
 		("<tab>" . company-indent-or-complete-common)))
+
+(use-package flycheck
+  :init (global-flycheck-mode))
+
+(use-package haskell-mode)
+
+(use-package markdown-mode)
 
 (use-package elcord
   :defer t)

@@ -435,7 +435,6 @@ Here I can define functions with my leader key.
 #+begin_src emacs-lisp
   (use-package which-key
     :init (which-key-mode)
-    :diminish which-key-mode
     :config
     (setq which-key-idle-delay 5))
 #+end_src
@@ -546,7 +545,6 @@ Evil-commentary adds better commenting functionality to evil, =gcc= comments out
 
 #+begin_src emacs-lisp
   (use-package evil-commentary
-    :diminish
     :after evil
     :config
     (evil-commentary-mode))
@@ -558,7 +556,6 @@ Evil-org adds evil functionality to org mode, very helpful
   (fset 'evil-redirect-digit-argument 'ignore) ;; before evil-org loaded
 
   (use-package evil-org
-    ;; :diminish evil-org
     :after org
     :config
     (add-hook 'org-mode-hook 'evil-org-mode)
@@ -688,19 +685,6 @@ eshell-git-prompt gives me a git prompt for eshell, kinda in the name xD
 
 *** Completion framework(s)
 
-**** Counsel
-
-Counsel takes Ivy further.
-
-#+begin_src emacs-lisp
-  (use-package counsel
-    :bind (("C-x j" . 'counsel-switch-buffer)
-	   :map minibuffer-local-map
-	   ("C-r" . 'counsel-minibuffer-history))
-    :config
-    (counsel-mode 1))
-#+end_src
-
 **** Ivy
 
 I use Ivy, it's a completion framework for Emacs, I'm in the process of learning how to configure mine.
@@ -708,7 +692,6 @@ This is the initial setup of Ivy, this is bound to change drastically over time.
 
 #+begin_src emacs-lisp
   (use-package ivy
-    :diminish
     :custom (ivy-initial-inputs-alist nil)
     :bind (("C-s" . counsel-grep-or-swiper)
            ("C-S-s" . swiper)
@@ -734,6 +717,19 @@ Ivy Rich provides a nicer interface to Ivy in my opinion.
     (ivy-rich-mode 1))
 #+end_src
 
+**** Counsel
+
+Counsel takes Ivy further.
+
+#+begin_src emacs-lisp
+  (use-package counsel
+    :bind (("C-x j" . 'counsel-switch-buffer)
+	   :map minibuffer-local-map
+	   ("C-r" . 'counsel-minibuffer-history))
+    :config
+    (counsel-mode 1))
+#+end_src
+
 ** General tools
 
 These are some general tools that I use, they don't really belong in any category.
@@ -741,9 +737,8 @@ These are some general tools that I use, they don't really belong in any categor
 *** Rainbow-mode
 #+begin_src emacs-lisp
   (use-package rainbow-mode
-    :config
-    ;; (setq rainbow-x-colors nil)
-    (add-hook 'prog-mode-hook 'rainbow-mode))
+    :hook
+    ((org-mode prog-mode) . rainbow-mode))
 #+end_src
 
 *** Rainbow-delimiters
@@ -769,12 +764,6 @@ These are some general tools that I use, they don't really belong in any categor
       "h f" '(counsel-describe-function :wk "describe function")
       "h v" '(counsel-describe-variable :wk "describe variable")
       "h k" '(helpful-key :wk "describe keybind"))
-#+end_src
-
-*** Rg - Ripgrep inside of Emacs
-#+begin_src emacs-lisp
-  (use-package rg
-    :defer t)
 #+end_src
 
 *** Hl-TODO - highlight TODO keywords and the like
@@ -825,6 +814,25 @@ These are some general tools that I use, they don't really belong in any categor
   		("<tab>" . company-complete-selection))
   	  (:map lsp-mode-map
   		("<tab>" . company-indent-or-complete-common)))
+#+end_src
+
+*** flycheck-mode
+
+#+begin_src emacs-lisp
+  (use-package flycheck
+    :init (global-flycheck-mode))
+#+end_src
+
+*** haskell-mode
+
+#+begin_src emacs-lisp
+  (use-package haskell-mode)
+#+end_src
+
+*** markdown-mode
+
+#+begin_src emacs-lisp
+  (use-package markdown-mode)
 #+end_src
 
 ** Fun packages
