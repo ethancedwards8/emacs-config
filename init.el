@@ -67,15 +67,6 @@
 ;; Necessary to use the `:elpaca' use-package keyword at the top-level.
 (elpaca-wait)
 
-(elpaca elpaca-use-package
- ;; Enable :elpaca use-package keyword.
- (elpaca-use-package-mode)
- ;; Assume :elpaca t unless otherwise specified.
- (setq elpaca-use-package-by-default t))
-
-;; Necessary to use the `:elpaca' use-package keyword at the top-level.
-(elpaca-wait)
-
 (add-hook 'emacs-startup-hook
 	    (lambda ()
 	      (message "Emacs ready in %s with %d garbage collections."
@@ -308,7 +299,7 @@ Very Similar to S-o from Vim"
 ;;     (kbd "0") 'evil-org-beginning-of-line)
 
 (use-package dired
-  :elpaca nil
+  :ensure nil
   :config
   (when (string= system-type "darwin")
     (setq dired-use-ls-dired nil)))
@@ -368,8 +359,7 @@ Very Similar to S-o from Vim"
 (elpaca-wait)
 
 (use-package eshell
-  ;; :ensure nil
-  :elpaca nil
+  :ensure nil
   :custom (eshell-aliases-file "~/.emacs.d/eshell/eshell-alias")
   :config
   (with-eval-after-load 'esh-opt
@@ -463,6 +453,9 @@ Very Similar to S-o from Vim"
   :init (global-flycheck-mode))
 
 (use-package haskell-mode)
+
+(use-package nix-mode
+  :mode "\\.nix\\'")
 
 (use-package markdown-mode)
 

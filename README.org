@@ -139,15 +139,6 @@ Add repo's. ELPA, MELPA, org, and ublt.
 
   ;; Necessary to use the `:elpaca' use-package keyword at the top-level.
   (elpaca-wait)
-
-  (elpaca elpaca-use-package
-   ;; Enable :elpaca use-package keyword.
-   (elpaca-use-package-mode)
-   ;; Assume :elpaca t unless otherwise specified.
-   (setq elpaca-use-package-by-default t))
-
-  ;; Necessary to use the `:elpaca' use-package keyword at the top-level.
-  (elpaca-wait)
 #+end_src
 
 ** Benchmark startup
@@ -588,7 +579,7 @@ Dired is a file manager built into Emacs, its pretty great.
 
 #+begin_src emacs-lisp
   (use-package dired
-    :elpaca nil
+    :ensure nil
     :config
     (when (string= system-type "darwin")
       (setq dired-use-ls-dired nil)))
@@ -680,8 +671,7 @@ eshell-git-prompt gives me a git prompt for eshell, kinda in the name xD
   (elpaca-wait)
 
   (use-package eshell
-    ;; :ensure nil
-    :elpaca nil
+    :ensure nil
     :custom (eshell-aliases-file "~/.emacs.d/eshell/eshell-alias")
     :config
     (with-eval-after-load 'esh-opt
@@ -838,6 +828,13 @@ These are some general tools that I use, they don't really belong in any categor
 
 #+begin_src emacs-lisp
   (use-package haskell-mode)
+#+end_src
+
+*** nix-mode
+
+#+begin_src emacs-lisp
+  (use-package nix-mode
+    :mode "\\.nix\\'")
 #+end_src
 
 *** markdown-mode
